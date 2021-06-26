@@ -71,6 +71,13 @@ Add a resource. Returns `SRL` which can be used to access the resource.
 -   `data`: data (`Buffer`) or file path (`string`) to the data.
 -   `hash`: (optional) hash of the resource, will be calculated automatically when omitted.
 
+#### `localize(text, locale)`
+
+Localize text using target and fallback locales.
+
+-   `text`: text to localize.
+-   `locale`: target locale.
+
 #### `serverInfoHandler`
 
 Handler for requesting server info. Defaults to `defaultServerInfoHandler`.

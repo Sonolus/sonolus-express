@@ -6,6 +6,7 @@ import express, {
     Response,
 } from 'express'
 import { readFileSync } from 'fs'
+import { LocalizationText } from '../jtd'
 import { DB, dbParser } from '../jtd/db'
 import { ResourceType, SRL } from '../jtd/srl'
 import {
@@ -196,6 +197,15 @@ export class Sonolus {
         return { type, hash, url }
     }
 
+    public localize(text: LocalizationText, locale: string): string {
+        return (
+            text[locale] ||
+            text[this.fallbackLocale] ||
+            Object.values(text)[0] ||
+            ''
+        )
+    }
+
     private use(name: string, handler: RequestHandler) {
         this.app.use(`${this.basePath}${name}`, handler)
     }
@@ -210,10 +220,7 @@ export class Sonolus {
     ) {
         this.app.get(`${this.basePath}${name}`, async (req, res) => {
             req.localize = (text) =>
-                text[req.query.localization] ||
-                text[this.fallbackLocale] ||
-                Object.values(text)[0] ||
-                ''
+                this.localize(text, req.query.localization as string)
 
             try {
                 await handler(this, req, res)
