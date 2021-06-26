@@ -6,6 +6,7 @@ import express, {
     Response,
 } from 'express'
 import { readFileSync } from 'fs'
+import { resolve } from 'path'
 import { LocalizationText } from '../jtd'
 import { DB, dbParser } from '../jtd/db'
 import { ResourceType, SRL } from '../jtd/srl'
@@ -185,8 +186,9 @@ export class Sonolus {
         const url = `/repository/${type}/${hash}`
 
         if (typeof data === 'string') {
+            const path = resolve(data)
             this.get(url, async (sonolus, req, res) => {
-                res.sendFile(data)
+                res.sendFile(path)
             })
         } else {
             this.get(url, async (sonolus, req, res) => {
