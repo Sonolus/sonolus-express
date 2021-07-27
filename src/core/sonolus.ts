@@ -1,10 +1,6 @@
 import { createHash } from 'crypto'
-import express, {
-    Application,
-    Request,
-    RequestHandler,
-    Response,
-} from 'express'
+import * as express from 'express'
+import { Application, Request, RequestHandler, Response } from 'express'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { LocalizationText } from '../jtd'
