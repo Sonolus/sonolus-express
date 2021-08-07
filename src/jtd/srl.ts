@@ -8,6 +8,7 @@ export type ResourceType =
     | 'BackgroundThumbnail'
     | 'BackgroundData'
     | 'BackgroundImage'
+    | 'BackgroundConfiguration'
     | 'EffectThumbnail'
     | 'EffectData'
     | 'EffectClip'

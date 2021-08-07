@@ -12,6 +12,7 @@ export type BackgroundItem = {
     thumbnail: SRL<'BackgroundThumbnail'>
     data: SRL<'BackgroundData'>
     image: SRL<'BackgroundImage'>
+    configuration: SRL<'BackgroundConfiguration'>
 }
 
 export function toBackgroundItem(
@@ -28,5 +29,6 @@ export function toBackgroundItem(
         thumbnail: info.thumbnail,
         data: info.data,
         image: info.image,
+        configuration: info.configuration,
     }
 }

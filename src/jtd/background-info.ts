@@ -12,6 +12,7 @@ export interface BackgroundInfo {
     thumbnail: SRL<'BackgroundThumbnail'>
     data: SRL<'BackgroundData'>
     image: SRL<'BackgroundImage'>
+    configuration: SRL<'BackgroundConfiguration'>
 }
 
 export const backgroundInfoSchema: JTDSchemaType<BackgroundInfo> = {
@@ -25,5 +26,6 @@ export const backgroundInfoSchema: JTDSchemaType<BackgroundInfo> = {
         thumbnail: getSRLSchema('BackgroundThumbnail'),
         data: getSRLSchema('BackgroundData'),
         image: getSRLSchema('BackgroundImage'),
+        configuration: getSRLSchema('BackgroundConfiguration'),
     },
 }
