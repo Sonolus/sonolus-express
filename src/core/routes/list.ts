@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
+import { ToItem } from '../../api/item'
 import { toList } from '../../api/list'
-import { DB } from '../../jtd/db'
-import { LocalizationText } from '../../jtd/localization-text'
 import { Promisable } from '../../utils/types'
 import { Sonolus } from '../sonolus'
 
@@ -36,11 +35,7 @@ export function defaultListHandler<T>(
 export async function listRouteHandler<T, U>(
     sonolus: Sonolus,
     handler: ListHandler<T>,
-    toItem: (
-        db: DB,
-        localize: (text: LocalizationText) => string,
-        info: T
-    ) => U,
+    toItem: ToItem<T, U>,
     req: Request<
         unknown,
         unknown,
@@ -51,8 +46,10 @@ export async function listRouteHandler<T, U>(
 ): Promise<void> {
     res.json(
         toList(
+            sonolus.db,
+            req.localize,
             await handler(sonolus, req.query.keywords, +(req.query.page || 0)),
-            (info) => toItem(sonolus.db, req.localize, info)
+            toItem
         )
     )
 }

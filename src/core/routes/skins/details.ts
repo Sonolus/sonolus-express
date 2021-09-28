@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
+import { InfoDetails, SkinInfo } from 'sonolus-core'
 import { toSkinItem } from '../../../api/skin-item'
-import { InfoDetails } from '../../../jtd/info-details'
-import { SkinInfo } from '../../../jtd/skin-info'
 import { Sonolus } from '../../sonolus'
 import {
     defaultDetailsHandler,

@@ -13,24 +13,27 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p .",
-    "lint": "eslint --ext .ts src/"
+    "lint": "tsc -p . --noEmit && eslint --ext .ts src/",
+    "build": "tsc -p ."
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
-    "@types/node": "^16.4.3",
-    "@typescript-eslint/eslint-plugin": "^4.28.5",
-    "@typescript-eslint/parser": "^4.28.5",
-    "eslint": "^7.31.0",
+    "@types/node": "^16.10.1",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "prettier": "^2.3.2",
-    "typescript": "^4.3.5"
-  },
-  "dependencies": {
-    "ajv": "^8.6.2"
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.3"
   },
   "peerDependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "sonolus-core": "~0.1.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "sonolus-core": "^0.1.0",
+    "zod": "^3.9.4"
   }
 }

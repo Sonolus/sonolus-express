@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
+import { EngineInfo } from 'sonolus-core'
 import { toEngineItem } from '../../../api/engine-item'
-import { EngineInfo } from '../../../jtd/engine-info'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 

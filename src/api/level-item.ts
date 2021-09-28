@@ -1,37 +1,23 @@
-import { DB, getByName } from '../jtd/db'
-import { LevelInfo, Use as LevelInfoUse } from '../jtd/level-info'
-import { LocalizationText } from '../jtd/localization-text'
-import { SRL } from '../jtd/srl'
-import { BackgroundItem, toBackgroundItem } from './background-item'
-import { EffectItem, toEffectItem } from './effect-item'
-import { EngineItem, toEngineItem } from './engine-item'
-import { ParticleItem, toParticleItem } from './particle-item'
-import { SkinItem, toSkinItem } from './skin-item'
-
-type Use<T> = {
-    useDefault: boolean
-    item?: T
-}
-
-export type LevelItem = {
-    name: string
-    version: number
-    rating: number
-    engine: EngineItem
-    useSkin: Use<SkinItem>
-    useBackground: Use<BackgroundItem>
-    useEffect: Use<EffectItem>
-    useParticle: Use<ParticleItem>
-    title: string
-    artists: string
-    author: string
-    cover: SRL<'LevelCover'>
-    bgm: SRL<'LevelBgm'>
-    data: SRL<'LevelData'>
-}
+import {
+    Database,
+    LevelInfo,
+    LevelItem,
+    LocalizationText,
+    UseInfo,
+    UseItem,
+} from 'sonolus-core'
+import {
+    toBackgroundItem,
+    toEffectItem,
+    toEngineItem,
+    toParticleItem,
+    toSkinItem,
+} from '.'
+import { getByName } from '..'
+import { ToItem } from './item'
 
 export function toLevelItem(
-    db: DB,
+    db: Database,
     localize: (text: LocalizationText) => string,
     info: LevelInfo
 ): LevelItem {
@@ -44,15 +30,14 @@ export function toLevelItem(
             localize,
             getByName(db.engines, info.engine, `Level/${info.name}`)
         ),
-        useSkin: toUse(info.useSkin, db.skins, db, toSkinItem),
+        useSkin: toUse(info.useSkin, db.skins, toSkinItem),
         useBackground: toUse(
             info.useBackground,
             db.backgrounds,
-            db,
             toBackgroundItem
         ),
-        useEffect: toUse(info.useEffect, db.effects, db, toEffectItem),
-        useParticle: toUse(info.useParticle, db.particles, db, toParticleItem),
+        useEffect: toUse(info.useEffect, db.effects, toEffectItem),
+        useParticle: toUse(info.useParticle, db.particles, toParticleItem),
         title: localize(info.title),
         artists: localize(info.artists),
         author: localize(info.author),
@@ -62,15 +47,10 @@ export function toLevelItem(
     }
 
     function toUse<T extends { name: string }, U>(
-        use: LevelInfoUse,
+        use: UseInfo,
         infos: T[],
-        db: DB,
-        toItem: (
-            db: DB,
-            localize: (text: LocalizationText) => string,
-            info: T
-        ) => U
-    ): Use<U> {
+        toItem: ToItem<T, U>
+    ): UseItem<U> {
         return {
             useDefault: use.useDefault,
             item: use.item

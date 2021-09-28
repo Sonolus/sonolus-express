@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
+import { LevelInfo } from 'sonolus-core'
 import { toLevelItem } from '../../../api/level-item'
-import { LevelInfo } from '../../../jtd/level-info'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 

@@ -1,24 +1,16 @@
-import { DB } from '../jtd/db'
-import { LocalizationText } from '../jtd/localization-text'
-import { BackgroundItem, toBackgroundItem } from './background-item'
-import { EffectItem, toEffectItem } from './effect-item'
-import { EngineItem, toEngineItem } from './engine-item'
-import { LevelItem, toLevelItem } from './level-item'
-import { ParticleItem, toParticleItem } from './particle-item'
-import { SkinItem, toSkinItem } from './skin-item'
-
-export type ServerInfo = {
-    levels: LevelItem[]
-    skins: SkinItem[]
-    backgrounds: BackgroundItem[]
-    effects: EffectItem[]
-    particles: ParticleItem[]
-    engines: EngineItem[]
-}
+import { Database, LocalizationText, ServerInfo } from 'sonolus-core'
+import {
+    toBackgroundItem,
+    toEffectItem,
+    toEngineItem,
+    toLevelItem,
+    toParticleItem,
+    toSkinItem,
+} from '.'
 
 export function toServerInfo(
-    serverInfo: DB,
-    db: DB,
+    serverInfo: Database,
+    db: Database,
     localize: (text: LocalizationText) => string
 ): ServerInfo {
     return {

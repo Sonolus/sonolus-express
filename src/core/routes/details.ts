@@ -1,8 +1,7 @@
 import { Request, Response } from 'express'
+import { InfoDetails, LocalizationText } from 'sonolus-core'
 import { toItemDetails } from '../../api'
-import { DB } from '../../jtd/db'
-import { InfoDetails } from '../../jtd/info-details'
-import { LocalizationText } from '../../jtd/localization-text'
+import { ToItem } from '../../api/item'
 import { Promisable } from '../../utils/types'
 import { Sonolus } from '../sonolus'
 
@@ -31,11 +30,7 @@ export function defaultDetailsHandler<
 export async function detailsRouteHandler<T, U>(
     sonolus: Sonolus,
     handler: DetailsHandler<T>,
-    toItem: (
-        db: DB,
-        localize: (text: LocalizationText) => string,
-        info: T
-    ) => U,
+    toItem: ToItem<T, U>,
     req: Request,
     res: Response
 ): Promise<void> {

@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
+import { BackgroundInfo, InfoDetails } from 'sonolus-core'
 import { toBackgroundItem } from '../../../api/background-item'
-import { BackgroundInfo } from '../../../jtd/background-info'
-import { InfoDetails } from '../../../jtd/info-details'
 import { Sonolus } from '../../sonolus'
 import {
     defaultDetailsHandler,

@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
+import { InfoDetails, LevelInfo } from 'sonolus-core'
 import { toLevelItem } from '../../../api/level-item'
-import { InfoDetails } from '../../../jtd/info-details'
-import { LevelInfo } from '../../../jtd/level-info'
 import { Sonolus } from '../../sonolus'
 import {
     defaultDetailsHandler,

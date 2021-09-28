@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
+import { SkinInfo } from 'sonolus-core'
 import { toSkinItem } from '../../../api/skin-item'
-import { SkinInfo } from '../../../jtd/skin-info'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 

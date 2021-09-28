@@ -1,22 +1,12 @@
-import { BackgroundInfo } from '../jtd/background-info'
-import { DB } from '../jtd/db'
-import { LocalizationText } from '../jtd/localization-text'
-import { SRL } from '../jtd/srl'
-
-export type BackgroundItem = {
-    name: string
-    version: number
-    title: string
-    subtitle: string
-    author: string
-    thumbnail: SRL<'BackgroundThumbnail'>
-    data: SRL<'BackgroundData'>
-    image: SRL<'BackgroundImage'>
-    configuration: SRL<'BackgroundConfiguration'>
-}
+import {
+    BackgroundInfo,
+    BackgroundItem,
+    Database,
+    LocalizationText,
+} from 'sonolus-core'
 
 export function toBackgroundItem(
-    db: DB,
+    db: Database,
     localize: (text: LocalizationText) => string,
     info: BackgroundInfo
 ): BackgroundItem {

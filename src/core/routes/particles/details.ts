@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
+import { InfoDetails, ParticleInfo } from 'sonolus-core'
 import { toParticleItem } from '../../../api/particle-item'
-import { InfoDetails } from '../../../jtd/info-details'
-import { ParticleInfo } from '../../../jtd/particle-info'
 import { Sonolus } from '../../sonolus'
 import {
     defaultDetailsHandler,

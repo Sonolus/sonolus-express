@@ -1,21 +1,7 @@
-import { DB } from '../jtd/db'
-import { LocalizationText } from '../jtd/localization-text'
-import { SkinInfo } from '../jtd/skin-info'
-import { SRL } from '../jtd/srl'
-
-export type SkinItem = {
-    name: string
-    version: number
-    title: string
-    subtitle: string
-    author: string
-    thumbnail: SRL<'SkinThumbnail'>
-    data: SRL<'SkinData'>
-    texture: SRL<'SkinTexture'>
-}
+import { Database, LocalizationText, SkinInfo, SkinItem } from 'sonolus-core'
 
 export function toSkinItem(
-    db: DB,
+    db: Database,
     localize: (text: LocalizationText) => string,
     info: SkinInfo
 ): SkinItem {

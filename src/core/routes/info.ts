@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
+import { Database } from 'sonolus-core'
 import { toServerInfo } from '../../api/server-info'
-import { DB } from '../../jtd/db'
 import { Promisable } from '../../utils/types'
 import { Sonolus } from '../sonolus'
 
-export type ServerInfoHandler = (sonolus: Sonolus) => Promisable<DB>
+export type ServerInfoHandler = (sonolus: Sonolus) => Promisable<Database>
 
-export function defaultServerInfoHandler(sonolus: Sonolus): DB {
+export function defaultServerInfoHandler(sonolus: Sonolus): Database {
     return {
         levels: sonolus.db.levels.slice(0, 5),
         skins: sonolus.db.skins.slice(0, 5),

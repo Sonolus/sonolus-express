@@ -1,11 +1,16 @@
-import { createHash } from 'crypto'
 import * as express from 'express'
 import { Application, Request, RequestHandler, Response } from 'express'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
-import { LocalizationText } from '../jtd'
-import { DB, dbParser } from '../jtd/db'
-import { ResourceType, SRL } from '../jtd/srl'
+import {
+    Database,
+    hash as sonolusHash,
+    LocalizationText,
+    ResourceType,
+    SRL,
+    version,
+} from 'sonolus-core'
+import { databaseParser } from '..'
 import {
     BackgroundDetailsHandler,
     backgroundDetailsRouteHandler,
@@ -74,11 +79,10 @@ import {
 
 export class Sonolus {
     readonly app: Application
-    readonly version: string | undefined
     readonly basePath: string
     readonly fallbackLocale: string
 
-    readonly db: DB
+    readonly db: Database
 
     serverInfoHandler: ServerInfoHandler = defaultServerInfoHandler
 
@@ -101,21 +105,19 @@ export class Sonolus {
     constructor(
         app: Application,
         options?: Partial<{
-            version: string
             basePath: string
             fallbackLocale: string
         }>
     ) {
         this.app = app
 
-        const { version, basePath, fallbackLocale } = Object.assign(
+        const { basePath, fallbackLocale } = Object.assign(
             {
                 basePath: '',
                 fallbackLocale: 'en',
             },
             options
         )
-        this.version = version
         this.basePath = basePath
         this.fallbackLocale = fallbackLocale
 
@@ -128,12 +130,10 @@ export class Sonolus {
             engines: [],
         }
 
-        if (this.version) {
-            this.use('', (req, res, next) => {
-                res.set('Sonolus-Version', this.version)
-                next()
-            })
-        }
+        this.use('', (req, res, next) => {
+            res.set('Sonolus-Version', version.sonolus)
+            next()
+        })
 
         this.get('/info', serverInfoRouteHandler)
 
@@ -153,10 +153,11 @@ export class Sonolus {
     }
 
     public load(path: string): void {
-        const db = dbParser(readFileSync(`${path}/db.json`, 'utf-8'))
-        if (!db) {
-            throw `${path}/db.json(${dbParser.position}): ${dbParser.message}`
-        }
+        const dbPath = `${path}/db.json`
+        const db = databaseParser(
+            JSON.parse(readFileSync(dbPath, 'utf-8')),
+            `${path}/db.json`
+        )
 
         this.db.levels.push(...db.levels)
         this.db.skins.push(...db.skins)
@@ -174,9 +175,9 @@ export class Sonolus {
         hash?: string
     ): SRL<T> {
         if (!hash) {
-            hash = createHash('sha1')
-                .update(typeof data === 'string' ? readFileSync(data) : data)
-                .digest('hex')
+            hash = sonolusHash(
+                typeof data === 'string' ? readFileSync(data) : data
+            )
         }
 
         const url = `/repository/${type}/${hash}`

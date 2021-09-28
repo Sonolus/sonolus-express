@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
+import { BackgroundInfo } from 'sonolus-core'
 import { toBackgroundItem } from '../../../api/background-item'
-import { BackgroundInfo } from '../../../jtd/background-info'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 

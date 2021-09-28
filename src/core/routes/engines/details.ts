@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
+import { EngineInfo, InfoDetails } from 'sonolus-core'
 import { toEngineItem } from '../../../api/engine-item'
-import { EngineInfo } from '../../../jtd/engine-info'
-import { InfoDetails } from '../../../jtd/info-details'
 import { Sonolus } from '../../sonolus'
 import {
     defaultDetailsHandler,

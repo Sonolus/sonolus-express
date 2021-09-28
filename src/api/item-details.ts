@@ -1,21 +1,15 @@
-import { DB } from '../jtd/db'
-import { InfoDetails } from '../jtd/info-details'
-import { LocalizationText } from '../jtd/localization-text'
-
-export type ItemDetails<T> = {
-    item: T
-    description: string
-    recommended: T[]
-}
+import {
+    Database,
+    InfoDetails,
+    ItemDetails,
+    LocalizationText,
+} from 'sonolus-core'
+import { ToItem } from './item'
 
 export function toItemDetails<T, U>(
-    db: DB,
+    db: Database,
     localize: (text: LocalizationText) => string,
-    toItem: (
-        db: DB,
-        localize: (text: LocalizationText) => string,
-        info: T
-    ) => U,
+    toItem: ToItem<T, U>,
     infoDetails: InfoDetails<T>
 ): ItemDetails<U> {
     return {

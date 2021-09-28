@@ -1,17 +1,14 @@
-export type List<T> = {
-    pageCount: number
-    items: T[]
-}
+import { Database, InfoList, ItemList, LocalizationText } from 'sonolus-core'
+import { ToItem } from './item'
 
 export function toList<T, U>(
-    list: {
-        pageCount: number
-        infos: T[]
-    },
-    toItem: (info: T) => U
-): List<U> {
+    db: Database,
+    localize: (text: LocalizationText) => string,
+    list: InfoList<T>,
+    toItem: ToItem<T, U>
+): ItemList<U> {
     return {
         pageCount: list.pageCount,
-        items: list.infos.map(toItem),
+        items: list.infos.map((info) => toItem(db, localize, info)),
     }
 }

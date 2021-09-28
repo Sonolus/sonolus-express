@@ -1,21 +1,12 @@
-import { DB } from '../jtd/db'
-import { LocalizationText } from '../jtd/localization-text'
-import { ParticleInfo } from '../jtd/particle-info'
-import { SRL } from '../jtd/srl'
-
-export type ParticleItem = {
-    name: string
-    version: number
-    title: string
-    subtitle: string
-    author: string
-    thumbnail: SRL<'ParticleThumbnail'>
-    data: SRL<'ParticleData'>
-    texture: SRL<'ParticleTexture'>
-}
+import {
+    Database,
+    LocalizationText,
+    ParticleInfo,
+    ParticleItem,
+} from 'sonolus-core'
 
 export function toParticleItem(
-    db: DB,
+    db: Database,
     localize: (text: LocalizationText) => string,
     info: ParticleInfo
 ): ParticleItem {

@@ -1,20 +1,12 @@
-import { DB } from '../jtd/db'
-import { EffectInfo } from '../jtd/effect-info'
-import { LocalizationText } from '../jtd/localization-text'
-import { SRL } from '../jtd/srl'
-
-export type EffectItem = {
-    name: string
-    version: number
-    title: string
-    subtitle: string
-    author: string
-    thumbnail: SRL<'EffectThumbnail'>
-    data: SRL<'EffectData'>
-}
+import {
+    Database,
+    EffectInfo,
+    EffectItem,
+    LocalizationText,
+} from 'sonolus-core'
 
 export function toEffectItem(
-    db: DB,
+    db: Database,
     localize: (text: LocalizationText) => string,
     info: EffectInfo
 ): EffectItem {

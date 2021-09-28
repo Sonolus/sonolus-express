@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
+import { EffectInfo } from 'sonolus-core'
 import { toEffectItem } from '../../../api/effect-item'
-import { EffectInfo } from '../../../jtd/effect-info'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 
