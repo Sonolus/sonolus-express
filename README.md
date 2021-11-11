@@ -5,14 +5,14 @@ TypeScript based developer toolkit for Sonolus servers with [Express.js](https:/
 ## Links
 
 -   [Sonolus Website](https://sonolus.com)
--   [Sonolus Wiki](https://github.com/NonSpicyBurrito/sonolus-wiki)
--   [sonolus-pack](https://github.com/NonSpicyBurrito/sonolus-pack)
+-   [Sonolus Wiki](https://wiki.sonolus.com)
+-   [sonolus-pack](https://github.com/Sonolus/sonolus-pack)
 
 ## Features
 
 -   Setup all necessary routes automatically, compliant with Sonolus server specifications.
 -   Provide handlers to interact with each route.
--   Load packs created by [sonolus-pack](https://github.com/NonSpicyBurrito/sonolus-pack).
+-   Load packs created by [sonolus-pack](https://github.com/Sonolus/sonolus-pack).
 
 ## Installation
 
@@ -20,7 +20,7 @@ TypeScript based developer toolkit for Sonolus servers with [Express.js](https:/
 npm install sonolus.js
 ```
 
-A compatible version of [sonolus-core](https://github.com/NonSpicyBurrito/sonolus-core) is also required as peer dependency. If it isn't installed automatically, you can do so with:
+A compatible version of [sonolus-core](https://github.com/Sonolus/sonolus-core) is also required as peer dependency. If it isn't installed automatically, you can do so with:
 
 ```
 npm install sonolus-core
