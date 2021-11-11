@@ -90,51 +90,51 @@ Handler for requesting server info. Defaults to `defaultServerInfoHandler`.
 
 #### `levelListHandler`
 
-Handler for requesting . Defaults to `defaultLevelListHandler`.
+Handler for requesting level list. Defaults to `defaultLevelListHandler`.
 
 #### `skinListHandler`
 
-Handler for requesting . Defaults to `defaultSkinListHandler`.
+Handler for requesting skin list. Defaults to `defaultSkinListHandler`.
 
 #### `backgroundListHandler`
 
-Handler for requesting . Defaults to `defaultBackgroundListHandler`.
+Handler for requesting background list. Defaults to `defaultBackgroundListHandler`.
 
 #### `effectListHandler`
 
-Handler for requesting . Defaults to `defaultEffectListHandler`.
+Handler for requesting effect list. Defaults to `defaultEffectListHandler`.
 
 #### `particleListHandler`
 
-Handler for requesting . Defaults to `defaultParticleListHandler`.
+Handler for requesting particle list. Defaults to `defaultParticleListHandler`.
 
 #### `engineListHandler`
 
-Handler for requesting . Defaults to `defaultEngineListHandler`.
+Handler for requesting engine list. Defaults to `defaultEngineListHandler`.
 
 #### `levelDetailsHandler`
 
-Handler for requesting . Defaults to `defaultLevelDetailsHandler`.
+Handler for requesting level details. Defaults to `defaultLevelDetailsHandler`.
 
 #### `skinDetailsHandler`
 
-Handler for requesting . Defaults to `defaultSkinDetailsHandler`.
+Handler for requesting skin details. Defaults to `defaultSkinDetailsHandler`.
 
 #### `backgroundDetailsHandler`
 
-Handler for requesting . Defaults to `defaultBackgroundDetailsHandler`.
+Handler for requesting background details. Defaults to `defaultBackgroundDetailsHandler`.
 
 #### `effectDetailsHandler`
 
-Handler for requesting . Defaults to `defaultEffectDetailsHandler`.
+Handler for requesting effect details. Defaults to `defaultEffectDetailsHandler`.
 
 #### `particleDetailsHandler`
 
-Handler for requesting . Defaults to `defaultParticleDetailsHandler`.
+Handler for requesting particle details. Defaults to `defaultParticleDetailsHandler`.
 
 #### `engineDetailsHandler`
 
-Handler for requesting . Defaults to `defaultEngineDetailsHandler`.
+Handler for requesting engine details. Defaults to `defaultEngineDetailsHandler`.
 
 ### Using `meta` in TypeScript
 
