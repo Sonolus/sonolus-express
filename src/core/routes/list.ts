@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { SearchInfo } from '../..'
 import { ToItem } from '../../api/item'
 import { toList } from '../../api/list'
 import { Promisable } from '../../utils/types'
@@ -36,6 +37,7 @@ export async function listRouteHandler<T, U>(
     sonolus: Sonolus,
     handler: ListHandler<T>,
     toItem: ToItem<T, U>,
+    search: SearchInfo,
     req: Request<
         unknown,
         unknown,
@@ -49,7 +51,8 @@ export async function listRouteHandler<T, U>(
             sonolus.db,
             req.localize,
             await handler(sonolus, req.query.keywords, +(req.query.page || 0)),
-            toItem
+            toItem,
+            search
         )
     )
 }

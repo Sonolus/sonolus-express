@@ -31,6 +31,7 @@ export function backgroundListRouteHandler(
         sonolus,
         sonolus.backgroundListHandler,
         toBackgroundItem,
+        sonolus.backgroundsOption.search,
         req,
         res
     )

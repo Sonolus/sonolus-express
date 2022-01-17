@@ -26,7 +26,13 @@ export async function serverInfoRouteHandler(
         toServerInfo(
             await sonolus.serverInfoHandler(sonolus),
             sonolus.db,
-            req.localize
+            req.localize,
+            sonolus.levelsOption.search,
+            sonolus.skinsOption.search,
+            sonolus.backgroundsOption.search,
+            sonolus.effectsOption.search,
+            sonolus.particlesOption.search,
+            sonolus.enginesOption.search
         )
     )
 }

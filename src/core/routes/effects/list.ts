@@ -31,6 +31,7 @@ export function effectListRouteHandler(
         sonolus,
         sonolus.effectListHandler,
         toEffectItem,
+        sonolus.effectsOption.search,
         req,
         res
     )

@@ -6,13 +6,11 @@ import {
     Database,
     hash as sonolusHash,
     LocalizationText,
-    OptionName,
     ResourceType,
-    Search,
     SRL,
     version,
 } from 'sonolus-core'
-import { databaseParser } from '..'
+import { databaseParser, SearchInfo } from '..'
 import {
     BackgroundDetailsHandler,
     backgroundDetailsRouteHandler,
@@ -79,21 +77,32 @@ import {
     skinListRouteHandler,
 } from './routes/skins/list'
 
-export const search: Search = {
-    options: [
-        {
-            query: 'keywords',
-            name: '#KEYWORDS' as OptionName,
-            type: 'text',
-            placeholder: '#KEYWORDS',
-        },
-    ],
+export type SectionOption = {
+    search: SearchInfo
 }
+
+export const defaultSectionOption = {
+    search: {
+        options: {
+            keywords: {
+                name: { en: '#KEYWORDS' },
+                type: 'text',
+                placeholder: '#KEYWORDS',
+            },
+        },
+    },
+} as const
 
 export class Sonolus {
     readonly app: Application
     readonly basePath: string
     readonly fallbackLocale: string
+    readonly levelsOption: SectionOption
+    readonly skinsOption: SectionOption
+    readonly backgroundsOption: SectionOption
+    readonly effectsOption: SectionOption
+    readonly particlesOption: SectionOption
+    readonly enginesOption: SectionOption
 
     readonly db: Database
 
@@ -120,19 +129,46 @@ export class Sonolus {
         options?: Partial<{
             basePath: string
             fallbackLocale: string
+            levels: SectionOption
+            skins: SectionOption
+            backgrounds: SectionOption
+            effects: SectionOption
+            particles: SectionOption
+            engines: SectionOption
         }>
     ) {
         this.app = app
 
-        const { basePath, fallbackLocale } = Object.assign(
+        const {
+            basePath,
+            fallbackLocale,
+            levels,
+            skins,
+            backgrounds,
+            effects,
+            particles,
+            engines,
+        } = Object.assign(
             {
                 basePath: '',
                 fallbackLocale: 'en',
+                levels: defaultSectionOption,
+                skins: defaultSectionOption,
+                backgrounds: defaultSectionOption,
+                effects: defaultSectionOption,
+                particles: defaultSectionOption,
+                engines: defaultSectionOption,
             },
             options
         )
         this.basePath = basePath
         this.fallbackLocale = fallbackLocale
+        this.levelsOption = levels
+        this.skinsOption = skins
+        this.backgroundsOption = backgrounds
+        this.effectsOption = effects
+        this.particlesOption = particles
+        this.enginesOption = engines
 
         this.db = {
             levels: [],

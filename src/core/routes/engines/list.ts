@@ -31,6 +31,7 @@ export function engineListRouteHandler(
         sonolus,
         sonolus.engineListHandler,
         toEngineItem,
+        sonolus.enginesOption.search,
         req,
         res
     )

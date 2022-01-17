@@ -31,6 +31,7 @@ export function particleListRouteHandler(
         sonolus,
         sonolus.particleListHandler,
         toParticleItem,
+        sonolus.particlesOption.search,
         req,
         res
     )

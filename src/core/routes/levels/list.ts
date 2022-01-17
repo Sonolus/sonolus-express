@@ -31,6 +31,7 @@ export function levelListRouteHandler(
         sonolus,
         sonolus.levelListHandler,
         toLevelItem,
+        sonolus.levelsOption.search,
         req,
         res
     )
