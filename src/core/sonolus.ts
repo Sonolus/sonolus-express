@@ -6,7 +6,9 @@ import {
     Database,
     hash as sonolusHash,
     LocalizationText,
+    OptionName,
     ResourceType,
+    Search,
     SRL,
     version,
 } from 'sonolus-core'
@@ -76,6 +78,17 @@ import {
     SkinListHandler,
     skinListRouteHandler,
 } from './routes/skins/list'
+
+export const search: Search = {
+    options: [
+        {
+            query: 'keywords',
+            name: '#KEYWORDS' as OptionName,
+            type: 'text',
+            placeholder: '#KEYWORDS',
+        },
+    ],
+}
 
 export class Sonolus {
     readonly app: Application

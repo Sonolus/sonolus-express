@@ -1,4 +1,5 @@
 import { Database, InfoList, ItemList, LocalizationText } from 'sonolus-core'
+import { search } from '..'
 import { ToItem } from './item'
 
 export function toList<T, U>(
@@ -10,5 +11,6 @@ export function toList<T, U>(
     return {
         pageCount: list.pageCount,
         items: list.infos.map((info) => toItem(db, localize, info)),
+        search,
     }
 }
