@@ -12,14 +12,12 @@ export type SearchOptionInfo =
     | SearchSelectOptionInfo
 
 export type SearchTextOptionInfo = {
-    query: string
     name: LocalizationText
     type: 'text'
     placeholder: string
 }
 
 export type SearchSliderOptionInfo = {
-    query: string
     name: LocalizationText
     type: 'slider'
     def: number
@@ -30,14 +28,12 @@ export type SearchSliderOptionInfo = {
 }
 
 export type SearchToggleOptionInfo = {
-    query: string
     name: LocalizationText
     type: 'toggle'
     def: 0 | 1
 }
 
 export type SearchSelectOptionInfo = {
-    query: string
     name: LocalizationText
     type: 'select'
     def: number
@@ -47,10 +43,12 @@ export type SearchSelectOptionInfo = {
 export function toSearchOption(
     db: Database,
     localize: (text: LocalizationText) => string,
+    query: string,
     info: SearchOptionInfo
 ): SearchOption {
     return {
         ...info,
+        query,
         name: localize(info.name) as OptionName,
     }
 }

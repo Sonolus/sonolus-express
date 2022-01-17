@@ -2,7 +2,9 @@ import { Database, LocalizationText, Search } from 'sonolus-core'
 import { SearchOptionInfo, toSearchOption } from './option-info'
 
 export type SearchInfo = {
-    options: SearchOptionInfo[]
+    options: {
+        [query: string]: SearchOptionInfo
+    }
 }
 
 export function toSearch(
@@ -11,8 +13,8 @@ export function toSearch(
     info: SearchInfo
 ): Search {
     return {
-        options: info.options.map((option) =>
-            toSearchOption(db, localize, option)
+        options: Object.entries(info.options).map(([query, option]) =>
+            toSearchOption(db, localize, query, option)
         ),
     }
 }
