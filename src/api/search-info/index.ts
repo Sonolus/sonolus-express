@@ -1,2 +1,2 @@
-export * from './option-info'
+export * from './option'
 export * from './search-info'
