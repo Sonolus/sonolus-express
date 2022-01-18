@@ -3,7 +3,7 @@ import { LocalizationText, OptionName, SearchToggleOption } from 'sonolus-core'
 export type SearchToggleOptionInfo = {
     name: LocalizationText
     type: 'toggle'
-    def: 0 | 1
+    def: boolean
 }
 
 export function toSearchToggleOption(
@@ -15,6 +15,6 @@ export function toSearchToggleOption(
         query,
         name: localize(info.name) as OptionName,
         type: 'toggle',
-        def: info.def,
+        def: info.def ? 1 : 0,
     }
 }

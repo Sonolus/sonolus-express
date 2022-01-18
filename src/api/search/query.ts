@@ -3,7 +3,7 @@ import { SearchInfo } from '.'
 type QueryType = {
     text: string
     slider: number
-    toggle: number
+    toggle: boolean
     select: number
 }
 
