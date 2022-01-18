@@ -12,6 +12,6 @@ export function toList<T, U>(
     return {
         pageCount: list.pageCount,
         items: list.infos.map((info) => toItem(db, localize, info)),
-        search: toSearch(db, localize, search),
+        search: toSearch(localize, search),
     }
 }

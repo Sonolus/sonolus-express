@@ -26,37 +26,37 @@ export function toServerInfo(
             items: serverInfo.levels.map((info) =>
                 toLevelItem(db, localize, info)
             ),
-            search: toSearch(db, localize, levelsSearch),
+            search: toSearch(localize, levelsSearch),
         },
         skins: {
             items: serverInfo.skins.map((info) =>
                 toSkinItem(db, localize, info)
             ),
-            search: toSearch(db, localize, skinsSearch),
+            search: toSearch(localize, skinsSearch),
         },
         backgrounds: {
             items: serverInfo.backgrounds.map((info) =>
                 toBackgroundItem(db, localize, info)
             ),
-            search: toSearch(db, localize, backgroundsSearch),
+            search: toSearch(localize, backgroundsSearch),
         },
         effects: {
             items: serverInfo.effects.map((info) =>
                 toEffectItem(db, localize, info)
             ),
-            search: toSearch(db, localize, effectsSearch),
+            search: toSearch(localize, effectsSearch),
         },
         particles: {
             items: serverInfo.particles.map((info) =>
                 toParticleItem(db, localize, info)
             ),
-            search: toSearch(db, localize, particlesSearch),
+            search: toSearch(localize, particlesSearch),
         },
         engines: {
             items: serverInfo.engines.map((info) =>
                 toEngineItem(db, localize, info)
             ),
-            search: toSearch(db, localize, enginesSearch),
+            search: toSearch(localize, enginesSearch),
         },
     }
 }
