@@ -8,7 +8,7 @@ export type BackgroundListHandler = ListHandler<BackgroundInfo>
 
 export function defaultBackgroundListHandler(
     sonolus: Sonolus,
-    keywords: string | undefined,
+    query: Record<string, unknown>,
     page: number
 ): {
     pageCount: number
@@ -17,7 +17,7 @@ export function defaultBackgroundListHandler(
     return defaultListHandler(
         sonolus.db.backgrounds,
         ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords,
+        query,
         page
     )
 }

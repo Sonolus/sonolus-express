@@ -8,7 +8,7 @@ export type ParticleListHandler = ListHandler<ParticleInfo>
 
 export function defaultParticleListHandler(
     sonolus: Sonolus,
-    keywords: string | undefined,
+    query: Record<string, unknown>,
     page: number
 ): {
     pageCount: number
@@ -17,7 +17,7 @@ export function defaultParticleListHandler(
     return defaultListHandler(
         sonolus.db.particles,
         ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords,
+        query,
         page
     )
 }

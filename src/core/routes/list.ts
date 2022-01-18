@@ -9,7 +9,7 @@ const perPage = 20
 
 export type ListHandler<T> = (
     sonolus: Sonolus,
-    keywords: string | undefined,
+    query: Record<string, unknown>,
     page: number
 ) => Promisable<{
     pageCount: number
@@ -19,12 +19,13 @@ export type ListHandler<T> = (
 export function defaultListHandler<T>(
     infos: T[],
     props: (keyof T)[],
-    keywords: string | undefined,
+    query: Record<string, unknown>,
     page: number
 ): {
     pageCount: number
     infos: T[]
 } {
+    const keywords = typeof query.keywords === 'string' ? query.keywords : ''
     const filteredInfos = filterInfos(infos, props, keywords)
 
     return {
@@ -38,32 +39,21 @@ export async function listRouteHandler<T, U>(
     handler: ListHandler<T>,
     toItem: ToItem<T, U>,
     search: SearchInfo,
-    req: Request<
-        unknown,
-        unknown,
-        unknown,
-        { keywords?: string; page?: string }
-    >,
+    req: Request,
     res: Response
 ): Promise<void> {
     res.json(
         toList(
             sonolus.db,
             req.localize,
-            await handler(sonolus, req.query.keywords, +(req.query.page || 0)),
+            await handler(sonolus, req.query, +(req.query.page || 0)),
             toItem,
             search
         )
     )
 }
 
-function filterInfos<T>(
-    infos: T[],
-    props: (keyof T)[],
-    keywords: string | undefined
-) {
-    if (!keywords) return infos
-
+function filterInfos<T>(infos: T[], props: (keyof T)[], keywords: string) {
     const terms = keywords.trim().toLowerCase().split(' ')
     if (terms.length === 0) return infos
 

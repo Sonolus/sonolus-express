@@ -8,7 +8,7 @@ export type SkinListHandler = ListHandler<SkinInfo>
 
 export function defaultSkinListHandler(
     sonolus: Sonolus,
-    keywords: string | undefined,
+    query: Record<string, unknown>,
     page: number
 ): {
     pageCount: number
@@ -17,7 +17,7 @@ export function defaultSkinListHandler(
     return defaultListHandler(
         sonolus.db.skins,
         ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords,
+        query,
         page
     )
 }

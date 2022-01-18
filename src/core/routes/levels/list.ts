@@ -8,7 +8,7 @@ export type LevelListHandler = ListHandler<LevelInfo>
 
 export function defaultLevelListHandler(
     sonolus: Sonolus,
-    keywords: string | undefined,
+    query: Record<string, unknown>,
     page: number
 ): {
     pageCount: number
@@ -17,7 +17,7 @@ export function defaultLevelListHandler(
     return defaultListHandler(
         sonolus.db.levels,
         ['name', 'rating', 'title', 'artists', 'author', 'description'],
-        keywords,
+        query,
         page
     )
 }

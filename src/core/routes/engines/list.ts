@@ -8,7 +8,7 @@ export type EngineListHandler = ListHandler<EngineInfo>
 
 export function defaultEngineListHandler(
     sonolus: Sonolus,
-    keywords: string | undefined,
+    query: Record<string, unknown>,
     page: number
 ): {
     pageCount: number
@@ -17,7 +17,7 @@ export function defaultEngineListHandler(
     return defaultListHandler(
         sonolus.db.engines,
         ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords,
+        query,
         page
     )
 }

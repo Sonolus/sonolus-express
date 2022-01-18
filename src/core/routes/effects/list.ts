@@ -8,7 +8,7 @@ export type EffectListHandler = ListHandler<EffectInfo>
 
 export function defaultEffectListHandler(
     sonolus: Sonolus,
-    keywords: string | undefined,
+    query: Record<string, unknown>,
     page: number
 ): {
     pageCount: number
@@ -17,7 +17,7 @@ export function defaultEffectListHandler(
     return defaultListHandler(
         sonolus.db.effects,
         ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords,
+        query,
         page
     )
 }
