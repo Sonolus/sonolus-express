@@ -44,7 +44,7 @@ export function defaultListHandler<T>(
     infos: T[]
 } {
     const keywords = parseTextQuery(query.keywords)
-    const filteredInfos = filterInfos(infos, props, keywords)
+    const filteredInfos = filterInfosByKeywords(infos, props, keywords)
 
     return {
         pageCount: Math.ceil(filteredInfos.length / perPage),
@@ -101,7 +101,7 @@ export async function listRouteHandler<
     )
 }
 
-export function filterInfos<T>(
+export function filterInfosByKeywords<T>(
     infos: T[],
     props: (keyof T)[],
     keywords: string
