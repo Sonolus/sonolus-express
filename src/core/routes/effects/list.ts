@@ -76,7 +76,7 @@ export function effectListRouteHandler<
         sonolus,
         sonolus.effectListHandler,
         toEffectItem,
-        sonolus.effectsOption.search,
+        sonolus.effectsConfig.search,
         req,
         res
     )

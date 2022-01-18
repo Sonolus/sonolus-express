@@ -76,7 +76,7 @@ export function backgroundListRouteHandler<
         sonolus,
         sonolus.backgroundListHandler,
         toBackgroundItem,
-        sonolus.backgroundsOption.search,
+        sonolus.backgroundsConfig.search,
         req,
         res
     )

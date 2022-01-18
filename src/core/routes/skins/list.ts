@@ -76,7 +76,7 @@ export function skinListRouteHandler<
         sonolus,
         sonolus.skinListHandler,
         toSkinItem,
-        sonolus.skinsOption.search,
+        sonolus.skinsConfig.search,
         req,
         res
     )

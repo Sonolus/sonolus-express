@@ -106,12 +106,12 @@ export class Sonolus<
     readonly app: Application
     readonly basePath: string
     readonly fallbackLocale: string
-    readonly levelsOption: TLevels
-    readonly skinsOption: TSkins
-    readonly backgroundsOption: TBackgrounds
-    readonly effectsOption: TEffects
-    readonly particlesOption: TParticles
-    readonly enginesOption: TEngines
+    readonly levelsConfig: TLevels
+    readonly skinsConfig: TSkins
+    readonly backgroundsConfig: TBackgrounds
+    readonly effectsConfig: TEffects
+    readonly particlesConfig: TParticles
+    readonly enginesConfig: TEngines
 
     readonly db: Database
 
@@ -267,12 +267,12 @@ export class Sonolus<
         )
         this.basePath = basePath
         this.fallbackLocale = fallbackLocale
-        this.levelsOption = levels
-        this.skinsOption = skins
-        this.backgroundsOption = backgrounds
-        this.effectsOption = effects
-        this.particlesOption = particles
-        this.enginesOption = engines
+        this.levelsConfig = levels
+        this.skinsConfig = skins
+        this.backgroundsConfig = backgrounds
+        this.effectsConfig = effects
+        this.particlesConfig = particles
+        this.enginesConfig = engines
 
         this.db = {
             levels: [],

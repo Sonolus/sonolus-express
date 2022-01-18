@@ -76,7 +76,7 @@ export function engineListRouteHandler<
         sonolus,
         sonolus.engineListHandler,
         toEngineItem,
-        sonolus.enginesOption.search,
+        sonolus.enginesConfig.search,
         req,
         res
     )

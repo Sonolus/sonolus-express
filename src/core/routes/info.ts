@@ -73,12 +73,12 @@ export async function serverInfoRouteHandler<
             await sonolus.serverInfoHandler(sonolus),
             sonolus.db,
             req.localize,
-            sonolus.levelsOption.search,
-            sonolus.skinsOption.search,
-            sonolus.backgroundsOption.search,
-            sonolus.effectsOption.search,
-            sonolus.particlesOption.search,
-            sonolus.enginesOption.search
+            sonolus.levelsConfig.search,
+            sonolus.skinsConfig.search,
+            sonolus.backgroundsConfig.search,
+            sonolus.effectsConfig.search,
+            sonolus.particlesConfig.search,
+            sonolus.enginesConfig.search
         )
     )
 }

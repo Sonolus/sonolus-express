@@ -76,7 +76,7 @@ export function levelListRouteHandler<
         sonolus,
         sonolus.levelListHandler,
         toLevelItem,
-        sonolus.levelsOption.search,
+        sonolus.levelsConfig.search,
         req,
         res
     )
