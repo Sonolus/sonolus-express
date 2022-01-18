@@ -93,16 +93,23 @@ export const defaultSectionOption = {
     },
 } as const
 
-export class Sonolus {
+export class Sonolus<
+    TLevels extends SectionOption = SectionOption,
+    TSkins extends SectionOption = SectionOption,
+    TBackgrounds extends SectionOption = SectionOption,
+    TEffects extends SectionOption = SectionOption,
+    TParticles extends SectionOption = SectionOption,
+    TEngines extends SectionOption = SectionOption
+> {
     readonly app: Application
     readonly basePath: string
     readonly fallbackLocale: string
-    readonly levelsOption: SectionOption
-    readonly skinsOption: SectionOption
-    readonly backgroundsOption: SectionOption
-    readonly effectsOption: SectionOption
-    readonly particlesOption: SectionOption
-    readonly enginesOption: SectionOption
+    readonly levelsOption: TLevels
+    readonly skinsOption: TSkins
+    readonly backgroundsOption: TBackgrounds
+    readonly effectsOption: TEffects
+    readonly particlesOption: TParticles
+    readonly enginesOption: TEngines
 
     readonly db: Database
 
@@ -129,12 +136,12 @@ export class Sonolus {
         options?: Partial<{
             basePath: string
             fallbackLocale: string
-            levels: SectionOption
-            skins: SectionOption
-            backgrounds: SectionOption
-            effects: SectionOption
-            particles: SectionOption
-            engines: SectionOption
+            levels: TLevels
+            skins: TSkins
+            backgrounds: TBackgrounds
+            effects: TEffects
+            particles: TParticles
+            engines: TEngines
         }>
     ) {
         this.app = app
@@ -260,11 +267,7 @@ export class Sonolus {
 
     private get(
         name: string,
-        handler: (
-            sonolus: Sonolus,
-            req: Request,
-            res: Response
-        ) => Promise<void>
+        handler: (sonolus: this, req: Request, res: Response) => Promise<void>
     ) {
         this.app.get(`${this.basePath}${name}`, async (req, res) => {
             req.localize = (text) =>
