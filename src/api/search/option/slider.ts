@@ -1,7 +1,7 @@
 import { LocalizationText, OptionName, SearchSliderOption } from 'sonolus-core'
 
 export type SearchSliderOptionInfo = {
-    name: LocalizationText
+    name: LocalizationText<OptionName>
     type: 'slider'
     def: number
     min: number

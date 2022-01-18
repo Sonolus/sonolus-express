@@ -7,6 +7,7 @@ import {
     hash as sonolusHash,
     LocalizationText,
     localize,
+    OptionName,
     ResourceType,
     SRL,
     version,
@@ -86,7 +87,7 @@ export const defaultItemsConfig = {
     search: {
         options: {
             keywords: {
-                name: { en: '#KEYWORDS' },
+                name: { en: '#KEYWORDS' as OptionName },
                 type: 'text',
                 placeholder: '#KEYWORDS',
             },

@@ -1,7 +1,7 @@
 import { LocalizationText, OptionName, SearchToggleOption } from 'sonolus-core'
 
 export type SearchToggleOptionInfo = {
-    name: LocalizationText
+    name: LocalizationText<OptionName>
     type: 'toggle'
     def: boolean
 }

@@ -1,7 +1,7 @@
 import { LocalizationText, OptionName, SearchSelectOption } from 'sonolus-core'
 
 export type SearchSelectOptionInfo = {
-    name: LocalizationText
+    name: LocalizationText<OptionName>
     type: 'select'
     def: number
     values: string[]

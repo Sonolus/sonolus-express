@@ -1,7 +1,7 @@
 import { LocalizationText, OptionName, SearchTextOption } from 'sonolus-core'
 
 export type SearchTextOptionInfo = {
-    name: LocalizationText
+    name: LocalizationText<OptionName>
     type: 'text'
     placeholder: string
 }
