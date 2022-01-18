@@ -7,8 +7,6 @@ import { parseQuery } from '../../api/search/query'
 import { Promisable } from '../../utils/types'
 import { ItemsConfig, Sonolus } from '../sonolus'
 
-const perPage = 20
-
 export type ListHandler<
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
@@ -46,10 +44,7 @@ export function defaultListHandler<T>(
     const keywords = parseTextQuery(query.keywords)
     const filteredInfos = filterInfosByKeywords(infos, props, keywords)
 
-    return {
-        pageCount: Math.ceil(filteredInfos.length / perPage),
-        infos: filteredInfos.slice(page * perPage, (page + 1) * perPage),
-    }
+    return paginateInfos(filteredInfos, page)
 }
 
 export async function listRouteHandler<
@@ -99,6 +94,20 @@ export async function listRouteHandler<
             search
         )
     )
+}
+
+export function paginateInfos<T>(
+    infos: T[],
+    page: number,
+    perPage = 20
+): {
+    pageCount: number
+    infos: T[]
+} {
+    return {
+        pageCount: Math.ceil(infos.length / perPage),
+        infos: infos.slice(page * perPage, (page + 1) * perPage),
+    }
 }
 
 export function filterInfosByKeywords<T>(
