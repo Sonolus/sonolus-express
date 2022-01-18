@@ -3,12 +3,28 @@ import { SearchInfo } from '../..'
 import { ToItem } from '../../api/item'
 import { toList } from '../../api/list'
 import { Promisable } from '../../utils/types'
-import { Sonolus } from '../sonolus'
+import { SectionOption, Sonolus } from '../sonolus'
 
 const perPage = 20
 
-export type ListHandler<T, U> = (
-    sonolus: Sonolus,
+export type ListHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption,
+    T,
+    U
+> = (
+    sonolus: Sonolus<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >,
     query: T,
     page: number
 ) => Promisable<{
@@ -34,9 +50,34 @@ export function defaultListHandler<T>(
     }
 }
 
-export async function listRouteHandler<T, U>(
-    sonolus: Sonolus,
-    handler: ListHandler<never, T>,
+export async function listRouteHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption,
+    T,
+    U
+>(
+    sonolus: Sonolus<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >,
+    handler: ListHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        never,
+        T
+    >,
     toItem: ToItem<T, U>,
     search: SearchInfo,
     req: Request,

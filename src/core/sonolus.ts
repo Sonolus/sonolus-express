@@ -94,12 +94,12 @@ export const defaultSectionOption = {
 } as const
 
 export class Sonolus<
-    TLevels extends SectionOption = SectionOption,
-    TSkins extends SectionOption = SectionOption,
-    TBackgrounds extends SectionOption = SectionOption,
-    TEffects extends SectionOption = SectionOption,
-    TParticles extends SectionOption = SectionOption,
-    TEngines extends SectionOption = SectionOption
+    TLevels extends SectionOption = typeof defaultSectionOption,
+    TSkins extends SectionOption = typeof defaultSectionOption,
+    TBackgrounds extends SectionOption = typeof defaultSectionOption,
+    TEffects extends SectionOption = typeof defaultSectionOption,
+    TParticles extends SectionOption = typeof defaultSectionOption,
+    TEngines extends SectionOption = typeof defaultSectionOption
 > {
     readonly app: Application
     readonly basePath: string
@@ -113,30 +113,118 @@ export class Sonolus<
 
     readonly db: Database
 
-    serverInfoHandler: ServerInfoHandler = defaultServerInfoHandler
+    serverInfoHandler: ServerInfoHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    > = defaultServerInfoHandler
 
-    levelListHandler: LevelListHandler<Query<TLevels['search']>> =
-        defaultLevelListHandler
-    skinListHandler: SkinListHandler<Query<TSkins['search']>> =
-        defaultSkinListHandler
+    levelListHandler: LevelListHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        Query<TLevels['search']>
+    > = defaultLevelListHandler
+    skinListHandler: SkinListHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        Query<TSkins['search']>
+    > = defaultSkinListHandler
     backgroundListHandler: BackgroundListHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
         Query<TBackgrounds['search']>
     > = defaultBackgroundListHandler
-    effectListHandler: EffectListHandler<Query<TEffects['search']>> =
-        defaultEffectListHandler
-    particleListHandler: ParticleListHandler<Query<TParticles['search']>> =
-        defaultParticleListHandler
-    engineListHandler: EngineListHandler<Query<TEngines['search']>> =
-        defaultEngineListHandler
+    effectListHandler: EffectListHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        Query<TEffects['search']>
+    > = defaultEffectListHandler
+    particleListHandler: ParticleListHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        Query<TParticles['search']>
+    > = defaultParticleListHandler
+    engineListHandler: EngineListHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        Query<TEngines['search']>
+    > = defaultEngineListHandler
 
-    levelDetailsHandler: LevelDetailsHandler = defaultLevelDetailsHandler
-    skinDetailsHandler: SkinDetailsHandler = defaultSkinDetailsHandler
-    backgroundDetailsHandler: BackgroundDetailsHandler =
-        defaultBackgroundDetailsHandler
-    effectDetailsHandler: EffectDetailsHandler = defaultEffectDetailsHandler
-    particleDetailsHandler: ParticleDetailsHandler =
-        defaultParticleDetailsHandler
-    engineDetailsHandler: EngineDetailsHandler = defaultEngineDetailsHandler
+    levelDetailsHandler: LevelDetailsHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    > = defaultLevelDetailsHandler
+    skinDetailsHandler: SkinDetailsHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    > = defaultSkinDetailsHandler
+    backgroundDetailsHandler: BackgroundDetailsHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    > = defaultBackgroundDetailsHandler
+    effectDetailsHandler: EffectDetailsHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    > = defaultEffectDetailsHandler
+    particleDetailsHandler: ParticleDetailsHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    > = defaultParticleDetailsHandler
+    engineDetailsHandler: EngineDetailsHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    > = defaultEngineDetailsHandler
 
     constructor(
         app: Application,

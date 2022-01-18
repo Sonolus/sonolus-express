@@ -2,11 +2,43 @@ import { Request, Response } from 'express'
 import { Database } from 'sonolus-core'
 import { toServerInfo } from '../../api/server-info'
 import { Promisable } from '../../utils/types'
-import { Sonolus } from '../sonolus'
+import { SectionOption, Sonolus } from '../sonolus'
 
-export type ServerInfoHandler = (sonolus: Sonolus) => Promisable<Database>
+export type ServerInfoHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption
+> = (
+    sonolus: Sonolus<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >
+) => Promisable<Database>
 
-export function defaultServerInfoHandler(sonolus: Sonolus): Database {
+export function defaultServerInfoHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption
+>(
+    sonolus: Sonolus<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >
+): Database {
     return {
         levels: sonolus.db.levels.slice(0, 5),
         skins: sonolus.db.skins.slice(0, 5),
@@ -17,8 +49,22 @@ export function defaultServerInfoHandler(sonolus: Sonolus): Database {
     }
 }
 
-export async function serverInfoRouteHandler(
-    sonolus: Sonolus,
+export async function serverInfoRouteHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption
+>(
+    sonolus: Sonolus<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >,
     req: Request,
     res: Response
 ): Promise<void> {

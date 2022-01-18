@@ -1,13 +1,44 @@
 import { Request, Response } from 'express'
 import { EffectInfo } from 'sonolus-core'
 import { toEffectItem } from '../../../api/effect-item'
-import { Sonolus } from '../../sonolus'
+import { SectionOption, Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 
-export type EffectListHandler<T> = ListHandler<T, EffectInfo>
+export type EffectListHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption,
+    T
+> = ListHandler<
+    TLevels,
+    TSkins,
+    TBackgrounds,
+    TEffects,
+    TParticles,
+    TEngines,
+    T,
+    EffectInfo
+>
 
-export function defaultEffectListHandler(
-    sonolus: Sonolus,
+export function defaultEffectListHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption
+>(
+    sonolus: Sonolus<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >,
     query: Record<string, unknown>,
     page: number
 ): {
@@ -22,8 +53,22 @@ export function defaultEffectListHandler(
     )
 }
 
-export function effectListRouteHandler(
-    sonolus: Sonolus,
+export function effectListRouteHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption
+>(
+    sonolus: Sonolus<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >,
     req: Request,
     res: Response
 ): Promise<void> {

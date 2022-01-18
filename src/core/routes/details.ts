@@ -1,12 +1,27 @@
 import { Request, Response } from 'express'
 import { InfoDetails, LocalizationText } from 'sonolus-core'
+import { SectionOption, Sonolus } from '..'
 import { toItemDetails } from '../../api'
 import { ToItem } from '../../api/item'
 import { Promisable } from '../../utils/types'
-import { Sonolus } from '../sonolus'
 
-export type DetailsHandler<T> = (
-    sonolus: Sonolus,
+export type DetailsHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption,
+    T
+> = (
+    sonolus: Sonolus<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >,
     name: string
 ) => Promisable<InfoDetails<T> | undefined>
 
@@ -27,9 +42,33 @@ export function defaultDetailsHandler<
     }
 }
 
-export async function detailsRouteHandler<T, U>(
-    sonolus: Sonolus,
-    handler: DetailsHandler<T>,
+export async function detailsRouteHandler<
+    TLevels extends SectionOption,
+    TSkins extends SectionOption,
+    TBackgrounds extends SectionOption,
+    TEffects extends SectionOption,
+    TParticles extends SectionOption,
+    TEngines extends SectionOption,
+    T,
+    U
+>(
+    sonolus: Sonolus<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >,
+    handler: DetailsHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        T
+    >,
     toItem: ToItem<T, U>,
     req: Request,
     res: Response
