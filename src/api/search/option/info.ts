@@ -1,14 +1,36 @@
 import { LocalizationText, SearchOption } from 'sonolus-core'
-import { SearchSelectOptionInfo, toSearchSelectOption } from './select'
-import { SearchSliderOptionInfo, toSearchSliderOption } from './slider'
-import { SearchTextOptionInfo, toSearchTextOption } from './text'
-import { SearchToggleOptionInfo, toSearchToggleOption } from './toggle'
+import { SearchInfo } from '..'
+import {
+    SearchQueryOfSelect,
+    SearchSelectOptionInfo,
+    toSearchSelectOption,
+} from './select'
+import {
+    SearchQueryOfSlider,
+    SearchSliderOptionInfo,
+    toSearchSliderOption,
+} from './slider'
+import {
+    SearchQueryOfText,
+    SearchTextOptionInfo,
+    toSearchTextOption,
+} from './text'
+import {
+    SearchQueryOfToggle,
+    SearchToggleOptionInfo,
+    toSearchToggleOption,
+} from './toggle'
 
 export type SearchOptionInfo =
     | SearchTextOptionInfo
     | SearchSliderOptionInfo
     | SearchToggleOptionInfo
     | SearchSelectOptionInfo
+
+export type SearchQuery<T extends SearchInfo> = SearchQueryOfText<T> &
+    SearchQueryOfSlider<T> &
+    SearchQueryOfToggle<T> &
+    SearchQueryOfSelect<T>
 
 export function toSearchOption(
     localize: (text: LocalizationText) => string,

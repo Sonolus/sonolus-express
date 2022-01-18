@@ -1,4 +1,6 @@
 import { LocalizationText, OptionName, SearchSliderOption } from 'sonolus-core'
+import { SearchInfo } from '..'
+import { SearchQueryOf } from './utils'
 
 export type SearchSliderOptionInfo = {
     name: LocalizationText
@@ -9,6 +11,12 @@ export type SearchSliderOptionInfo = {
     step: number
     display: 'number' | 'percentage'
 }
+
+export type SearchQueryOfSlider<T extends SearchInfo> = SearchQueryOf<
+    T,
+    SearchSliderOptionInfo,
+    number
+>
 
 export function toSearchSliderOption(
     localize: (text: LocalizationText) => string,
