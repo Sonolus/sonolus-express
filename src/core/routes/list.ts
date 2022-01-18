@@ -101,7 +101,11 @@ export async function listRouteHandler<
     )
 }
 
-function filterInfos<T>(infos: T[], props: (keyof T)[], keywords: string) {
+export function filterInfos<T>(
+    infos: T[],
+    props: (keyof T)[],
+    keywords: string
+): T[] {
     const terms = keywords.trim().toLowerCase().split(' ')
     if (terms.length === 0) return infos
 
