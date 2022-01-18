@@ -6,6 +6,12 @@ export type SearchTextOptionInfo = {
     placeholder: string
 }
 
+export function parseTextQuery(value: unknown): string {
+    if (typeof value !== 'string') return ''
+
+    return value
+}
+
 export function toSearchTextOption(
     localize: (text: LocalizationText) => string,
     query: string,

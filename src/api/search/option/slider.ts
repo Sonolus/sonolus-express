@@ -10,6 +10,20 @@ export type SearchSliderOptionInfo = {
     display: 'number' | 'percentage'
 }
 
+export function parseSliderQuery(
+    value: unknown,
+    option: SearchSliderOptionInfo
+): number {
+    if (typeof value !== 'string') return option.def
+
+    const parsed = +value
+    if (Number.isNaN(parsed)) return option.def
+
+    if (parsed < option.min) return option.min
+    if (parsed > option.max) return option.max
+    return parsed
+}
+
 export function toSearchSliderOption(
     localize: (text: LocalizationText) => string,
     query: string,

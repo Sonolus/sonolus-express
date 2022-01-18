@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
-import { SearchInfo } from '../..'
+import { Query, SearchInfo } from '../..'
 import { ToItem } from '../../api/item'
 import { toList } from '../../api/list'
+import { parseTextQuery } from '../../api/search/option/text'
+import { parseQuery } from '../../api/search/query'
 import { Promisable } from '../../utils/types'
 import { ItemsConfig, Sonolus } from '../sonolus'
 
@@ -41,7 +43,7 @@ export function defaultListHandler<T>(
     pageCount: number
     infos: T[]
 } {
-    const keywords = typeof query.keywords === 'string' ? query.keywords : ''
+    const keywords = parseTextQuery(query.keywords)
     const filteredInfos = filterInfos(infos, props, keywords)
 
     return {
@@ -57,8 +59,9 @@ export async function listRouteHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
-    T,
-    U
+    T extends ItemsConfig,
+    U,
+    V
 >(
     sonolus: Sonolus<
         TLevels,
@@ -75,10 +78,10 @@ export async function listRouteHandler<
         TEffects,
         TParticles,
         TEngines,
-        never,
-        T
+        Query<T['search']>,
+        U
     >,
-    toItem: ToItem<T, U>,
+    toItem: ToItem<U, V>,
     search: SearchInfo,
     req: Request,
     res: Response
@@ -89,7 +92,7 @@ export async function listRouteHandler<
             req.localize,
             await handler(
                 sonolus,
-                req.query as never,
+                parseQuery(req.query, search),
                 +(req.query.page || '') || 0
             ),
             toItem,
