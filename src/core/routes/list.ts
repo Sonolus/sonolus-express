@@ -46,7 +46,7 @@ export async function listRouteHandler<T, U>(
         toList(
             sonolus.db,
             req.localize,
-            await handler(sonolus, req.query, +(req.query.page || 0)),
+            await handler(sonolus, req.query, +(req.query.page || '') || 0),
             toItem,
             search
         )
