@@ -1,6 +1,4 @@
 import { LocalizationText, OptionName, SearchSelectOption } from 'sonolus-core'
-import { SearchInfo } from '..'
-import { SearchQueryOf } from './utils'
 
 export type SearchSelectOptionInfo = {
     name: LocalizationText
@@ -8,12 +6,6 @@ export type SearchSelectOptionInfo = {
     def: number
     values: string[]
 }
-
-export type SearchQueryOfSelect<T extends SearchInfo> = SearchQueryOf<
-    T,
-    SearchSelectOptionInfo,
-    number
->
 
 export function toSearchSelectOption(
     localize: (text: LocalizationText) => string,

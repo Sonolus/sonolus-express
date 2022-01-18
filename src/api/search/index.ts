@@ -1,2 +1,3 @@
-export * from './info'
+export { SearchInfo, toSearch } from './info'
 export * from './option'
+export { Query } from './query'
