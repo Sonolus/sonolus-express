@@ -2,15 +2,15 @@ import { Request, Response } from 'express'
 import { Database } from 'sonolus-core'
 import { toServerInfo } from '../../api/server-info'
 import { Promisable } from '../../utils/types'
-import { SectionOption, Sonolus } from '../sonolus'
+import { ItemsConfig, Sonolus } from '../sonolus'
 
 export type ServerInfoHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig
 > = (
     sonolus: Sonolus<
         TLevels,
@@ -23,12 +23,12 @@ export type ServerInfoHandler<
 ) => Promisable<Database>
 
 export function defaultServerInfoHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig
 >(
     sonolus: Sonolus<
         TLevels,
@@ -50,12 +50,12 @@ export function defaultServerInfoHandler<
 }
 
 export async function serverInfoRouteHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig
 >(
     sonolus: Sonolus<
         TLevels,

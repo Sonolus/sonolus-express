@@ -1,16 +1,16 @@
 import { Request, Response } from 'express'
 import { EngineInfo } from 'sonolus-core'
 import { toEngineItem } from '../../../api/engine-item'
-import { SectionOption, Sonolus } from '../../sonolus'
+import { ItemsConfig, Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 
 export type EngineListHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption,
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig,
     T
 > = ListHandler<
     TLevels,
@@ -24,12 +24,12 @@ export type EngineListHandler<
 >
 
 export function defaultEngineListHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig
 >(
     sonolus: Sonolus<
         TLevels,
@@ -54,12 +54,12 @@ export function defaultEngineListHandler<
 }
 
 export function engineListRouteHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig
 >(
     sonolus: Sonolus<
         TLevels,

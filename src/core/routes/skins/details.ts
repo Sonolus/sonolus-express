@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { InfoDetails, SkinInfo } from 'sonolus-core'
-import { SectionOption, Sonolus } from '../..'
+import { ItemsConfig, Sonolus } from '../..'
 import { toSkinItem } from '../../../api/skin-item'
 import {
     defaultDetailsHandler,
@@ -9,12 +9,12 @@ import {
 } from '../details'
 
 export type SkinDetailsHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig
 > = DetailsHandler<
     TLevels,
     TSkins,
@@ -26,12 +26,12 @@ export type SkinDetailsHandler<
 >
 
 export function defaultSkinDetailsHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig
 >(
     sonolus: Sonolus<
         TLevels,
@@ -47,12 +47,12 @@ export function defaultSkinDetailsHandler<
 }
 
 export function skinDetailsRouteHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig
 >(
     sonolus: Sonolus<
         TLevels,

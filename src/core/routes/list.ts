@@ -3,17 +3,17 @@ import { SearchInfo } from '../..'
 import { ToItem } from '../../api/item'
 import { toList } from '../../api/list'
 import { Promisable } from '../../utils/types'
-import { SectionOption, Sonolus } from '../sonolus'
+import { ItemsConfig, Sonolus } from '../sonolus'
 
 const perPage = 20
 
 export type ListHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption,
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig,
     T,
     U
 > = (
@@ -51,12 +51,12 @@ export function defaultListHandler<T>(
 }
 
 export async function listRouteHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption,
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig,
     T,
     U
 >(

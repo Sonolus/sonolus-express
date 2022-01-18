@@ -1,17 +1,17 @@
 import { Request, Response } from 'express'
 import { InfoDetails, LocalizationText } from 'sonolus-core'
-import { SectionOption, Sonolus } from '..'
+import { ItemsConfig, Sonolus } from '..'
 import { toItemDetails } from '../../api'
 import { ToItem } from '../../api/item'
 import { Promisable } from '../../utils/types'
 
 export type DetailsHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption,
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig,
     T
 > = (
     sonolus: Sonolus<
@@ -43,12 +43,12 @@ export function defaultDetailsHandler<
 }
 
 export async function detailsRouteHandler<
-    TLevels extends SectionOption,
-    TSkins extends SectionOption,
-    TBackgrounds extends SectionOption,
-    TEffects extends SectionOption,
-    TParticles extends SectionOption,
-    TEngines extends SectionOption,
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig,
     T,
     U
 >(

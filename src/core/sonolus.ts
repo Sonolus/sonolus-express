@@ -77,11 +77,11 @@ import {
     skinListRouteHandler,
 } from './routes/skins/list'
 
-export type SectionOption = {
+export type ItemsConfig = {
     search: SearchInfo
 }
 
-export const defaultSectionOption = {
+export const defaultItemsConfig = {
     search: {
         options: {
             keywords: {
@@ -94,12 +94,12 @@ export const defaultSectionOption = {
 } as const
 
 export class Sonolus<
-    TLevels extends SectionOption = typeof defaultSectionOption,
-    TSkins extends SectionOption = typeof defaultSectionOption,
-    TBackgrounds extends SectionOption = typeof defaultSectionOption,
-    TEffects extends SectionOption = typeof defaultSectionOption,
-    TParticles extends SectionOption = typeof defaultSectionOption,
-    TEngines extends SectionOption = typeof defaultSectionOption
+    TLevels extends ItemsConfig = typeof defaultItemsConfig,
+    TSkins extends ItemsConfig = typeof defaultItemsConfig,
+    TBackgrounds extends ItemsConfig = typeof defaultItemsConfig,
+    TEffects extends ItemsConfig = typeof defaultItemsConfig,
+    TParticles extends ItemsConfig = typeof defaultItemsConfig,
+    TEngines extends ItemsConfig = typeof defaultItemsConfig
 > {
     readonly app: Application
     readonly basePath: string
@@ -254,12 +254,12 @@ export class Sonolus<
             {
                 basePath: '',
                 fallbackLocale: 'en',
-                levels: defaultSectionOption,
-                skins: defaultSectionOption,
-                backgrounds: defaultSectionOption,
-                effects: defaultSectionOption,
-                particles: defaultSectionOption,
-                engines: defaultSectionOption,
+                levels: defaultItemsConfig,
+                skins: defaultItemsConfig,
+                backgrounds: defaultItemsConfig,
+                effects: defaultItemsConfig,
+                particles: defaultItemsConfig,
+                engines: defaultItemsConfig,
             },
             options
         )
