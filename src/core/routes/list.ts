@@ -7,13 +7,13 @@ import { Sonolus } from '../sonolus'
 
 const perPage = 20
 
-export type ListHandler<T> = (
+export type ListHandler<T, U> = (
     sonolus: Sonolus,
-    query: Record<string, unknown>,
+    query: T,
     page: number
 ) => Promisable<{
     pageCount: number
-    infos: T[]
+    infos: U[]
 }>
 
 export function defaultListHandler<T>(
@@ -36,7 +36,7 @@ export function defaultListHandler<T>(
 
 export async function listRouteHandler<T, U>(
     sonolus: Sonolus,
-    handler: ListHandler<T>,
+    handler: ListHandler<never, T>,
     toItem: ToItem<T, U>,
     search: SearchInfo,
     req: Request,
@@ -46,7 +46,11 @@ export async function listRouteHandler<T, U>(
         toList(
             sonolus.db,
             req.localize,
-            await handler(sonolus, req.query, +(req.query.page || '') || 0),
+            await handler(
+                sonolus,
+                req.query as never,
+                +(req.query.page || '') || 0
+            ),
             toItem,
             search
         )

@@ -4,7 +4,7 @@ import { toEffectItem } from '../../../api/effect-item'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 
-export type EffectListHandler = ListHandler<EffectInfo>
+export type EffectListHandler<T> = ListHandler<T, EffectInfo>
 
 export function defaultEffectListHandler(
     sonolus: Sonolus,

@@ -4,7 +4,7 @@ import { toParticleItem } from '../../../api/particle-item'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 
-export type ParticleListHandler = ListHandler<ParticleInfo>
+export type ParticleListHandler<T> = ListHandler<T, ParticleInfo>
 
 export function defaultParticleListHandler(
     sonolus: Sonolus,

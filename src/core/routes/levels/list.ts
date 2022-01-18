@@ -4,7 +4,7 @@ import { toLevelItem } from '../../../api/level-item'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 
-export type LevelListHandler = ListHandler<LevelInfo>
+export type LevelListHandler<T> = ListHandler<T, LevelInfo>
 
 export function defaultLevelListHandler(
     sonolus: Sonolus,

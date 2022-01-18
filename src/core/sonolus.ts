@@ -10,7 +10,7 @@ import {
     SRL,
     version,
 } from 'sonolus-core'
-import { databaseParser, SearchInfo } from '..'
+import { databaseParser, Query, SearchInfo } from '..'
 import {
     BackgroundDetailsHandler,
     backgroundDetailsRouteHandler,
@@ -115,12 +115,19 @@ export class Sonolus<
 
     serverInfoHandler: ServerInfoHandler = defaultServerInfoHandler
 
-    levelListHandler: LevelListHandler = defaultLevelListHandler
-    skinListHandler: SkinListHandler = defaultSkinListHandler
-    backgroundListHandler: BackgroundListHandler = defaultBackgroundListHandler
-    effectListHandler: EffectListHandler = defaultEffectListHandler
-    particleListHandler: ParticleListHandler = defaultParticleListHandler
-    engineListHandler: EngineListHandler = defaultEngineListHandler
+    levelListHandler: LevelListHandler<Query<TLevels['search']>> =
+        defaultLevelListHandler
+    skinListHandler: SkinListHandler<Query<TSkins['search']>> =
+        defaultSkinListHandler
+    backgroundListHandler: BackgroundListHandler<
+        Query<TBackgrounds['search']>
+    > = defaultBackgroundListHandler
+    effectListHandler: EffectListHandler<Query<TEffects['search']>> =
+        defaultEffectListHandler
+    particleListHandler: ParticleListHandler<Query<TParticles['search']>> =
+        defaultParticleListHandler
+    engineListHandler: EngineListHandler<Query<TEngines['search']>> =
+        defaultEngineListHandler
 
     levelDetailsHandler: LevelDetailsHandler = defaultLevelDetailsHandler
     skinDetailsHandler: SkinDetailsHandler = defaultSkinDetailsHandler

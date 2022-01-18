@@ -4,7 +4,7 @@ import { toEngineItem } from '../../../api/engine-item'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 
-export type EngineListHandler = ListHandler<EngineInfo>
+export type EngineListHandler<T> = ListHandler<T, EngineInfo>
 
 export function defaultEngineListHandler(
     sonolus: Sonolus,

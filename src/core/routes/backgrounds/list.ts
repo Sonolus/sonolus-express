@@ -4,7 +4,7 @@ import { toBackgroundItem } from '../../../api/background-item'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 
-export type BackgroundListHandler = ListHandler<BackgroundInfo>
+export type BackgroundListHandler<T> = ListHandler<T, BackgroundInfo>
 
 export function defaultBackgroundListHandler(
     sonolus: Sonolus,

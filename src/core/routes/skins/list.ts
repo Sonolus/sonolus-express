@@ -4,7 +4,7 @@ import { toSkinItem } from '../../../api/skin-item'
 import { Sonolus } from '../../sonolus'
 import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
 
-export type SkinListHandler = ListHandler<SkinInfo>
+export type SkinListHandler<T> = ListHandler<T, SkinInfo>
 
 export function defaultSkinListHandler(
     sonolus: Sonolus,
