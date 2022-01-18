@@ -4,7 +4,7 @@ export type SearchSelectOptionInfo = {
     name: LocalizationText<OptionName>
     type: 'select'
     def: number
-    values: string[]
+    values: LocalizationText[]
 }
 
 export function parseSelectQuery(
@@ -30,6 +30,6 @@ export function toSearchSelectOption(
         name: localize(info.name) as OptionName,
         type: 'select',
         def: info.def,
-        values: info.values,
+        values: info.values.map(localize),
     }
 }
