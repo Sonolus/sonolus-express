@@ -6,6 +6,7 @@ import {
     Database,
     hash as sonolusHash,
     LocalizationText,
+    localize,
     ResourceType,
     SRL,
     version,
@@ -347,13 +348,11 @@ export class Sonolus<
         return { type, hash, url }
     }
 
-    public localize(text: LocalizationText, locale: string): string {
-        return (
-            text[locale] ||
-            text[this.fallbackLocale] ||
-            Object.values(text)[0] ||
-            ''
-        )
+    public localize<T extends string>(
+        text: LocalizationText<T>,
+        locale: string
+    ): T {
+        return localize(text, locale, this.fallbackLocale)
     }
 
     private use(name: string, handler: RequestHandler) {
