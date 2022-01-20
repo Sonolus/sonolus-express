@@ -22,6 +22,7 @@ export const levelInfoSchema = z.object({
     useParticle: useInfoSchema,
     cover: getSRLSchema('LevelCover'),
     bgm: getSRLSchema('LevelBgm'),
+    preview: getSRLSchema('LevelPreview').optional(),
     data: getSRLSchema('LevelData'),
     meta: z.unknown(),
 })

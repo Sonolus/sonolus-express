@@ -43,6 +43,7 @@ export function toLevelItem(
         author: localize(info.author),
         cover: info.cover,
         bgm: info.bgm,
+        preview: info.preview,
         data: info.data,
     }
 
