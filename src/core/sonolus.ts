@@ -8,6 +8,7 @@ import {
     LocalizationText,
     localize,
     OptionName,
+    OptionPlaceholder,
     ResourceType,
     SRL,
     version,
@@ -87,9 +88,9 @@ export const defaultItemsConfig = {
     search: {
         options: {
             keywords: {
-                name: { en: '#KEYWORDS' as OptionName },
+                name: { en: OptionName.Keywords },
                 type: 'text',
-                placeholder: '#KEYWORDS',
+                placeholder: { en: OptionPlaceholder.Keywords },
             },
         },
     },
