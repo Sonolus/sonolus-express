@@ -141,7 +141,7 @@ Handler for requesting engine details. Defaults to `defaultEngineDetailsHandler`
 Use [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html):
 
 ```ts
-declare module 'sonolus-express' {
+declare module 'sonolus-core' {
     interface LevelInfo {
         meta: ... // user-defined meta information type
     }
