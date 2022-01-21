@@ -48,9 +48,14 @@ app.listen(port, () => {
 Create a Sonolus server on `app` with `options`.
 
 -   `app`: [Express.js](https://expressjs.com) app.
--   `options.version`: allowed Sonolus version.
 -   `options.basePath`: base path of the Sonolus server.
 -   `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
+-   `options.levels`: configurations for levels.
+-   `options.skins`: configurations for skins.
+-   `options.backgrounds`: configurations for backgrounds.
+-   `options.effects`: configurations for effects.
+-   `options.particles`: configurations for particles.
+-   `options.engines`: configurations for engines.
 
 #### `db`
 
