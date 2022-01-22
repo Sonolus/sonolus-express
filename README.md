@@ -208,7 +208,9 @@ Use [declaration merging](https://www.typescriptlang.org/docs/handbook/declarati
 ```ts
 declare module 'sonolus-core' {
     interface LevelInfo {
-        meta: ... // user-defined meta information type
+        meta: {
+            // user-defined meta information
+        }
     }
 }
 ```
