@@ -350,10 +350,7 @@ export class Sonolus<
         return { type, hash, url }
     }
 
-    public localize<T extends string>(
-        text: LocalizationText<T>,
-        locale: string
-    ): T {
+    public localize(text: LocalizationText, locale: string): string {
         return localize(text, locale, this.fallbackLocale)
     }
 

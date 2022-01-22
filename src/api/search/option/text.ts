@@ -1,14 +1,9 @@
-import {
-    LocalizationText,
-    OptionName,
-    OptionPlaceholder,
-    SearchTextOption,
-} from 'sonolus-core'
+import { LocalizationText, SearchTextOption } from 'sonolus-core'
 
 export type SearchTextOptionInfo = {
-    name: LocalizationText<OptionName>
+    name: LocalizationText
     type: 'text'
-    placeholder: LocalizationText<OptionPlaceholder>
+    placeholder: LocalizationText
 }
 
 export function parseTextQuery(value: unknown): string {
@@ -24,8 +19,8 @@ export function toSearchTextOption(
 ): SearchTextOption {
     return {
         query,
-        name: localize(info.name) as OptionName,
+        name: localize(info.name),
         type: 'text',
-        placeholder: localize(info.placeholder) as OptionPlaceholder,
+        placeholder: localize(info.placeholder),
     }
 }

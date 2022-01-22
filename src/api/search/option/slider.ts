@@ -1,7 +1,7 @@
-import { LocalizationText, OptionName, SearchSliderOption } from 'sonolus-core'
+import { LocalizationText, SearchSliderOption } from 'sonolus-core'
 
 export type SearchSliderOptionInfo = {
-    name: LocalizationText<OptionName>
+    name: LocalizationText
     type: 'slider'
     def: number
     min: number
@@ -31,7 +31,7 @@ export function toSearchSliderOption(
 ): SearchSliderOption {
     return {
         query,
-        name: localize(info.name) as OptionName,
+        name: localize(info.name),
         type: 'slider',
         def: info.def,
         min: info.min,

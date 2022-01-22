@@ -1,15 +1,10 @@
-import {
-    LocalizationText,
-    OptionName,
-    OptionValue,
-    SearchSelectOption,
-} from 'sonolus-core'
+import { LocalizationText, SearchSelectOption } from 'sonolus-core'
 
 export type SearchSelectOptionInfo = {
-    name: LocalizationText<OptionName>
+    name: LocalizationText
     type: 'select'
     def: number
-    values: LocalizationText<OptionValue>[]
+    values: LocalizationText[]
 }
 
 export function parseSelectQuery(
@@ -32,9 +27,9 @@ export function toSearchSelectOption(
 ): SearchSelectOption {
     return {
         query,
-        name: localize(info.name) as OptionName,
+        name: localize(info.name),
         type: 'select',
         def: info.def,
-        values: info.values.map(localize) as OptionValue[],
+        values: info.values.map(localize),
     }
 }
