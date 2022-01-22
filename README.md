@@ -141,6 +141,66 @@ Handler for requesting particle details. Defaults to `defaultParticleDetailsHand
 
 Handler for requesting engine details. Defaults to `defaultEngineDetailsHandler`.
 
+### `filterLevelInfosByKeywords(infos, keywords)`
+
+Filter level infos by keywords on `name`, `rating`, `title`, `artists`, `author`, and `description`.
+
+-   `infos`: level infos.
+-   `keywords`: keywords.
+
+### `filterSkinInfosByKeywords(infos, keywords)`
+
+Filter skin infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
+
+-   `infos`: skin infos.
+-   `keywords`: keywords.
+
+### `filterBackgroundInfosByKeywords(infos, keywords)`
+
+Filter background infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
+
+-   `infos`: background infos.
+-   `keywords`: keywords.
+
+### `filterEffectInfosByKeywords(infos, keywords)`
+
+Filter effect infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
+
+-   `infos`: effect infos.
+-   `keywords`: keywords.
+
+### `filterParticleInfosByKeywords(infos, keywords)`
+
+Filter particle infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
+
+-   `infos`: particle infos.
+-   `keywords`: keywords.
+
+### `filterEngineInfosByKeywords(infos, keywords)`
+
+Filter engine infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
+
+-   `infos`: engine infos.
+-   `keywords`: keywords.
+
+### `filterInfosByKeywords(infos, props, keywords)`
+
+Filter item infos by keywords on specified props.
+
+Recommended to use functions for the specific info type instead.
+
+-   `infos`: item infos.
+-   `props`: props to filter keywords on.
+-   `keywords`: keywords.
+
+### `paginateInfos(infos, page, perPage)`
+
+Paginate item infos by page and per page size.
+
+-   `infos`: item infos.
+-   `page`: page.
+-   `perPage`: per page size, defaults to 20.
+
 ### Using `meta` in TypeScript
 
 Use [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html):
