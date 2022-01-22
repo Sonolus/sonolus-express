@@ -2,7 +2,12 @@ import { Request, Response } from 'express'
 import { ParticleInfo } from 'sonolus-core'
 import { toParticleItem } from '../../../api/particle-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
-import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
+import {
+    defaultListHandler,
+    filterInfosByKeywords,
+    ListHandler,
+    listRouteHandler,
+} from '../list'
 
 export type ParticleListHandler<
     TLevels extends ItemsConfig,
@@ -47,9 +52,20 @@ export function defaultParticleListHandler<
 } {
     return defaultListHandler(
         sonolus.db.particles,
-        ['name', 'title', 'subtitle', 'author', 'description'],
+        filterParticleInfosByKeywords,
         query,
         page
+    )
+}
+
+export function filterParticleInfosByKeywords(
+    infos: ParticleInfo[],
+    keywords: string
+): ParticleInfo[] {
+    return filterInfosByKeywords(
+        infos,
+        ['name', 'title', 'subtitle', 'author', 'description'],
+        keywords
     )
 }
 

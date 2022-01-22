@@ -2,7 +2,12 @@ import { Request, Response } from 'express'
 import { EngineInfo } from 'sonolus-core'
 import { toEngineItem } from '../../../api/engine-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
-import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
+import {
+    defaultListHandler,
+    filterInfosByKeywords,
+    ListHandler,
+    listRouteHandler,
+} from '../list'
 
 export type EngineListHandler<
     TLevels extends ItemsConfig,
@@ -47,9 +52,20 @@ export function defaultEngineListHandler<
 } {
     return defaultListHandler(
         sonolus.db.engines,
-        ['name', 'title', 'subtitle', 'author', 'description'],
+        filterEngineInfosByKeywords,
         query,
         page
+    )
+}
+
+export function filterEngineInfosByKeywords(
+    infos: EngineInfo[],
+    keywords: string
+): EngineInfo[] {
+    return filterInfosByKeywords(
+        infos,
+        ['name', 'title', 'subtitle', 'author', 'description'],
+        keywords
     )
 }
 

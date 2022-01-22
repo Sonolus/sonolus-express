@@ -2,7 +2,12 @@ import { Request, Response } from 'express'
 import { BackgroundInfo } from 'sonolus-core'
 import { toBackgroundItem } from '../../../api/background-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
-import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
+import {
+    defaultListHandler,
+    filterInfosByKeywords,
+    ListHandler,
+    listRouteHandler,
+} from '../list'
 
 export type BackgroundListHandler<
     TLevels extends ItemsConfig,
@@ -47,9 +52,20 @@ export function defaultBackgroundListHandler<
 } {
     return defaultListHandler(
         sonolus.db.backgrounds,
-        ['name', 'title', 'subtitle', 'author', 'description'],
+        filterBackgroundInfosByKeywords,
         query,
         page
+    )
+}
+
+export function filterBackgroundInfosByKeywords(
+    infos: BackgroundInfo[],
+    keywords: string
+): BackgroundInfo[] {
+    return filterInfosByKeywords(
+        infos,
+        ['name', 'title', 'subtitle', 'author', 'description'],
+        keywords
     )
 }
 

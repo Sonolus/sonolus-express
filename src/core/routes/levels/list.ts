@@ -2,7 +2,12 @@ import { Request, Response } from 'express'
 import { LevelInfo } from 'sonolus-core'
 import { toLevelItem } from '../../../api/level-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
-import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
+import {
+    defaultListHandler,
+    filterInfosByKeywords,
+    ListHandler,
+    listRouteHandler,
+} from '../list'
 
 export type LevelListHandler<
     TLevels extends ItemsConfig,
@@ -47,9 +52,20 @@ export function defaultLevelListHandler<
 } {
     return defaultListHandler(
         sonolus.db.levels,
-        ['name', 'rating', 'title', 'artists', 'author', 'description'],
+        filterLevelInfosByKeywords,
         query,
         page
+    )
+}
+
+export function filterLevelInfosByKeywords(
+    infos: LevelInfo[],
+    keywords: string
+): LevelInfo[] {
+    return filterInfosByKeywords(
+        infos,
+        ['name', 'rating', 'title', 'artists', 'author', 'description'],
+        keywords
     )
 }
 

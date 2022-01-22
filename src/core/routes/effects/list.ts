@@ -2,7 +2,12 @@ import { Request, Response } from 'express'
 import { EffectInfo } from 'sonolus-core'
 import { toEffectItem } from '../../../api/effect-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
-import { defaultListHandler, ListHandler, listRouteHandler } from '../list'
+import {
+    defaultListHandler,
+    filterInfosByKeywords,
+    ListHandler,
+    listRouteHandler,
+} from '../list'
 
 export type EffectListHandler<
     TLevels extends ItemsConfig,
@@ -47,9 +52,20 @@ export function defaultEffectListHandler<
 } {
     return defaultListHandler(
         sonolus.db.effects,
-        ['name', 'title', 'subtitle', 'author', 'description'],
+        filterEffectInfosByKeywords,
         query,
         page
+    )
+}
+
+export function filterEffectInfosByKeywords(
+    infos: EffectInfo[],
+    keywords: string
+): EffectInfo[] {
+    return filterInfosByKeywords(
+        infos,
+        ['name', 'title', 'subtitle', 'author', 'description'],
+        keywords
     )
 }
 

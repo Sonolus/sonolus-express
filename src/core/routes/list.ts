@@ -34,7 +34,7 @@ export type ListHandler<
 
 export function defaultListHandler<T>(
     infos: T[],
-    props: (keyof T)[],
+    filter: (infos: T[], keywords: string) => T[],
     query: Record<string, unknown>,
     page: number
 ): {
@@ -42,7 +42,7 @@ export function defaultListHandler<T>(
     infos: T[]
 } {
     const keywords = parseTextQuery(query.keywords)
-    const filteredInfos = filterInfosByKeywords(infos, props, keywords)
+    const filteredInfos = filter(infos, keywords)
 
     return paginateInfos(filteredInfos, page)
 }
