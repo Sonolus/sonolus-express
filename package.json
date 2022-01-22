@@ -29,11 +29,11 @@
   },
   "peerDependencies": {
     "express": "^4.17.1",
-    "sonolus-core": "~1.0.0-beta.0"
+    "sonolus-core": "~1.0.0-beta.2"
   },
   "dependencies": {
     "express": "^4.17.1",
-    "sonolus-core": "~1.0.0-beta.0",
+    "sonolus-core": "~1.0.0-beta.2",
     "zod": "^3.9.5"
   }
 }
