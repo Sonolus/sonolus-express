@@ -40,6 +40,7 @@ export function toEngineItem(
         ),
         thumbnail: info.thumbnail,
         data: info.data,
+        rom: info.rom,
         configuration: info.configuration,
     }
 }
