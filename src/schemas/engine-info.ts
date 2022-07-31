@@ -4,7 +4,7 @@ import { getSRLSchema } from './srl'
 
 export const engineInfoSchema = z.object({
     name: z.string(),
-    version: z.literal(5),
+    version: z.literal(6),
     title: localizationTextSchema,
     subtitle: localizationTextSchema,
     author: localizationTextSchema,
