@@ -18,5 +18,6 @@ export function toEffectItem(
         author: localize(info.author),
         thumbnail: info.thumbnail,
         data: info.data,
+        audio: info.audio,
     }
 }

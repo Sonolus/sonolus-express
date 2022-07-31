@@ -4,12 +4,13 @@ import { getSRLSchema } from './srl'
 
 export const effectInfoSchema = z.object({
     name: z.string(),
-    version: z.literal(2),
+    version: z.literal(3),
     title: localizationTextSchema,
     subtitle: localizationTextSchema,
     author: localizationTextSchema,
     description: localizationTextSchema,
     thumbnail: getSRLSchema('EffectThumbnail'),
     data: getSRLSchema('EffectData'),
+    audio: getSRLSchema('EffectAudio'),
     meta: z.unknown(),
 })
