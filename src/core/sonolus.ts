@@ -289,21 +289,21 @@ export class Sonolus<
             next()
         })
 
-        this.get('/info', serverInfoRouteHandler)
+        this.get('/sonolus/info', serverInfoRouteHandler)
 
-        this.get('/levels/list', levelListRouteHandler)
-        this.get('/skins/list', skinListRouteHandler)
-        this.get('/backgrounds/list', backgroundListRouteHandler)
-        this.get('/effects/list', effectListRouteHandler)
-        this.get('/particles/list', particleListRouteHandler)
-        this.get('/engines/list', engineListRouteHandler)
+        this.get('/sonolus/levels/list', levelListRouteHandler)
+        this.get('/sonolus/skins/list', skinListRouteHandler)
+        this.get('/sonolus/backgrounds/list', backgroundListRouteHandler)
+        this.get('/sonolus/effects/list', effectListRouteHandler)
+        this.get('/sonolus/particles/list', particleListRouteHandler)
+        this.get('/sonolus/engines/list', engineListRouteHandler)
 
-        this.get('/levels/:name', levelDetailsRouteHandler)
-        this.get('/skins/:name', skinDetailsRouteHandler)
-        this.get('/backgrounds/:name', backgroundDetailsRouteHandler)
-        this.get('/effects/:name', effectDetailsRouteHandler)
-        this.get('/particles/:name', particleDetailsRouteHandler)
-        this.get('/engines/:name', engineDetailsRouteHandler)
+        this.get('/sonolus/levels/:name', levelDetailsRouteHandler)
+        this.get('/sonolus/skins/:name', skinDetailsRouteHandler)
+        this.get('/sonolus/backgrounds/:name', backgroundDetailsRouteHandler)
+        this.get('/sonolus/effects/:name', effectDetailsRouteHandler)
+        this.get('/sonolus/particles/:name', particleDetailsRouteHandler)
+        this.get('/sonolus/engines/:name', engineDetailsRouteHandler)
     }
 
     public load(path: string): void {
@@ -320,7 +320,7 @@ export class Sonolus<
         this.db.particles.push(...db.particles)
         this.db.engines.push(...db.engines)
 
-        this.use('/repository', express.static(`${path}/repository`))
+        this.use('/sonolus/repository', express.static(`${path}/repository`))
     }
 
     public add<T extends ResourceType>(
