@@ -334,7 +334,7 @@ export class Sonolus<
             )
         }
 
-        const url = `/repository/${type}/${hash}`
+        const url = `/sonolus/repository/${type}/${hash}`
 
         if (typeof data === 'string') {
             const path = resolve(data)
