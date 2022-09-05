@@ -2,10 +2,10 @@ import { z } from 'zod'
 import { localizationTextSchema } from './localization-text'
 import { getSRLSchema } from './srl'
 
-const useInfoSchema = z.object({
-    useDefault: z.boolean(),
-    item: z.string().optional(),
-})
+const useInfoSchema = z.discriminatedUnion('useDefault', [
+    z.object({ useDefault: z.literal(true) }),
+    z.object({ useDefault: z.literal(false), item: z.string() }),
+])
 
 export const levelInfoSchema = z.object({
     name: z.string(),
