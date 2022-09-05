@@ -48,19 +48,21 @@ export function toLevelItem(
     }
 
     function toUse<T extends { name: string }, U>(
-        use: UseInfo,
+        useInfo: UseInfo,
         infos: T[],
         toItem: ToItem<T, U>
     ): UseItem<U> {
-        return {
-            useDefault: use.useDefault,
-            item: use.item
-                ? toItem(
+        return useInfo.useDefault
+            ? {
+                  useDefault: true,
+              }
+            : {
+                  useDefault: false,
+                  item: toItem(
                       db,
                       localize,
-                      getByName(infos, use.item, `Level/${info.name}`)
-                  )
-                : undefined,
-        }
+                      getByName(infos, useInfo.item, `Level/${info.name}`)
+                  ),
+              }
     }
 }
