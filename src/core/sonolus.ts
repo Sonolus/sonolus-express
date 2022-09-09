@@ -276,6 +276,10 @@ export class Sonolus<
         this.enginesConfig = engines
 
         this.db = {
+            info: {
+                title: {},
+                banner: { type: 'ServerBanner', hash: '', url: '' },
+            },
             levels: [],
             skins: [],
             backgrounds: [],
@@ -313,6 +317,7 @@ export class Sonolus<
             `${path}/db.json`
         )
 
+        this.db.info = db.info
         this.db.levels.push(...db.levels)
         this.db.skins.push(...db.skins)
         this.db.backgrounds.push(...db.backgrounds)
