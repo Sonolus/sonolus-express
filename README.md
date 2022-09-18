@@ -48,14 +48,22 @@ app.listen(port, () => {
 Create a Sonolus server on `app` with `options`.
 
 -   `app`: [Express.js](https://expressjs.com) app.
--   `options.basePath`: base path of the Sonolus server.
+-   `options.basePath`: base path of the Sonolus server (should not have ending `/`).
 -   `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
+-   `options.mode`: share link handling mode, can be `custom`, `redirect`, or `spa`.
+-   `options.spaRoot`: root of static SPA files to serve when `options.mode` is `spa`.
 -   `options.levels`: configurations for levels.
 -   `options.skins`: configurations for skins.
 -   `options.backgrounds`: configurations for backgrounds.
 -   `options.effects`: configurations for effects.
 -   `options.particles`: configurations for particles.
 -   `options.engines`: configurations for engines.
+
+#### `router`
+
+Express router.
+
+Installing more routes under `options.basePath` may not work due to SPA mode catch all routes. Instead install onto `router` rather than the original Express app.
 
 #### `db`
 
