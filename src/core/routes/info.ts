@@ -40,6 +40,7 @@ export function defaultServerInfoHandler<
     >
 ): Database {
     return {
+        info: sonolus.db.info,
         levels: sonolus.db.levels.slice(0, 5),
         skins: sonolus.db.skins.slice(0, 5),
         backgrounds: sonolus.db.backgrounds.slice(0, 5),

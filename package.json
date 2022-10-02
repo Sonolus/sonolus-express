@@ -1,6 +1,6 @@
 {
   "name": "sonolus-express",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "TypeScript based developer toolkit for Sonolus servers with Express.js",
   "author": "NonSpicyBurrito",
   "repository": "github:Sonolus/sonolus-express",
@@ -29,7 +29,7 @@
   },
   "peerDependencies": {
     "express": "^4.17.3",
-    "sonolus-core": "^4.0.0"
+    "sonolus-core": "^5.0.0"
   },
   "dependencies": {
     "zod": "^3.18.0"

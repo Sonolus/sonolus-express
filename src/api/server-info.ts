@@ -22,6 +22,8 @@ export function toServerInfo(
     enginesSearch: SearchInfo
 ): ServerInfo {
     return {
+        title: localize(serverInfo.info.title),
+        banner: serverInfo.info.banner,
         levels: {
             items: serverInfo.levels.map((info) =>
                 toLevelItem(db, localize, info)

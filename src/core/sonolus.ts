@@ -1,7 +1,8 @@
+import type { Application, Request, Response, Router } from 'express'
 import * as express from 'express'
-import { Application, Request, RequestHandler, Response } from 'express'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
+import type { ParsedQs } from 'qs'
 import {
     Database,
     hash as sonolusHash,
@@ -104,9 +105,10 @@ export class Sonolus<
     TParticles extends ItemsConfig = typeof defaultItemsConfig,
     TEngines extends ItemsConfig = typeof defaultItemsConfig
 > {
-    readonly app: Application
-    readonly basePath: string
-    readonly fallbackLocale: string
+    private readonly fallbackLocale: string
+
+    readonly router: Router
+
     readonly levelsConfig: TLevels
     readonly skinsConfig: TSkins
     readonly backgroundsConfig: TBackgrounds
@@ -234,6 +236,8 @@ export class Sonolus<
         options?: Partial<{
             basePath: string
             fallbackLocale: string
+            mode: 'custom' | 'redirect' | 'spa'
+            spaRoot: string
             levels: TLevels
             skins: TSkins
             backgrounds: TBackgrounds
@@ -242,11 +246,11 @@ export class Sonolus<
             engines: TEngines
         }>
     ) {
-        this.app = app
-
         const {
             basePath,
             fallbackLocale,
+            mode,
+            spaRoot,
             levels,
             skins,
             backgrounds,
@@ -257,6 +261,7 @@ export class Sonolus<
             {
                 basePath: '',
                 fallbackLocale: 'en',
+                mode: 'custom',
                 levels: defaultItemsConfig,
                 skins: defaultItemsConfig,
                 backgrounds: defaultItemsConfig,
@@ -266,8 +271,11 @@ export class Sonolus<
             },
             options
         )
-        this.basePath = basePath
+
         this.fallbackLocale = fallbackLocale
+
+        this.router = express.Router()
+
         this.levelsConfig = levels
         this.skinsConfig = skins
         this.backgroundsConfig = backgrounds
@@ -276,6 +284,10 @@ export class Sonolus<
         this.enginesConfig = engines
 
         this.db = {
+            info: {
+                title: {},
+                banner: { type: 'ServerBanner', hash: '', url: '' },
+            },
             levels: [],
             skins: [],
             backgrounds: [],
@@ -284,26 +296,31 @@ export class Sonolus<
             engines: [],
         }
 
-        this.use('', (req, res, next) => {
-            res.set('Sonolus-Version', version.sonolus)
-            next()
-        })
+        this.getAPI('/sonolus/info', serverInfoRouteHandler)
 
-        this.get('/sonolus/info', serverInfoRouteHandler)
+        this.getAPI('/sonolus/levels/list', levelListRouteHandler)
+        this.getAPI('/sonolus/skins/list', skinListRouteHandler)
+        this.getAPI('/sonolus/backgrounds/list', backgroundListRouteHandler)
+        this.getAPI('/sonolus/effects/list', effectListRouteHandler)
+        this.getAPI('/sonolus/particles/list', particleListRouteHandler)
+        this.getAPI('/sonolus/engines/list', engineListRouteHandler)
 
-        this.get('/sonolus/levels/list', levelListRouteHandler)
-        this.get('/sonolus/skins/list', skinListRouteHandler)
-        this.get('/sonolus/backgrounds/list', backgroundListRouteHandler)
-        this.get('/sonolus/effects/list', effectListRouteHandler)
-        this.get('/sonolus/particles/list', particleListRouteHandler)
-        this.get('/sonolus/engines/list', engineListRouteHandler)
+        this.getAPI('/sonolus/levels/:name', levelDetailsRouteHandler)
+        this.getAPI('/sonolus/skins/:name', skinDetailsRouteHandler)
+        this.getAPI('/sonolus/backgrounds/:name', backgroundDetailsRouteHandler)
+        this.getAPI('/sonolus/effects/:name', effectDetailsRouteHandler)
+        this.getAPI('/sonolus/particles/:name', particleDetailsRouteHandler)
+        this.getAPI('/sonolus/engines/:name', engineDetailsRouteHandler)
 
-        this.get('/sonolus/levels/:name', levelDetailsRouteHandler)
-        this.get('/sonolus/skins/:name', skinDetailsRouteHandler)
-        this.get('/sonolus/backgrounds/:name', backgroundDetailsRouteHandler)
-        this.get('/sonolus/effects/:name', effectDetailsRouteHandler)
-        this.get('/sonolus/particles/:name', particleDetailsRouteHandler)
-        this.get('/sonolus/engines/:name', engineDetailsRouteHandler)
+        app.use(basePath, this.router)
+
+        if (mode === 'spa') {
+            if (!spaRoot) throw 'Missing SPA root'
+
+            installSPA(app, basePath, spaRoot)
+        } else if (mode === 'redirect') {
+            installRedirect(app, basePath)
+        }
     }
 
     public load(path: string): void {
@@ -313,6 +330,7 @@ export class Sonolus<
             `${path}/db.json`
         )
 
+        this.db.info = db.info
         this.db.levels.push(...db.levels)
         this.db.skins.push(...db.skins)
         this.db.backgrounds.push(...db.backgrounds)
@@ -320,7 +338,10 @@ export class Sonolus<
         this.db.particles.push(...db.particles)
         this.db.engines.push(...db.engines)
 
-        this.use('/sonolus/repository', express.static(`${path}/repository`))
+        this.router.use(
+            '/sonolus/repository',
+            express.static(`${path}/repository`)
+        )
     }
 
     public add<T extends ResourceType>(
@@ -338,11 +359,11 @@ export class Sonolus<
 
         if (typeof data === 'string') {
             const path = resolve(data)
-            this.get(url, async (sonolus, req, res) => {
+            this.router.get(url, async (req, res) => {
                 res.sendFile(path)
             })
         } else {
-            this.get(url, async (sonolus, req, res) => {
+            this.router.get(url, async (req, res) => {
                 res.send(data)
             })
         }
@@ -354,17 +375,15 @@ export class Sonolus<
         return localize(text, locale, this.fallbackLocale)
     }
 
-    private use(name: string, handler: RequestHandler) {
-        this.app.use(`${this.basePath}${name}`, handler)
-    }
-
-    private get(
-        name: string,
+    private getAPI(
+        path: string,
         handler: (sonolus: this, req: Request, res: Response) => Promise<void>
     ) {
-        this.app.get(`${this.basePath}${name}`, async (req, res) => {
+        this.router.get(path, async (req, res) => {
             req.localize = (text) =>
                 this.localize(text, req.query.localization as string)
+
+            res.set('Sonolus-Version', version.sonolus)
 
             try {
                 await handler(this, req, res)
@@ -374,4 +393,55 @@ export class Sonolus<
             }
         })
     }
+}
+
+function installSPA(app: Application, basePath: string, spaRoot: string) {
+    const indexPath = resolve(spaRoot, 'index.html')
+
+    app.use(basePath, express.static(spaRoot))
+    ;['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines'].map(
+        (type) => {
+            app.get(`${basePath}/${type}/:any`, (req, res) => {
+                res.sendFile(indexPath)
+            })
+        }
+    )
+
+    app.use(basePath, (req, res) => {
+        res.status(404).sendFile(indexPath)
+    })
+}
+
+function installRedirect(app: Application, basePath: string) {
+    app.get(basePath, (req, res) => {
+        res.redirect(`sonolus://${req.headers.host}${basePath}`)
+    })
+    ;['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines'].map(
+        (type) => {
+            app.get(`${basePath}/${type}/list`, (req, res) => {
+                res.redirect(
+                    `sonolus://${
+                        req.headers.host
+                    }${basePath}/${type}/list${getSearch(req.query)}`
+                )
+            })
+
+            app.get(`${basePath}/${type}/:name`, (req, res) => {
+                res.redirect(
+                    `sonolus://${req.headers.host}${basePath}/${type}/${req.params.name}`
+                )
+            })
+        }
+    )
+}
+
+function getSearch(query: ParsedQs) {
+    const params = new URLSearchParams()
+
+    for (const key in query) {
+        params.append(key, `${query[key]}`)
+    }
+
+    const queryString = params.toString()
+    return queryString && `?${queryString}`
 }
