@@ -49,6 +49,9 @@ Create a Sonolus server on `app` with `options`.
 
 -   `app`: [Express.js](https://expressjs.com) app.
 -   `options.basePath`: base path of the Sonolus server (should not have ending `/`).
+-   `options.authentication`: if Sonolus server requires authentication.
+-   `options.sessionAddress`: session address to be used in authentication.
+-   `options.sessionDuration`: session duration to be used in authentication.
 -   `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
 -   `options.mode`: share link handling mode, can be `custom`, `redirect`, or `spa`.
 -   `options.spaRoot`: root of static SPA files to serve when `options.mode` is `spa`.
@@ -58,6 +61,10 @@ Create a Sonolus server on `app` with `options`.
 -   `options.effects`: configurations for effects.
 -   `options.particles`: configurations for particles.
 -   `options.engines`: configurations for engines.
+
+#### `sessionAddress`
+
+Session address. As passed in from `constructor(app, options)`.
 
 #### `router`
 
@@ -96,6 +103,18 @@ Localize text using target and fallback locales.
 
 -   `text`: text to localize.
 -   `locale`: target locale.
+
+#### `createSessionHandler`
+
+Handler for creating an authentication session.
+
+#### `findSessionHandler`
+
+Handler for finding an authentication session.
+
+#### `checkSessionHandler`
+
+Handler for checking an authentication session.
 
 #### `serverInfoHandler`
 
