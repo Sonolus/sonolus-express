@@ -146,7 +146,13 @@ function matchTerm<T>(info: T, keywordProps: (keyof T)[], term: string) {
                 texts = [value.toLowerCase()]
                 break
             case 'object':
-                texts = Object.values(value).map((text) => text.toLowerCase())
+                if (value) {
+                    texts = Object.values(value).map((text) =>
+                        text.toLowerCase()
+                    )
+                } else {
+                    texts = []
+                }
                 break
             default:
                 continue
