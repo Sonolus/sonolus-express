@@ -126,9 +126,10 @@ export function filterInfosByKeywords<T>(
         .filter(({ results }) => results.every((result) => result > 0))
         .map(({ info, results }) => ({
             info,
-            sum: results.reduce((sum, result) => sum + result, 0),
+            exacts: results.filter((result) => result === 2).length,
+            partials: results.filter((result) => result === 1).length,
         }))
-        .sort((a, b) => b.sum - a.sum)
+        .sort((a, b) => b.exacts - a.exacts || b.partials - a.partials)
         .map(({ info }) => info)
 }
 
