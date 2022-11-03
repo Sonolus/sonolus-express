@@ -513,11 +513,11 @@ export class Sonolus<
         if (!this.findSessionHandler) throw 'Missing findSessionHandler'
         if (!this.checkSessionHandler) throw 'Missing checkSessionHandler'
 
-        if (!req.headers['x-sonolus-session-id']) return false
-        const id = `${req.headers['x-sonolus-session-id']}`
+        if (!req.headers['sonolus-session-id']) return false
+        const id = `${req.headers['sonolus-session-id']}`
 
-        if (!req.headers['x-sonolus-session-data']) return false
-        const data = `${req.headers['x-sonolus-session-data']}`
+        if (!req.headers['sonolus-session-data']) return false
+        const data = `${req.headers['sonolus-session-data']}`
 
         const session = await this.findSessionHandler(this, id)
         if (!session || Date.now() >= session.expiration) return false
