@@ -570,13 +570,13 @@ function installSPA(app: Application, basePath: string, spaRoot: string) {
 
 function installRedirect(app: Application, basePath: string) {
     app.get(basePath, (req, res) => {
-        res.redirect(`sonolus://${req.headers.host}${basePath}`)
+        res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}`)
     })
     ;['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines'].map(
         (type) => {
             app.get(`${basePath}/${type}/list`, (req, res) => {
                 res.redirect(
-                    `sonolus://${
+                    `https://open.sonolus.com/${
                         req.headers.host
                     }${basePath}/${type}/list${getSearch(req.query)}`
                 )
@@ -584,7 +584,7 @@ function installRedirect(app: Application, basePath: string) {
 
             app.get(`${basePath}/${type}/:name`, (req, res) => {
                 res.redirect(
-                    `sonolus://${req.headers.host}${basePath}/${type}/${req.params.name}`
+                    `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/${req.params.name}`
                 )
             })
         }
