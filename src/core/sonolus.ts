@@ -1,20 +1,26 @@
+import { randomUUID, webcrypto } from 'crypto'
 import type { Application, Request, Response, Router } from 'express'
 import * as express from 'express'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import type { ParsedQs } from 'qs'
 import {
+    AuthenticateInfo,
     Database,
+    getEncryptionPublicKey,
     hash as sonolusHash,
     LocalizationText,
     localize,
     OptionName,
     OptionPlaceholder,
     ResourceType,
+    SessionData,
+    SessionInfo,
     SRL,
     version,
 } from 'sonolus-core'
 import { databaseParser, Query, SearchInfo } from '..'
+import { sessionDataSchema } from '../schemas/session-data'
 import {
     BackgroundDetailsHandler,
     backgroundDetailsRouteHandler,
@@ -80,6 +86,11 @@ import {
     SkinListHandler,
     skinListRouteHandler,
 } from './routes/skins/list'
+import {
+    CheckSessionHandler,
+    CreateSessionHandler,
+    FindSessionHandler,
+} from './session'
 
 export type ItemsConfig = {
     search: SearchInfo
@@ -105,7 +116,11 @@ export class Sonolus<
     TParticles extends ItemsConfig = typeof defaultItemsConfig,
     TEngines extends ItemsConfig = typeof defaultItemsConfig
 > {
+    private readonly authentication: boolean
+    private readonly sessionDuration: number
     private readonly fallbackLocale: string
+
+    readonly sessionAddress: string
 
     readonly router: Router
 
@@ -117,6 +132,31 @@ export class Sonolus<
     readonly enginesConfig: TEngines
 
     readonly db: Database
+
+    createSessionHandler?: CreateSessionHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >
+    findSessionHandler?: FindSessionHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >
+    checkSessionHandler?: CheckSessionHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines
+    >
 
     serverInfoHandler: ServerInfoHandler<
         TLevels,
@@ -235,6 +275,9 @@ export class Sonolus<
         app: Application,
         options?: Partial<{
             basePath: string
+            authentication: boolean
+            sessionAddress: string
+            sessionDuration: number
             fallbackLocale: string
             mode: 'custom' | 'redirect' | 'spa'
             spaRoot: string
@@ -248,6 +291,9 @@ export class Sonolus<
     ) {
         const {
             basePath,
+            authentication,
+            sessionAddress,
+            sessionDuration,
             fallbackLocale,
             mode,
             spaRoot,
@@ -260,6 +306,9 @@ export class Sonolus<
         } = Object.assign(
             {
                 basePath: '',
+                authentication: false,
+                sessionAddress: '',
+                sessionDuration: 30 * 60 * 1000,
                 fallbackLocale: 'en',
                 mode: 'custom',
                 levels: defaultItemsConfig,
@@ -272,7 +321,11 @@ export class Sonolus<
             options
         )
 
+        this.authentication = authentication
+        this.sessionDuration = sessionDuration
         this.fallbackLocale = fallbackLocale
+
+        this.sessionAddress = sessionAddress
 
         this.router = express.Router()
 
@@ -295,6 +348,8 @@ export class Sonolus<
             particles: [],
             engines: [],
         }
+
+        this.postAuthenticate()
 
         this.getAPI('/sonolus/info', serverInfoRouteHandler)
 
@@ -375,6 +430,61 @@ export class Sonolus<
         return localize(text, locale, this.fallbackLocale)
     }
 
+    private postAuthenticate() {
+        if (!this.authentication) return
+
+        this.router.post('/sonolus/authenticate', async (req, res) => {
+            res.set('Sonolus-Version', version.sonolus)
+
+            try {
+                if (!this.createSessionHandler) {
+                    res.status(401).end()
+                    return
+                }
+
+                const encryptionPublicKey = await getEncryptionPublicKey()
+
+                const id = randomUUID()
+                const key = await webcrypto.subtle.exportKey(
+                    'raw',
+                    await webcrypto.subtle.generateKey(
+                        { name: 'AES-CBC', length: 256 },
+                        true,
+                        []
+                    )
+                )
+                const iv = webcrypto.getRandomValues(new Uint8Array(16))
+                const expiration = Date.now() + this.sessionDuration
+
+                await this.createSessionHandler(this, id, key, iv, expiration)
+
+                const sessionInfo: SessionInfo = {
+                    id,
+                    key: Buffer.from(key).toString('base64'),
+                    iv: Buffer.from(iv).toString('base64'),
+                }
+                const session = Buffer.from(
+                    await webcrypto.subtle.encrypt(
+                        'RSA-OAEP',
+                        encryptionPublicKey,
+                        Buffer.from(JSON.stringify(sessionInfo))
+                    )
+                ).toString('base64')
+
+                const response: AuthenticateInfo = {
+                    address: this.sessionAddress,
+                    session,
+                    expiration,
+                }
+
+                res.json(response)
+            } catch (error) {
+                console.error('[ERROR]', error)
+                res.status(500).end()
+            }
+        })
+    }
+
     private getAPI(
         path: string,
         handler: (sonolus: this, req: Request, res: Response) => Promise<void>
@@ -386,12 +496,58 @@ export class Sonolus<
             res.set('Sonolus-Version', version.sonolus)
 
             try {
+                if (this.authentication && !(await this.checkSession(req))) {
+                    res.status(401).end()
+                    return
+                }
+
                 await handler(this, req, res)
             } catch (error) {
                 console.error('[ERROR]', error)
                 res.status(500).end()
             }
         })
+    }
+
+    private async checkSession(req: Request) {
+        if (!this.findSessionHandler) throw 'Missing findSessionHandler'
+        if (!this.checkSessionHandler) throw 'Missing checkSessionHandler'
+
+        if (!req.headers['sonolus-session-id']) return false
+        const id = `${req.headers['sonolus-session-id']}`
+
+        if (!req.headers['sonolus-session-data']) return false
+        const data = `${req.headers['sonolus-session-data']}`
+
+        const session = await this.findSessionHandler(this, id)
+        if (!session || Date.now() >= session.expiration) return false
+
+        const key = await webcrypto.subtle.importKey(
+            'raw',
+            session.key,
+            { name: 'AES-CBC' },
+            false,
+            ['decrypt']
+        )
+
+        let sessionData: SessionData
+        try {
+            sessionData = sessionDataSchema.parse(
+                JSON.parse(
+                    Buffer.from(
+                        await webcrypto.subtle.decrypt(
+                            { name: 'AES-CBC', iv: session.iv },
+                            key,
+                            Buffer.from(data, 'base64')
+                        )
+                    ).toString()
+                )
+            )
+        } catch (error) {
+            return false
+        }
+
+        return await this.checkSessionHandler(this, id, sessionData)
     }
 }
 
@@ -414,13 +570,13 @@ function installSPA(app: Application, basePath: string, spaRoot: string) {
 
 function installRedirect(app: Application, basePath: string) {
     app.get(basePath, (req, res) => {
-        res.redirect(`sonolus://${req.headers.host}${basePath}`)
+        res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}`)
     })
     ;['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines'].map(
         (type) => {
             app.get(`${basePath}/${type}/list`, (req, res) => {
                 res.redirect(
-                    `sonolus://${
+                    `https://open.sonolus.com/${
                         req.headers.host
                     }${basePath}/${type}/list${getSearch(req.query)}`
                 )
@@ -428,7 +584,7 @@ function installRedirect(app: Application, basePath: string) {
 
             app.get(`${basePath}/${type}/:name`, (req, res) => {
                 res.redirect(
-                    `sonolus://${req.headers.host}${basePath}/${type}/${req.params.name}`
+                    `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/${req.params.name}`
                 )
             })
         }

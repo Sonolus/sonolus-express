@@ -115,7 +115,10 @@ export function filterInfosByKeywords<T>(
     props: (keyof T)[],
     keywords: string
 ): T[] {
-    const terms = keywords.trim().toLowerCase().split(' ')
+    const fullTerm = keywords.trim().toLowerCase()
+    if (!fullTerm) return infos
+
+    const terms = fullTerm.split(' ')
     if (terms.length === 0) return infos
 
     return infos
@@ -126,9 +129,16 @@ export function filterInfosByKeywords<T>(
         .filter(({ results }) => results.every((result) => result > 0))
         .map(({ info, results }) => ({
             info,
-            sum: results.reduce((sum, result) => sum + result, 0),
+            full: matchTerm(info, props, fullTerm),
+            exacts: results.filter((result) => result === 2).length,
+            partials: results.filter((result) => result === 1).length,
         }))
-        .sort((a, b) => b.sum - a.sum)
+        .sort(
+            (a, b) =>
+                b.full - a.full ||
+                b.exacts - a.exacts ||
+                b.partials - a.partials
+        )
         .map(({ info }) => info)
 }
 
@@ -146,7 +156,13 @@ function matchTerm<T>(info: T, keywordProps: (keyof T)[], term: string) {
                 texts = [value.toLowerCase()]
                 break
             case 'object':
-                texts = Object.values(value).map((text) => text.toLowerCase())
+                if (value) {
+                    texts = Object.values(value).map((text) =>
+                        text.toLowerCase()
+                    )
+                } else {
+                    texts = []
+                }
                 break
             default:
                 continue
