@@ -7,7 +7,7 @@ export type SearchSliderOptionInfo = {
     min: number
     max: number
     step: number
-    display: 'number' | 'percentage'
+    unit?: LocalizationText
 }
 
 export function parseSliderQuery(
@@ -37,6 +37,6 @@ export function toSearchSliderOption(
         min: info.min,
         max: info.max,
         step: info.step,
-        display: info.display,
+        unit: info.unit && localize(info.unit),
     }
 }
