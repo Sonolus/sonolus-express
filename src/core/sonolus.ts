@@ -11,8 +11,8 @@ import {
     hash as sonolusHash,
     LocalizationText,
     localize,
-    OptionName,
-    OptionPlaceholder,
+    NameText,
+    PlaceholderText,
     ResourceType,
     SessionData,
     SessionInfo,
@@ -100,9 +100,9 @@ export const defaultItemsConfig = {
     search: {
         options: {
             keywords: {
-                name: { en: OptionName.Keywords },
+                name: { en: NameText.Keywords },
                 type: 'text',
-                placeholder: { en: OptionPlaceholder.Keywords },
+                placeholder: { en: PlaceholderText.Keywords },
             },
         },
     },
