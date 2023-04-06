@@ -3,9 +3,9 @@ import { LevelInfo } from 'sonolus-core'
 import { toLevelItem } from '../../../api/level-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
 import {
+    ListHandler,
     defaultListHandler,
     filterInfosByKeywords,
-    ListHandler,
     listRouteHandler,
 } from '../list'
 

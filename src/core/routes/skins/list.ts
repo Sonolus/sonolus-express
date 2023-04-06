@@ -3,9 +3,9 @@ import { SkinInfo } from 'sonolus-core'
 import { toSkinItem } from '../../../api/skin-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
 import {
+    ListHandler,
     defaultListHandler,
     filterInfosByKeywords,
-    ListHandler,
     listRouteHandler,
 } from '../list'
 

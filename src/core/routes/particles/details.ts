@@ -3,8 +3,8 @@ import { InfoDetails, ParticleInfo } from 'sonolus-core'
 import { ItemsConfig, Sonolus } from '../..'
 import { toParticleItem } from '../../../api/particle-item'
 import {
-    defaultDetailsHandler,
     DetailsHandler,
+    defaultDetailsHandler,
     detailsRouteHandler,
 } from '../details'
 

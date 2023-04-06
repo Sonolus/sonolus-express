@@ -3,9 +3,9 @@ import { EffectInfo } from 'sonolus-core'
 import { toEffectItem } from '../../../api/effect-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
 import {
+    ListHandler,
     defaultListHandler,
     filterInfosByKeywords,
-    ListHandler,
     listRouteHandler,
 } from '../list'
 

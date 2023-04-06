@@ -3,8 +3,8 @@ import { InfoDetails, SkinInfo } from 'sonolus-core'
 import { ItemsConfig, Sonolus } from '../..'
 import { toSkinItem } from '../../../api/skin-item'
 import {
-    defaultDetailsHandler,
     DetailsHandler,
+    defaultDetailsHandler,
     detailsRouteHandler,
 } from '../details'
 

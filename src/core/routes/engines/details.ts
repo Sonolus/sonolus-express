@@ -3,8 +3,8 @@ import { EngineInfo, InfoDetails } from 'sonolus-core'
 import { ItemsConfig, Sonolus } from '../..'
 import { toEngineItem } from '../../../api/engine-item'
 import {
-    defaultDetailsHandler,
     DetailsHandler,
+    defaultDetailsHandler,
     detailsRouteHandler,
 } from '../details'
 

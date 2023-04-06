@@ -3,9 +3,9 @@ import { ParticleInfo } from 'sonolus-core'
 import { toParticleItem } from '../../../api/particle-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
 import {
+    ListHandler,
     defaultListHandler,
     filterInfosByKeywords,
-    ListHandler,
     listRouteHandler,
 } from '../list'
 

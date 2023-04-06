@@ -3,9 +3,9 @@ import { BackgroundInfo } from 'sonolus-core'
 import { toBackgroundItem } from '../../../api/background-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
 import {
+    ListHandler,
     defaultListHandler,
     filterInfosByKeywords,
-    ListHandler,
     listRouteHandler,
 } from '../list'
 

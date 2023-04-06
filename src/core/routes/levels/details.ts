@@ -3,8 +3,8 @@ import { InfoDetails, LevelInfo } from 'sonolus-core'
 import { ItemsConfig, Sonolus } from '../..'
 import { toLevelItem } from '../../../api/level-item'
 import {
-    defaultDetailsHandler,
     DetailsHandler,
+    defaultDetailsHandler,
     detailsRouteHandler,
 } from '../details'
 

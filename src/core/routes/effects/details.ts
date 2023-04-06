@@ -3,8 +3,8 @@ import { EffectInfo, InfoDetails } from 'sonolus-core'
 import { ItemsConfig, Sonolus } from '../..'
 import { toEffectItem } from '../../../api/effect-item'
 import {
-    defaultDetailsHandler,
     DetailsHandler,
+    defaultDetailsHandler,
     detailsRouteHandler,
 } from '../details'
 
