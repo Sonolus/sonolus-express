@@ -1,5 +1,5 @@
 import { randomUUID, webcrypto } from 'crypto'
-import type { Application, Request, Response, Router } from 'express'
+import type { Express, Request, Response, Router } from 'express'
 import * as express from 'express'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
@@ -272,7 +272,7 @@ export class Sonolus<
     > = defaultEngineDetailsHandler
 
     constructor(
-        app: Application,
+        app: Express,
         options?: Partial<{
             basePath: string
             authentication: boolean
@@ -551,7 +551,7 @@ export class Sonolus<
     }
 }
 
-function installSPA(app: Application, basePath: string, spaRoot: string) {
+function installSPA(app: Express, basePath: string, spaRoot: string) {
     const indexPath = resolve(spaRoot, 'index.html')
 
     app.use(basePath, express.static(spaRoot))
@@ -568,7 +568,7 @@ function installSPA(app: Application, basePath: string, spaRoot: string) {
     })
 }
 
-function installRedirect(app: Application, basePath: string) {
+function installRedirect(app: Express, basePath: string) {
     app.get(basePath, (req, res) => {
         res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}`)
     })
