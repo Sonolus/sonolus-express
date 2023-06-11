@@ -14,7 +14,7 @@ export type BackgroundListHandler<
     T,
 > = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, BackgroundInfo>
 
-export function defaultBackgroundListHandler<
+export const defaultBackgroundListHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -28,22 +28,15 @@ export function defaultBackgroundListHandler<
 ): {
     pageCount: number
     infos: BackgroundInfo[]
-} {
-    return defaultListHandler(sonolus.db.backgrounds, filterBackgroundInfosByKeywords, query, page)
-}
+} => defaultListHandler(sonolus.db.backgrounds, filterBackgroundInfosByKeywords, query, page)
 
-export function filterBackgroundInfosByKeywords(
+export const filterBackgroundInfosByKeywords = (
     infos: BackgroundInfo[],
     keywords: string,
-): BackgroundInfo[] {
-    return filterInfosByKeywords(
-        infos,
-        ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords,
-    )
-}
+): BackgroundInfo[] =>
+    filterInfosByKeywords(infos, ['name', 'title', 'subtitle', 'author', 'description'], keywords)
 
-export function backgroundListRouteHandler<
+export const backgroundListRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -54,8 +47,8 @@ export function backgroundListRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return listRouteHandler(
+): Promise<void> =>
+    listRouteHandler(
         sonolus,
         sonolus.backgroundListHandler,
         toBackgroundItem,
@@ -63,4 +56,3 @@ export function backgroundListRouteHandler<
         req,
         res,
     )
-}

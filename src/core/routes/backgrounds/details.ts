@@ -13,7 +13,7 @@ export type BackgroundDetailsHandler<
     TEngines extends ItemsConfig,
 > = DetailsHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, BackgroundInfo>
 
-export function defaultBackgroundDetailsHandler<
+export const defaultBackgroundDetailsHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -23,11 +23,9 @@ export function defaultBackgroundDetailsHandler<
 >(
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     name: string,
-): InfoDetails<BackgroundInfo> | undefined {
-    return defaultDetailsHandler(sonolus.db.backgrounds, name)
-}
+): InfoDetails<BackgroundInfo> | undefined => defaultDetailsHandler(sonolus.db.backgrounds, name)
 
-export function backgroundDetailsRouteHandler<
+export const backgroundDetailsRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -38,12 +36,5 @@ export function backgroundDetailsRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return detailsRouteHandler(
-        sonolus,
-        sonolus.backgroundDetailsHandler,
-        toBackgroundItem,
-        req,
-        res,
-    )
-}
+): Promise<void> =>
+    detailsRouteHandler(sonolus, sonolus.backgroundDetailsHandler, toBackgroundItem, req, res)

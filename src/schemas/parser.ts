@@ -2,8 +2,9 @@ import { ZodError } from 'zod'
 
 export type Parser<T> = (data: unknown, logPath: string) => T
 
-export function getParser<T>(schema: { parse: (data: unknown) => T }): Parser<T> {
-    return (data, logPath) => {
+export const getParser =
+    <T>(schema: { parse: (data: unknown) => T }): Parser<T> =>
+    (data, logPath) => {
         try {
             return schema.parse(data)
         } catch (error) {
@@ -15,10 +16,9 @@ export function getParser<T>(schema: { parse: (data: unknown) => T }): Parser<T>
             throw [`${logPath}:`, ...messages].join(messages.length > 1 ? '\n' : ' ')
         }
     }
-}
 
-function formatPath(path: (string | number)[]) {
-    return path
+const formatPath = (path: (string | number)[]) =>
+    path
         .map((segment) => {
             switch (typeof segment) {
                 case 'string':
@@ -28,4 +28,3 @@ function formatPath(path: (string | number)[]) {
             }
         })
         .join('')
-}

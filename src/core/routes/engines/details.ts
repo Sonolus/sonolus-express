@@ -13,7 +13,7 @@ export type EngineDetailsHandler<
     TEngines extends ItemsConfig,
 > = DetailsHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, EngineInfo>
 
-export function defaultEngineDetailsHandler<
+export const defaultEngineDetailsHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -23,11 +23,9 @@ export function defaultEngineDetailsHandler<
 >(
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     name: string,
-): InfoDetails<EngineInfo> | undefined {
-    return defaultDetailsHandler(sonolus.db.engines, name)
-}
+): InfoDetails<EngineInfo> | undefined => defaultDetailsHandler(sonolus.db.engines, name)
 
-export function engineDetailsRouteHandler<
+export const engineDetailsRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -38,6 +36,5 @@ export function engineDetailsRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return detailsRouteHandler(sonolus, sonolus.engineDetailsHandler, toEngineItem, req, res)
-}
+): Promise<void> =>
+    detailsRouteHandler(sonolus, sonolus.engineDetailsHandler, toEngineItem, req, res)

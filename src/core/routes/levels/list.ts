@@ -14,7 +14,7 @@ export type LevelListHandler<
     T,
 > = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, LevelInfo>
 
-export function defaultLevelListHandler<
+export const defaultLevelListHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -28,19 +28,16 @@ export function defaultLevelListHandler<
 ): {
     pageCount: number
     infos: LevelInfo[]
-} {
-    return defaultListHandler(sonolus.db.levels, filterLevelInfosByKeywords, query, page)
-}
+} => defaultListHandler(sonolus.db.levels, filterLevelInfosByKeywords, query, page)
 
-export function filterLevelInfosByKeywords(infos: LevelInfo[], keywords: string): LevelInfo[] {
-    return filterInfosByKeywords(
+export const filterLevelInfosByKeywords = (infos: LevelInfo[], keywords: string): LevelInfo[] =>
+    filterInfosByKeywords(
         infos,
         ['name', 'rating', 'title', 'artists', 'author', 'description'],
         keywords,
     )
-}
 
-export function levelListRouteHandler<
+export const levelListRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -51,8 +48,8 @@ export function levelListRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return listRouteHandler(
+): Promise<void> =>
+    listRouteHandler(
         sonolus,
         sonolus.levelListHandler,
         toLevelItem,
@@ -60,4 +57,3 @@ export function levelListRouteHandler<
         req,
         res,
     )
-}

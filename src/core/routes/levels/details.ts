@@ -13,7 +13,7 @@ export type LevelDetailsHandler<
     TEngines extends ItemsConfig,
 > = DetailsHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, LevelInfo>
 
-export function defaultLevelDetailsHandler<
+export const defaultLevelDetailsHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -23,11 +23,9 @@ export function defaultLevelDetailsHandler<
 >(
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     name: string,
-): InfoDetails<LevelInfo> | undefined {
-    return defaultDetailsHandler(sonolus.db.levels, name)
-}
+): InfoDetails<LevelInfo> | undefined => defaultDetailsHandler(sonolus.db.levels, name)
 
-export function levelDetailsRouteHandler<
+export const levelDetailsRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -38,6 +36,4 @@ export function levelDetailsRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return detailsRouteHandler(sonolus, sonolus.levelDetailsHandler, toLevelItem, req, res)
-}
+): Promise<void> => detailsRouteHandler(sonolus, sonolus.levelDetailsHandler, toLevelItem, req, res)

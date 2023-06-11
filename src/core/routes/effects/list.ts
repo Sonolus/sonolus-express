@@ -14,7 +14,7 @@ export type EffectListHandler<
     T,
 > = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, EffectInfo>
 
-export function defaultEffectListHandler<
+export const defaultEffectListHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -28,19 +28,12 @@ export function defaultEffectListHandler<
 ): {
     pageCount: number
     infos: EffectInfo[]
-} {
-    return defaultListHandler(sonolus.db.effects, filterEffectInfosByKeywords, query, page)
-}
+} => defaultListHandler(sonolus.db.effects, filterEffectInfosByKeywords, query, page)
 
-export function filterEffectInfosByKeywords(infos: EffectInfo[], keywords: string): EffectInfo[] {
-    return filterInfosByKeywords(
-        infos,
-        ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords,
-    )
-}
+export const filterEffectInfosByKeywords = (infos: EffectInfo[], keywords: string): EffectInfo[] =>
+    filterInfosByKeywords(infos, ['name', 'title', 'subtitle', 'author', 'description'], keywords)
 
-export function effectListRouteHandler<
+export const effectListRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -51,8 +44,8 @@ export function effectListRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return listRouteHandler(
+): Promise<void> =>
+    listRouteHandler(
         sonolus,
         sonolus.effectListHandler,
         toEffectItem,
@@ -60,4 +53,3 @@ export function effectListRouteHandler<
         req,
         res,
     )
-}

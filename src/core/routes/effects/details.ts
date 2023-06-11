@@ -13,7 +13,7 @@ export type EffectDetailsHandler<
     TEngines extends ItemsConfig,
 > = DetailsHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, EffectInfo>
 
-export function defaultEffectDetailsHandler<
+export const defaultEffectDetailsHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -23,11 +23,9 @@ export function defaultEffectDetailsHandler<
 >(
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     name: string,
-): InfoDetails<EffectInfo> | undefined {
-    return defaultDetailsHandler(sonolus.db.effects, name)
-}
+): InfoDetails<EffectInfo> | undefined => defaultDetailsHandler(sonolus.db.effects, name)
 
-export function effectDetailsRouteHandler<
+export const effectDetailsRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -38,6 +36,5 @@ export function effectDetailsRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return detailsRouteHandler(sonolus, sonolus.effectDetailsHandler, toEffectItem, req, res)
-}
+): Promise<void> =>
+    detailsRouteHandler(sonolus, sonolus.effectDetailsHandler, toEffectItem, req, res)

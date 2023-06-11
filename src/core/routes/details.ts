@@ -18,12 +18,15 @@ export type DetailsHandler<
     name: string,
 ) => Promisable<InfoDetails<T> | undefined>
 
-export function defaultDetailsHandler<
+export const defaultDetailsHandler = <
     T extends {
         name: string
         description: LocalizationText
     },
->(infos: T[], name: string): InfoDetails<T> | undefined {
+>(
+    infos: T[],
+    name: string,
+): InfoDetails<T> | undefined => {
     const index = infos.findIndex((info) => info.name === name)
     if (index === -1) return undefined
 
@@ -35,7 +38,7 @@ export function defaultDetailsHandler<
     }
 }
 
-export async function detailsRouteHandler<
+export const detailsRouteHandler = async <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -50,7 +53,7 @@ export async function detailsRouteHandler<
     toItem: ToItem<T, U>,
     req: Request,
     res: Response,
-): Promise<void> {
+): Promise<void> => {
     const infoDetails = await handler(sonolus, req.params.name)
     if (!infoDetails) {
         res.status(404).end()

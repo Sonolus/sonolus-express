@@ -522,7 +522,7 @@ export class Sonolus<
     }
 }
 
-function installSPA(app: Express, basePath: string, spaRoot: string) {
+const installSPA = (app: Express, basePath: string, spaRoot: string) => {
     const indexPath = resolve(spaRoot, 'index.html')
 
     app.use(basePath, express.static(spaRoot))
@@ -537,7 +537,7 @@ function installSPA(app: Express, basePath: string, spaRoot: string) {
     })
 }
 
-function installRedirect(app: Express, basePath: string) {
+const installRedirect = (app: Express, basePath: string) => {
     app.get(basePath, (req, res) => {
         res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}`)
     })
@@ -558,7 +558,7 @@ function installRedirect(app: Express, basePath: string) {
     })
 }
 
-function getSearch(query: ParsedQs) {
+const getSearch = (query: ParsedQs) => {
     const params = new URLSearchParams()
 
     for (const key in query) {

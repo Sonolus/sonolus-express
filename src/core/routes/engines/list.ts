@@ -14,7 +14,7 @@ export type EngineListHandler<
     T,
 > = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, EngineInfo>
 
-export function defaultEngineListHandler<
+export const defaultEngineListHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -28,19 +28,12 @@ export function defaultEngineListHandler<
 ): {
     pageCount: number
     infos: EngineInfo[]
-} {
-    return defaultListHandler(sonolus.db.engines, filterEngineInfosByKeywords, query, page)
-}
+} => defaultListHandler(sonolus.db.engines, filterEngineInfosByKeywords, query, page)
 
-export function filterEngineInfosByKeywords(infos: EngineInfo[], keywords: string): EngineInfo[] {
-    return filterInfosByKeywords(
-        infos,
-        ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords,
-    )
-}
+export const filterEngineInfosByKeywords = (infos: EngineInfo[], keywords: string): EngineInfo[] =>
+    filterInfosByKeywords(infos, ['name', 'title', 'subtitle', 'author', 'description'], keywords)
 
-export function engineListRouteHandler<
+export const engineListRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -51,8 +44,8 @@ export function engineListRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return listRouteHandler(
+): Promise<void> =>
+    listRouteHandler(
         sonolus,
         sonolus.engineListHandler,
         toEngineItem,
@@ -60,4 +53,3 @@ export function engineListRouteHandler<
         req,
         res,
     )
-}

@@ -13,7 +13,7 @@ export type ParticleDetailsHandler<
     TEngines extends ItemsConfig,
 > = DetailsHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, ParticleInfo>
 
-export function defaultParticleDetailsHandler<
+export const defaultParticleDetailsHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -23,11 +23,9 @@ export function defaultParticleDetailsHandler<
 >(
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     name: string,
-): InfoDetails<ParticleInfo> | undefined {
-    return defaultDetailsHandler(sonolus.db.particles, name)
-}
+): InfoDetails<ParticleInfo> | undefined => defaultDetailsHandler(sonolus.db.particles, name)
 
-export function particleDetailsRouteHandler<
+export const particleDetailsRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -38,6 +36,5 @@ export function particleDetailsRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return detailsRouteHandler(sonolus, sonolus.particleDetailsHandler, toParticleItem, req, res)
-}
+): Promise<void> =>
+    detailsRouteHandler(sonolus, sonolus.particleDetailsHandler, toParticleItem, req, res)

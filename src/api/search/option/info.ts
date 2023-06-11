@@ -10,11 +10,11 @@ export type SearchOptionInfo =
     | SearchToggleOptionInfo
     | SearchSelectOptionInfo
 
-export function toSearchOption(
+export const toSearchOption = (
     localize: (text: LocalizationText) => string,
     query: string,
     info: SearchOptionInfo,
-): SearchOption {
+): SearchOption => {
     switch (info.type) {
         case 'text':
             return toSearchTextOption(localize, query, info)

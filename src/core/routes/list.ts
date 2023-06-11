@@ -25,7 +25,7 @@ export type ListHandler<
     infos: U[]
 }>
 
-export function defaultListHandler<T>(
+export const defaultListHandler = <T>(
     infos: T[],
     filter: (infos: T[], keywords: string) => T[],
     query: Record<string, unknown>,
@@ -33,14 +33,14 @@ export function defaultListHandler<T>(
 ): {
     pageCount: number
     infos: T[]
-} {
+} => {
     const keywords = parseTextQuery(query.keywords)
     const filteredInfos = filter(infos, keywords)
 
     return paginateInfos(filteredInfos, page)
 }
 
-export async function listRouteHandler<
+export const listRouteHandler = async <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -66,7 +66,7 @@ export async function listRouteHandler<
     search: SearchInfo,
     req: Request,
     res: Response,
-): Promise<void> {
+): Promise<void> => {
     res.json(
         toList(
             sonolus.db,
@@ -78,21 +78,19 @@ export async function listRouteHandler<
     )
 }
 
-export function paginateInfos<T>(
+export const paginateInfos = <T>(
     infos: T[],
     page: number,
     perPage = 20,
 ): {
     pageCount: number
     infos: T[]
-} {
-    return {
-        pageCount: Math.ceil(infos.length / perPage),
-        infos: infos.slice(page * perPage, (page + 1) * perPage),
-    }
-}
+} => ({
+    pageCount: Math.ceil(infos.length / perPage),
+    infos: infos.slice(page * perPage, (page + 1) * perPage),
+})
 
-export function filterInfosByKeywords<T>(infos: T[], props: (keyof T)[], keywords: string): T[] {
+export const filterInfosByKeywords = <T>(infos: T[], props: (keyof T)[], keywords: string): T[] => {
     const fullTerm = keywords.trim().toLowerCase()
     if (!fullTerm) return infos
 
@@ -115,7 +113,7 @@ export function filterInfosByKeywords<T>(infos: T[], props: (keyof T)[], keyword
         .map(({ info }) => info)
 }
 
-function matchTerm<T>(info: T, keywordProps: (keyof T)[], term: string) {
+const matchTerm = <T>(info: T, keywordProps: (keyof T)[], term: string) => {
     let result = 0
     for (const prop of keywordProps) {
         const value = info[prop]

@@ -14,7 +14,7 @@ export type SkinListHandler<
     T,
 > = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, SkinInfo>
 
-export function defaultSkinListHandler<
+export const defaultSkinListHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -28,19 +28,12 @@ export function defaultSkinListHandler<
 ): {
     pageCount: number
     infos: SkinInfo[]
-} {
-    return defaultListHandler(sonolus.db.skins, filterSkinInfosByKeywords, query, page)
-}
+} => defaultListHandler(sonolus.db.skins, filterSkinInfosByKeywords, query, page)
 
-export function filterSkinInfosByKeywords(infos: SkinInfo[], keywords: string): SkinInfo[] {
-    return filterInfosByKeywords(
-        infos,
-        ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords,
-    )
-}
+export const filterSkinInfosByKeywords = (infos: SkinInfo[], keywords: string): SkinInfo[] =>
+    filterInfosByKeywords(infos, ['name', 'title', 'subtitle', 'author', 'description'], keywords)
 
-export function skinListRouteHandler<
+export const skinListRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -51,8 +44,8 @@ export function skinListRouteHandler<
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
     res: Response,
-): Promise<void> {
-    return listRouteHandler(
+): Promise<void> =>
+    listRouteHandler(
         sonolus,
         sonolus.skinListHandler,
         toSkinItem,
@@ -60,4 +53,3 @@ export function skinListRouteHandler<
         req,
         res,
     )
-}

@@ -15,11 +15,11 @@ export type Query<T extends SearchInfo> = {
     [P in keyof T['options']]: QueryType[T['options'][P]['type']]
 }
 
-export function parseQuery<T extends SearchInfo>(
+export const parseQuery = <T extends SearchInfo>(
     query: Record<string, unknown>,
     search: T,
-): Query<T> {
-    return Object.fromEntries(
+): Query<T> =>
+    Object.fromEntries(
         Object.entries(search.options).map(([key, option]) => {
             switch (option.type) {
                 case 'text':
@@ -33,4 +33,3 @@ export function parseQuery<T extends SearchInfo>(
             }
         }),
     )
-}
