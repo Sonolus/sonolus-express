@@ -2,12 +2,7 @@ import { Request, Response } from 'express'
 import { LevelInfo } from 'sonolus-core'
 import { toLevelItem } from '../../../api/level-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
-import {
-    ListHandler,
-    defaultListHandler,
-    filterInfosByKeywords,
-    listRouteHandler,
-} from '../list'
+import { ListHandler, defaultListHandler, filterInfosByKeywords, listRouteHandler } from '../list'
 
 export type LevelListHandler<
     TLevels extends ItemsConfig,
@@ -16,17 +11,8 @@ export type LevelListHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
-    T
-> = ListHandler<
-    TLevels,
-    TSkins,
-    TBackgrounds,
-    TEffects,
-    TParticles,
-    TEngines,
     T,
-    LevelInfo
->
+> = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, LevelInfo>
 
 export function defaultLevelListHandler<
     TLevels extends ItemsConfig,
@@ -34,38 +20,23 @@ export function defaultLevelListHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     query: Record<string, unknown>,
-    page: number
+    page: number,
 ): {
     pageCount: number
     infos: LevelInfo[]
 } {
-    return defaultListHandler(
-        sonolus.db.levels,
-        filterLevelInfosByKeywords,
-        query,
-        page
-    )
+    return defaultListHandler(sonolus.db.levels, filterLevelInfosByKeywords, query, page)
 }
 
-export function filterLevelInfosByKeywords(
-    infos: LevelInfo[],
-    keywords: string
-): LevelInfo[] {
+export function filterLevelInfosByKeywords(infos: LevelInfo[], keywords: string): LevelInfo[] {
     return filterInfosByKeywords(
         infos,
         ['name', 'rating', 'title', 'artists', 'author', 'description'],
-        keywords
+        keywords,
     )
 }
 
@@ -75,18 +46,11 @@ export function levelListRouteHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
     return listRouteHandler(
         sonolus,
@@ -94,6 +58,6 @@ export function levelListRouteHandler<
         toLevelItem,
         sonolus.levelsConfig.search,
         req,
-        res
+        res,
     )
 }

@@ -7,10 +7,7 @@ export type SearchSelectOptionInfo = {
     values: LocalizationText[]
 }
 
-export function parseSelectQuery(
-    value: unknown,
-    option: SearchSelectOptionInfo
-): number {
+export function parseSelectQuery(value: unknown, option: SearchSelectOptionInfo): number {
     if (typeof value !== 'string') return option.def
 
     const parsed = +value
@@ -23,7 +20,7 @@ export function parseSelectQuery(
 export function toSearchSelectOption(
     localize: (text: LocalizationText) => string,
     query: string,
-    info: SearchSelectOptionInfo
+    info: SearchSelectOptionInfo,
 ): SearchSelectOption {
     return {
         query,

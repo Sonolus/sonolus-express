@@ -8,20 +8,13 @@ export type CreateSessionHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 > = (
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     id: string,
     key: ArrayBuffer,
     iv: ArrayBuffer,
-    expiration: number
+    expiration: number,
 ) => Promisable<void>
 
 export type FindSessionHandler<
@@ -30,17 +23,10 @@ export type FindSessionHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 > = (
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
-    id: string
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    id: string,
 ) => Promisable<
     | {
           key: ArrayBuffer
@@ -56,16 +42,9 @@ export type CheckSessionHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 > = (
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     id: string,
-    data: SessionData
+    data: SessionData,
 ) => Promisable<boolean>

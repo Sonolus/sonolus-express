@@ -7,7 +7,7 @@ export function toList<T, U>(
     localize: (text: LocalizationText) => string,
     list: InfoList<T>,
     toItem: ToItem<T, U>,
-    search: SearchInfo
+    search: SearchInfo,
 ): ItemList<U> {
     return {
         pageCount: list.pageCount,

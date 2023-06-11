@@ -13,7 +13,7 @@ export type SearchOptionInfo =
 export function toSearchOption(
     localize: (text: LocalizationText) => string,
     query: string,
-    info: SearchOptionInfo
+    info: SearchOptionInfo,
 ): SearchOption {
     switch (info.type) {
         case 'text':

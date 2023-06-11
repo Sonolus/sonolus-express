@@ -6,10 +6,7 @@ export type SearchToggleOptionInfo = {
     def: boolean
 }
 
-export function parseToggleQuery(
-    value: unknown,
-    option: SearchToggleOptionInfo
-): boolean {
+export function parseToggleQuery(value: unknown, option: SearchToggleOptionInfo): boolean {
     if (typeof value !== 'string') return option.def
 
     return value !== '0'
@@ -18,7 +15,7 @@ export function parseToggleQuery(
 export function toSearchToggleOption(
     localize: (text: LocalizationText) => string,
     query: string,
-    info: SearchToggleOptionInfo
+    info: SearchToggleOptionInfo,
 ): SearchToggleOption {
     return {
         query,

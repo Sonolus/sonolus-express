@@ -1,14 +1,9 @@
-import {
-    BackgroundInfo,
-    BackgroundItem,
-    Database,
-    LocalizationText,
-} from 'sonolus-core'
+import { BackgroundInfo, BackgroundItem, Database, LocalizationText } from 'sonolus-core'
 
 export function toBackgroundItem(
     db: Database,
     localize: (text: LocalizationText) => string,
-    info: BackgroundInfo
+    info: BackgroundInfo,
 ): BackgroundItem {
     return {
         name: info.name,

@@ -15,7 +15,7 @@ export function parseTextQuery(value: unknown): string {
 export function toSearchTextOption(
     localize: (text: LocalizationText) => string,
     query: string,
-    info: SearchTextOptionInfo
+    info: SearchTextOptionInfo,
 ): SearchTextOption {
     return {
         query,

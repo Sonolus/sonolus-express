@@ -24,11 +24,7 @@ const databaseSchema = z.object({
 
 export const databaseParser = getParser(databaseSchema)
 
-export function getByName<T extends { name: string }>(
-    infos: T[],
-    name: string,
-    parent: string
-): T {
+export function getByName<T extends { name: string }>(infos: T[], name: string, parent: string): T {
     const info = infos.find((info) => info.name === name)
     if (!info) {
         throw `${parent}: ${name} not found`

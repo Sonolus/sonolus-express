@@ -2,12 +2,7 @@ import { Request, Response } from 'express'
 import { ParticleInfo } from 'sonolus-core'
 import { toParticleItem } from '../../../api/particle-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
-import {
-    ListHandler,
-    defaultListHandler,
-    filterInfosByKeywords,
-    listRouteHandler,
-} from '../list'
+import { ListHandler, defaultListHandler, filterInfosByKeywords, listRouteHandler } from '../list'
 
 export type ParticleListHandler<
     TLevels extends ItemsConfig,
@@ -16,17 +11,8 @@ export type ParticleListHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
-    T
-> = ListHandler<
-    TLevels,
-    TSkins,
-    TBackgrounds,
-    TEffects,
-    TParticles,
-    TEngines,
     T,
-    ParticleInfo
->
+> = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, ParticleInfo>
 
 export function defaultParticleListHandler<
     TLevels extends ItemsConfig,
@@ -34,38 +20,26 @@ export function defaultParticleListHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     query: Record<string, unknown>,
-    page: number
+    page: number,
 ): {
     pageCount: number
     infos: ParticleInfo[]
 } {
-    return defaultListHandler(
-        sonolus.db.particles,
-        filterParticleInfosByKeywords,
-        query,
-        page
-    )
+    return defaultListHandler(sonolus.db.particles, filterParticleInfosByKeywords, query, page)
 }
 
 export function filterParticleInfosByKeywords(
     infos: ParticleInfo[],
-    keywords: string
+    keywords: string,
 ): ParticleInfo[] {
     return filterInfosByKeywords(
         infos,
         ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords
+        keywords,
     )
 }
 
@@ -75,18 +49,11 @@ export function particleListRouteHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
     return listRouteHandler(
         sonolus,
@@ -94,6 +61,6 @@ export function particleListRouteHandler<
         toParticleItem,
         sonolus.particlesConfig.search,
         req,
-        res
+        res,
     )
 }

@@ -2,11 +2,7 @@ import { Request, Response } from 'express'
 import { InfoDetails, LevelInfo } from 'sonolus-core'
 import { ItemsConfig, Sonolus } from '../..'
 import { toLevelItem } from '../../../api/level-item'
-import {
-    DetailsHandler,
-    defaultDetailsHandler,
-    detailsRouteHandler,
-} from '../details'
+import { DetailsHandler, defaultDetailsHandler, detailsRouteHandler } from '../details'
 
 export type LevelDetailsHandler<
     TLevels extends ItemsConfig,
@@ -14,16 +10,8 @@ export type LevelDetailsHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
-> = DetailsHandler<
-    TLevels,
-    TSkins,
-    TBackgrounds,
-    TEffects,
-    TParticles,
-    TEngines,
-    LevelInfo
->
+    TEngines extends ItemsConfig,
+> = DetailsHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, LevelInfo>
 
 export function defaultLevelDetailsHandler<
     TLevels extends ItemsConfig,
@@ -31,17 +19,10 @@ export function defaultLevelDetailsHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
-    name: string
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    name: string,
 ): InfoDetails<LevelInfo> | undefined {
     return defaultDetailsHandler(sonolus.db.levels, name)
 }
@@ -52,24 +33,11 @@ export function levelDetailsRouteHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
-    return detailsRouteHandler(
-        sonolus,
-        sonolus.levelDetailsHandler,
-        toLevelItem,
-        req,
-        res
-    )
+    return detailsRouteHandler(sonolus, sonolus.levelDetailsHandler, toLevelItem, req, res)
 }

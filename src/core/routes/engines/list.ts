@@ -2,12 +2,7 @@ import { Request, Response } from 'express'
 import { EngineInfo } from 'sonolus-core'
 import { toEngineItem } from '../../../api/engine-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
-import {
-    ListHandler,
-    defaultListHandler,
-    filterInfosByKeywords,
-    listRouteHandler,
-} from '../list'
+import { ListHandler, defaultListHandler, filterInfosByKeywords, listRouteHandler } from '../list'
 
 export type EngineListHandler<
     TLevels extends ItemsConfig,
@@ -16,17 +11,8 @@ export type EngineListHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
-    T
-> = ListHandler<
-    TLevels,
-    TSkins,
-    TBackgrounds,
-    TEffects,
-    TParticles,
-    TEngines,
     T,
-    EngineInfo
->
+> = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, EngineInfo>
 
 export function defaultEngineListHandler<
     TLevels extends ItemsConfig,
@@ -34,38 +20,23 @@ export function defaultEngineListHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     query: Record<string, unknown>,
-    page: number
+    page: number,
 ): {
     pageCount: number
     infos: EngineInfo[]
 } {
-    return defaultListHandler(
-        sonolus.db.engines,
-        filterEngineInfosByKeywords,
-        query,
-        page
-    )
+    return defaultListHandler(sonolus.db.engines, filterEngineInfosByKeywords, query, page)
 }
 
-export function filterEngineInfosByKeywords(
-    infos: EngineInfo[],
-    keywords: string
-): EngineInfo[] {
+export function filterEngineInfosByKeywords(infos: EngineInfo[], keywords: string): EngineInfo[] {
     return filterInfosByKeywords(
         infos,
         ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords
+        keywords,
     )
 }
 
@@ -75,18 +46,11 @@ export function engineListRouteHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
     return listRouteHandler(
         sonolus,
@@ -94,6 +58,6 @@ export function engineListRouteHandler<
         toEngineItem,
         sonolus.enginesConfig.search,
         req,
-        res
+        res,
     )
 }

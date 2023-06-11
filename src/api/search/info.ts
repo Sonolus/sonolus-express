@@ -7,13 +7,10 @@ export type SearchInfo = {
     }
 }
 
-export function toSearch(
-    localize: (text: LocalizationText) => string,
-    info: SearchInfo
-): Search {
+export function toSearch(localize: (text: LocalizationText) => string, info: SearchInfo): Search {
     return {
         options: Object.entries(info.options).map(([query, option]) =>
-            toSearchOption(localize, query, option)
+            toSearchOption(localize, query, option),
         ),
     }
 }

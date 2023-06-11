@@ -1,14 +1,9 @@
-import {
-    Database,
-    EffectInfo,
-    EffectItem,
-    LocalizationText,
-} from 'sonolus-core'
+import { Database, EffectInfo, EffectItem, LocalizationText } from 'sonolus-core'
 
 export function toEffectItem(
     db: Database,
     localize: (text: LocalizationText) => string,
-    info: EffectInfo
+    info: EffectInfo,
 ): EffectItem {
     return {
         name: info.name,

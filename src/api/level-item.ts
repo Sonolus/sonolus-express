@@ -1,25 +1,12 @@
-import {
-    Database,
-    LevelInfo,
-    LevelItem,
-    LocalizationText,
-    UseInfo,
-    UseItem,
-} from 'sonolus-core'
-import {
-    toBackgroundItem,
-    toEffectItem,
-    toEngineItem,
-    toParticleItem,
-    toSkinItem,
-} from '.'
+import { Database, LevelInfo, LevelItem, LocalizationText, UseInfo, UseItem } from 'sonolus-core'
+import { toBackgroundItem, toEffectItem, toEngineItem, toParticleItem, toSkinItem } from '.'
 import { getByName } from '..'
 import { ToItem } from './item'
 
 export function toLevelItem(
     db: Database,
     localize: (text: LocalizationText) => string,
-    info: LevelInfo
+    info: LevelInfo,
 ): LevelItem {
     return {
         name: info.name,
@@ -28,14 +15,10 @@ export function toLevelItem(
         engine: toEngineItem(
             db,
             localize,
-            getByName(db.engines, info.engine, `Level/${info.name}`)
+            getByName(db.engines, info.engine, `Level/${info.name}`),
         ),
         useSkin: toUse(info.useSkin, db.skins, toSkinItem),
-        useBackground: toUse(
-            info.useBackground,
-            db.backgrounds,
-            toBackgroundItem
-        ),
+        useBackground: toUse(info.useBackground, db.backgrounds, toBackgroundItem),
         useEffect: toUse(info.useEffect, db.effects, toEffectItem),
         useParticle: toUse(info.useParticle, db.particles, toParticleItem),
         title: localize(info.title),
@@ -50,7 +33,7 @@ export function toLevelItem(
     function toUse<T extends { name: string }, U>(
         useInfo: UseInfo,
         infos: T[],
-        toItem: ToItem<T, U>
+        toItem: ToItem<T, U>,
     ): UseItem<U> {
         return useInfo.useDefault
             ? {
@@ -58,11 +41,7 @@ export function toLevelItem(
               }
             : {
                   useDefault: false,
-                  item: toItem(
-                      db,
-                      localize,
-                      getByName(infos, useInfo.item, `Level/${info.name}`)
-                  ),
+                  item: toItem(db, localize, getByName(infos, useInfo.item, `Level/${info.name}`)),
               }
     }
 }

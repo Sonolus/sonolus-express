@@ -2,12 +2,7 @@ import { Request, Response } from 'express'
 import { BackgroundInfo } from 'sonolus-core'
 import { toBackgroundItem } from '../../../api/background-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
-import {
-    ListHandler,
-    defaultListHandler,
-    filterInfosByKeywords,
-    listRouteHandler,
-} from '../list'
+import { ListHandler, defaultListHandler, filterInfosByKeywords, listRouteHandler } from '../list'
 
 export type BackgroundListHandler<
     TLevels extends ItemsConfig,
@@ -16,17 +11,8 @@ export type BackgroundListHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
-    T
-> = ListHandler<
-    TLevels,
-    TSkins,
-    TBackgrounds,
-    TEffects,
-    TParticles,
-    TEngines,
     T,
-    BackgroundInfo
->
+> = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, BackgroundInfo>
 
 export function defaultBackgroundListHandler<
     TLevels extends ItemsConfig,
@@ -34,38 +20,26 @@ export function defaultBackgroundListHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     query: Record<string, unknown>,
-    page: number
+    page: number,
 ): {
     pageCount: number
     infos: BackgroundInfo[]
 } {
-    return defaultListHandler(
-        sonolus.db.backgrounds,
-        filterBackgroundInfosByKeywords,
-        query,
-        page
-    )
+    return defaultListHandler(sonolus.db.backgrounds, filterBackgroundInfosByKeywords, query, page)
 }
 
 export function filterBackgroundInfosByKeywords(
     infos: BackgroundInfo[],
-    keywords: string
+    keywords: string,
 ): BackgroundInfo[] {
     return filterInfosByKeywords(
         infos,
         ['name', 'title', 'subtitle', 'author', 'description'],
-        keywords
+        keywords,
     )
 }
 
@@ -75,18 +49,11 @@ export function backgroundListRouteHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
     return listRouteHandler(
         sonolus,
@@ -94,6 +61,6 @@ export function backgroundListRouteHandler<
         toBackgroundItem,
         sonolus.backgroundsConfig.search,
         req,
-        res
+        res,
     )
 }

@@ -17,7 +17,7 @@ export type Query<T extends SearchInfo> = {
 
 export function parseQuery<T extends SearchInfo>(
     query: Record<string, unknown>,
-    search: T
+    search: T,
 ): Query<T> {
     return Object.fromEntries(
         Object.entries(search.options).map(([key, option]) => {
@@ -31,6 +31,6 @@ export function parseQuery<T extends SearchInfo>(
                 case 'select':
                     return [key, parseSelectQuery(query[key], option)]
             }
-        })
+        }),
     )
 }

@@ -1,14 +1,9 @@
-import {
-    Database,
-    LocalizationText,
-    ParticleInfo,
-    ParticleItem,
-} from 'sonolus-core'
+import { Database, LocalizationText, ParticleInfo, ParticleItem } from 'sonolus-core'
 
 export function toParticleItem(
     db: Database,
     localize: (text: LocalizationText) => string,
-    info: ParticleInfo
+    info: ParticleInfo,
 ): ParticleItem {
     return {
         name: info.name,

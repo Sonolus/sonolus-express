@@ -12,24 +12,17 @@ export type DetailsHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
-    T
+    T,
 > = (
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
-    name: string
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    name: string,
 ) => Promisable<InfoDetails<T> | undefined>
 
 export function defaultDetailsHandler<
     T extends {
         name: string
         description: LocalizationText
-    }
+    },
 >(infos: T[], name: string): InfoDetails<T> | undefined {
     const index = infos.findIndex((info) => info.name === name)
     if (index === -1) return undefined
@@ -50,28 +43,13 @@ export async function detailsRouteHandler<
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
     T,
-    U
+    U,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
-    handler: DetailsHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        T
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    handler: DetailsHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T>,
     toItem: ToItem<T, U>,
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
     const infoDetails = await handler(sonolus, req.params.name)
     if (!infoDetails) {

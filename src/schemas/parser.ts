@@ -2,9 +2,7 @@ import { ZodError } from 'zod'
 
 export type Parser<T> = (data: unknown, logPath: string) => T
 
-export function getParser<T>(schema: {
-    parse: (data: unknown) => T
-}): Parser<T> {
+export function getParser<T>(schema: { parse: (data: unknown) => T }): Parser<T> {
     return (data, logPath) => {
         try {
             return schema.parse(data)
@@ -12,11 +10,9 @@ export function getParser<T>(schema: {
             if (!(error instanceof ZodError)) throw `${logPath}: ${error}`
 
             const messages = error.issues.map(({ message, path }) =>
-                path.length > 0 ? `${message} (${formatPath(path)})` : message
+                path.length > 0 ? `${message} (${formatPath(path)})` : message,
             )
-            throw [`${logPath}:`, ...messages].join(
-                messages.length > 1 ? '\n' : ' '
-            )
+            throw [`${logPath}:`, ...messages].join(messages.length > 1 ? '\n' : ' ')
         }
     }
 }

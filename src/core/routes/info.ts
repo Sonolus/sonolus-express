@@ -10,16 +10,9 @@ export type ServerInfoHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 > = (
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
 ) => Promisable<Database>
 
 export function defaultServerInfoHandler<
@@ -28,17 +21,8 @@ export function defaultServerInfoHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
->(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >
-): Database {
+    TEngines extends ItemsConfig,
+>(sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>): Database {
     return {
         info: sonolus.db.info,
         levels: sonolus.db.levels.slice(0, 5),
@@ -56,18 +40,11 @@ export async function serverInfoRouteHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
     res.json(
         toServerInfo(
@@ -79,7 +56,7 @@ export async function serverInfoRouteHandler<
             sonolus.backgroundsConfig.search,
             sonolus.effectsConfig.search,
             sonolus.particlesConfig.search,
-            sonolus.enginesConfig.search
-        )
+            sonolus.enginesConfig.search,
+        ),
     )
 }

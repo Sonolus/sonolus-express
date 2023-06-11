@@ -3,7 +3,7 @@ import { Database, LocalizationText, SkinInfo, SkinItem } from 'sonolus-core'
 export function toSkinItem(
     db: Database,
     localize: (text: LocalizationText) => string,
-    info: SkinInfo
+    info: SkinInfo,
 ): SkinItem {
     return {
         name: info.name,

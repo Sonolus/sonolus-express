@@ -10,10 +10,7 @@ export type SearchSliderOptionInfo = {
     unit?: LocalizationText
 }
 
-export function parseSliderQuery(
-    value: unknown,
-    option: SearchSliderOptionInfo
-): number {
+export function parseSliderQuery(value: unknown, option: SearchSliderOptionInfo): number {
     if (typeof value !== 'string') return option.def
 
     const parsed = +value
@@ -27,7 +24,7 @@ export function parseSliderQuery(
 export function toSearchSliderOption(
     localize: (text: LocalizationText) => string,
     query: string,
-    info: SearchSliderOptionInfo
+    info: SearchSliderOptionInfo,
 ): SearchSliderOption {
     return {
         query,

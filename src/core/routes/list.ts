@@ -15,18 +15,11 @@ export type ListHandler<
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
     T,
-    U
+    U,
 > = (
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     query: T,
-    page: number
+    page: number,
 ) => Promisable<{
     pageCount: number
     infos: U[]
@@ -36,7 +29,7 @@ export function defaultListHandler<T>(
     infos: T[],
     filter: (infos: T[], keywords: string) => T[],
     query: Record<string, unknown>,
-    page: number
+    page: number,
 ): {
     pageCount: number
     infos: T[]
@@ -56,16 +49,9 @@ export async function listRouteHandler<
     TEngines extends ItemsConfig,
     T extends ItemsConfig,
     U,
-    V
+    V,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     handler: ListHandler<
         TLevels,
         TSkins,
@@ -79,27 +65,23 @@ export async function listRouteHandler<
     toItem: ToItem<U, V>,
     search: SearchInfo,
     req: Request,
-    res: Response
+    res: Response,
 ): Promise<void> {
     res.json(
         toList(
             sonolus.db,
             req.localize,
-            await handler(
-                sonolus,
-                parseQuery(req.query, search),
-                +(req.query.page || '') || 0
-            ),
+            await handler(sonolus, parseQuery(req.query, search), +(req.query.page || '') || 0),
             toItem,
-            search
-        )
+            search,
+        ),
     )
 }
 
 export function paginateInfos<T>(
     infos: T[],
     page: number,
-    perPage = 20
+    perPage = 20,
 ): {
     pageCount: number
     infos: T[]
@@ -110,11 +92,7 @@ export function paginateInfos<T>(
     }
 }
 
-export function filterInfosByKeywords<T>(
-    infos: T[],
-    props: (keyof T)[],
-    keywords: string
-): T[] {
+export function filterInfosByKeywords<T>(infos: T[], props: (keyof T)[], keywords: string): T[] {
     const fullTerm = keywords.trim().toLowerCase()
     if (!fullTerm) return infos
 
@@ -133,12 +111,7 @@ export function filterInfosByKeywords<T>(
             exacts: results.filter((result) => result === 2).length,
             partials: results.filter((result) => result === 1).length,
         }))
-        .sort(
-            (a, b) =>
-                b.full - a.full ||
-                b.exacts - a.exacts ||
-                b.partials - a.partials
-        )
+        .sort((a, b) => b.full - a.full || b.exacts - a.exacts || b.partials - a.partials)
         .map(({ info }) => info)
 }
 
@@ -157,9 +130,7 @@ function matchTerm<T>(info: T, keywordProps: (keyof T)[], term: string) {
                 break
             case 'object':
                 if (value) {
-                    texts = Object.values(value).map((text) =>
-                        text.toLowerCase()
-                    )
+                    texts = Object.values(value).map((text) => text.toLowerCase())
                 } else {
                     texts = []
                 }
