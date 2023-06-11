@@ -17,7 +17,7 @@ TypeScript based developer toolkit for Sonolus servers with [Express.js](https:/
 ## Installation
 
 ```
-npm install sonolus.js
+npm install sonolus-express
 ```
 
 A compatible version of [sonolus-core](https://github.com/Sonolus/sonolus-core) is also required as peer dependency. If it isn't installed automatically, you can do so with:
