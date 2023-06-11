@@ -17,7 +17,6 @@
     "build": "tsc -p ."
   },
   "devDependencies": {
-    "@tsconfig/node16": "^1.0.3",
     "@types/express": "^4.17.17",
     "@types/node": "^16.18.23",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
