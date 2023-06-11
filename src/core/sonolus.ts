@@ -526,11 +526,12 @@ const installSPA = (app: Express, basePath: string, spaRoot: string) => {
     const indexPath = resolve(spaRoot, 'index.html')
 
     app.use(basePath, express.static(spaRoot))
-    ;['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines'].map((type) => {
+
+    for (const type of ['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines']) {
         app.get(`${basePath}/${type}/:any`, (req, res) => {
             res.sendFile(indexPath)
         })
-    })
+    }
 
     app.use(basePath, (req, res) => {
         res.status(404).sendFile(indexPath)
@@ -541,7 +542,8 @@ const installRedirect = (app: Express, basePath: string) => {
     app.get(basePath, (req, res) => {
         res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}`)
     })
-    ;['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines'].map((type) => {
+
+    for (const type of ['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines']) {
         app.get(`${basePath}/${type}/list`, (req, res) => {
             res.redirect(
                 `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/list${getSearch(
@@ -555,7 +557,7 @@ const installRedirect = (app: Express, basePath: string) => {
                 `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/${req.params.name}`,
             )
         })
-    })
+    }
 }
 
 const getSearch = (query: ParsedQs) => {
