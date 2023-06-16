@@ -11,7 +11,7 @@ export const userProfileSchema = z.object({
         z.object({
             title: z.string(),
             address: z.string(),
-        })
+        }),
     ),
     favorites: z.array(z.string()),
 })

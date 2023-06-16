@@ -1,5 +1,5 @@
 import { randomUUID, webcrypto } from 'crypto'
-import type { Application, Request, Response, Router } from 'express'
+import type { Express, Request, Response, Router } from 'express'
 import * as express from 'express'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
@@ -7,19 +7,19 @@ import type { ParsedQs } from 'qs'
 import {
     AuthenticateInfo,
     Database,
-    getEncryptionPublicKey,
-    hash as sonolusHash,
     LocalizationText,
-    localize,
     NameText,
     PlaceholderText,
     ResourceType,
+    SRL,
     SessionData,
     SessionInfo,
-    SRL,
+    getEncryptionPublicKey,
+    localize,
+    hash as sonolusHash,
     version,
 } from 'sonolus-core'
-import { databaseParser, Query, SearchInfo } from '..'
+import { Query, SearchInfo, databaseParser } from '..'
 import { sessionDataSchema } from '../schemas/session-data'
 import {
     BackgroundDetailsHandler,
@@ -32,65 +32,53 @@ import {
     defaultBackgroundListHandler,
 } from './routes/backgrounds/list'
 import {
-    defaultEffectDetailsHandler,
     EffectDetailsHandler,
+    defaultEffectDetailsHandler,
     effectDetailsRouteHandler,
 } from './routes/effects/details'
 import {
-    defaultEffectListHandler,
     EffectListHandler,
+    defaultEffectListHandler,
     effectListRouteHandler,
 } from './routes/effects/list'
 import {
-    defaultEngineDetailsHandler,
     EngineDetailsHandler,
+    defaultEngineDetailsHandler,
     engineDetailsRouteHandler,
 } from './routes/engines/details'
 import {
-    defaultEngineListHandler,
     EngineListHandler,
+    defaultEngineListHandler,
     engineListRouteHandler,
 } from './routes/engines/list'
+import { ServerInfoHandler, defaultServerInfoHandler, serverInfoRouteHandler } from './routes/info'
 import {
-    defaultServerInfoHandler,
-    ServerInfoHandler,
-    serverInfoRouteHandler,
-} from './routes/info'
-import {
-    defaultLevelDetailsHandler,
     LevelDetailsHandler,
+    defaultLevelDetailsHandler,
     levelDetailsRouteHandler,
 } from './routes/levels/details'
 import {
-    defaultLevelListHandler,
     LevelListHandler,
+    defaultLevelListHandler,
     levelListRouteHandler,
 } from './routes/levels/list'
 import {
-    defaultParticleDetailsHandler,
     ParticleDetailsHandler,
+    defaultParticleDetailsHandler,
     particleDetailsRouteHandler,
 } from './routes/particles/details'
 import {
-    defaultParticleListHandler,
     ParticleListHandler,
+    defaultParticleListHandler,
     particleListRouteHandler,
 } from './routes/particles/list'
 import {
-    defaultSkinDetailsHandler,
     SkinDetailsHandler,
+    defaultSkinDetailsHandler,
     skinDetailsRouteHandler,
 } from './routes/skins/details'
-import {
-    defaultSkinListHandler,
-    SkinListHandler,
-    skinListRouteHandler,
-} from './routes/skins/list'
-import {
-    CheckSessionHandler,
-    CreateSessionHandler,
-    FindSessionHandler,
-} from './session'
+import { SkinListHandler, defaultSkinListHandler, skinListRouteHandler } from './routes/skins/list'
+import { CheckSessionHandler, CreateSessionHandler, FindSessionHandler } from './session'
 
 export type ItemsConfig = {
     search: SearchInfo
@@ -114,7 +102,7 @@ export class Sonolus<
     TBackgrounds extends ItemsConfig = typeof defaultItemsConfig,
     TEffects extends ItemsConfig = typeof defaultItemsConfig,
     TParticles extends ItemsConfig = typeof defaultItemsConfig,
-    TEngines extends ItemsConfig = typeof defaultItemsConfig
+    TEngines extends ItemsConfig = typeof defaultItemsConfig,
 > {
     private readonly authentication: boolean
     private readonly sessionDuration: number
@@ -272,7 +260,7 @@ export class Sonolus<
     > = defaultEngineDetailsHandler
 
     constructor(
-        app: Application,
+        app: Express,
         options?: Partial<{
             basePath: string
             authentication: boolean
@@ -287,7 +275,7 @@ export class Sonolus<
             effects: TEffects
             particles: TParticles
             engines: TEngines
-        }>
+        }>,
     ) {
         const {
             basePath,
@@ -318,7 +306,7 @@ export class Sonolus<
                 particles: defaultItemsConfig,
                 engines: defaultItemsConfig,
             },
-            options
+            options,
         )
 
         this.authentication = authentication
@@ -380,10 +368,7 @@ export class Sonolus<
 
     public load(path: string): void {
         const dbPath = `${path}/db.json`
-        const db = databaseParser(
-            JSON.parse(readFileSync(dbPath, 'utf-8')),
-            `${path}/db.json`
-        )
+        const db = databaseParser(JSON.parse(readFileSync(dbPath, 'utf-8')), `${path}/db.json`)
 
         this.db.info = db.info
         this.db.levels.push(...db.levels)
@@ -393,21 +378,12 @@ export class Sonolus<
         this.db.particles.push(...db.particles)
         this.db.engines.push(...db.engines)
 
-        this.router.use(
-            '/sonolus/repository',
-            express.static(`${path}/repository`)
-        )
+        this.router.use('/sonolus/repository', express.static(`${path}/repository`))
     }
 
-    public add<T extends ResourceType>(
-        type: T,
-        data: Buffer | string,
-        hash?: string
-    ): SRL<T> {
+    public add<T extends ResourceType>(type: T, data: Buffer | string, hash?: string): SRL<T> {
         if (!hash) {
-            hash = sonolusHash(
-                typeof data === 'string' ? readFileSync(data) : data
-            )
+            hash = sonolusHash(typeof data === 'string' ? readFileSync(data) : data)
         }
 
         const url = `/sonolus/repository/${type}/${hash}`
@@ -447,11 +423,7 @@ export class Sonolus<
                 const id = randomUUID()
                 const key = await webcrypto.subtle.exportKey(
                     'raw',
-                    await webcrypto.subtle.generateKey(
-                        { name: 'AES-CBC', length: 256 },
-                        true,
-                        []
-                    )
+                    await webcrypto.subtle.generateKey({ name: 'AES-CBC', length: 256 }, true, []),
                 )
                 const iv = webcrypto.getRandomValues(new Uint8Array(16))
                 const expiration = Date.now() + this.sessionDuration
@@ -467,8 +439,8 @@ export class Sonolus<
                     await webcrypto.subtle.encrypt(
                         'RSA-OAEP',
                         encryptionPublicKey,
-                        Buffer.from(JSON.stringify(sessionInfo))
-                    )
+                        Buffer.from(JSON.stringify(sessionInfo)),
+                    ),
                 ).toString('base64')
 
                 const response: AuthenticateInfo = {
@@ -487,11 +459,10 @@ export class Sonolus<
 
     private getAPI(
         path: string,
-        handler: (sonolus: this, req: Request, res: Response) => Promise<void>
+        handler: (sonolus: this, req: Request, res: Response) => Promise<void>,
     ) {
         this.router.get(path, async (req, res) => {
-            req.localize = (text) =>
-                this.localize(text, req.query.localization as string)
+            req.localize = (text) => this.localize(text, req.query.localization as string)
 
             res.set('Sonolus-Version', version.sonolus)
 
@@ -527,7 +498,7 @@ export class Sonolus<
             session.key,
             { name: 'AES-CBC' },
             false,
-            ['decrypt']
+            ['decrypt'],
         )
 
         let sessionData: SessionData
@@ -538,10 +509,10 @@ export class Sonolus<
                         await webcrypto.subtle.decrypt(
                             { name: 'AES-CBC', iv: session.iv },
                             key,
-                            Buffer.from(data, 'base64')
-                        )
-                    ).toString()
-                )
+                            Buffer.from(data, 'base64'),
+                        ),
+                    ).toString(),
+                ),
             )
         } catch (error) {
             return false
@@ -551,47 +522,45 @@ export class Sonolus<
     }
 }
 
-function installSPA(app: Application, basePath: string, spaRoot: string) {
+const installSPA = (app: Express, basePath: string, spaRoot: string) => {
     const indexPath = resolve(spaRoot, 'index.html')
 
     app.use(basePath, express.static(spaRoot))
-    ;['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines'].map(
-        (type) => {
-            app.get(`${basePath}/${type}/:any`, (req, res) => {
-                res.sendFile(indexPath)
-            })
-        }
-    )
+
+    for (const type of ['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines']) {
+        app.get(`${basePath}/${type}/:any`, (req, res) => {
+            res.sendFile(indexPath)
+        })
+    }
 
     app.use(basePath, (req, res) => {
         res.status(404).sendFile(indexPath)
     })
 }
 
-function installRedirect(app: Application, basePath: string) {
+const installRedirect = (app: Express, basePath: string) => {
     app.get(basePath, (req, res) => {
         res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}`)
     })
-    ;['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines'].map(
-        (type) => {
-            app.get(`${basePath}/${type}/list`, (req, res) => {
-                res.redirect(
-                    `https://open.sonolus.com/${
-                        req.headers.host
-                    }${basePath}/${type}/list${getSearch(req.query)}`
-                )
-            })
 
-            app.get(`${basePath}/${type}/:name`, (req, res) => {
-                res.redirect(
-                    `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/${req.params.name}`
-                )
-            })
-        }
-    )
+    for (const type of ['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines']) {
+        app.get(`${basePath}/${type}/list`, (req, res) => {
+            res.redirect(
+                `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/list${getSearch(
+                    req.query,
+                )}`,
+            )
+        })
+
+        app.get(`${basePath}/${type}/:name`, (req, res) => {
+            res.redirect(
+                `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/${req.params.name}`,
+            )
+        })
+    }
 }
 
-function getSearch(query: ParsedQs) {
+const getSearch = (query: ParsedQs) => {
     const params = new URLSearchParams()
 
     for (const key in query) {

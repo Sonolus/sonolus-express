@@ -10,10 +10,7 @@ export type SearchSliderOptionInfo = {
     unit?: LocalizationText
 }
 
-export function parseSliderQuery(
-    value: unknown,
-    option: SearchSliderOptionInfo
-): number {
+export const parseSliderQuery = (value: unknown, option: SearchSliderOptionInfo): number => {
     if (typeof value !== 'string') return option.def
 
     const parsed = +value
@@ -24,19 +21,17 @@ export function parseSliderQuery(
     return parsed
 }
 
-export function toSearchSliderOption(
+export const toSearchSliderOption = (
     localize: (text: LocalizationText) => string,
     query: string,
-    info: SearchSliderOptionInfo
-): SearchSliderOption {
-    return {
-        query,
-        name: localize(info.name),
-        type: 'slider',
-        def: info.def,
-        min: info.min,
-        max: info.max,
-        step: info.step,
-        unit: info.unit && localize(info.unit),
-    }
-}
+    info: SearchSliderOptionInfo,
+): SearchSliderOption => ({
+    query,
+    name: localize(info.name),
+    type: 'slider',
+    def: info.def,
+    min: info.min,
+    max: info.max,
+    step: info.step,
+    unit: info.unit && localize(info.unit),
+})

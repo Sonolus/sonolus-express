@@ -7,13 +7,11 @@ export type SearchInfo = {
     }
 }
 
-export function toSearch(
+export const toSearch = (
     localize: (text: LocalizationText) => string,
-    info: SearchInfo
-): Search {
-    return {
-        options: Object.entries(info.options).map(([query, option]) =>
-            toSearchOption(localize, query, option)
-        ),
-    }
-}
+    info: SearchInfo,
+): Search => ({
+    options: Object.entries(info.options).map(([query, option]) =>
+        toSearchOption(localize, query, option),
+    ),
+})

@@ -6,21 +6,19 @@ export type SearchTextOptionInfo = {
     placeholder: LocalizationText
 }
 
-export function parseTextQuery(value: unknown): string {
+export const parseTextQuery = (value: unknown): string => {
     if (typeof value !== 'string') return ''
 
     return value
 }
 
-export function toSearchTextOption(
+export const toSearchTextOption = (
     localize: (text: LocalizationText) => string,
     query: string,
-    info: SearchTextOptionInfo
-): SearchTextOption {
-    return {
-        query,
-        name: localize(info.name),
-        type: 'text',
-        placeholder: localize(info.placeholder),
-    }
-}
+    info: SearchTextOptionInfo,
+): SearchTextOption => ({
+    query,
+    name: localize(info.name),
+    type: 'text',
+    placeholder: localize(info.placeholder),
+})

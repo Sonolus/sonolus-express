@@ -4,7 +4,7 @@ import { getSRLSchema } from './srl'
 
 export const skinInfoSchema = z.object({
     name: z.string(),
-    version: z.literal(2),
+    version: z.literal(3),
     title: localizationTextSchema,
     subtitle: localizationTextSchema,
     author: localizationTextSchema,

@@ -2,11 +2,7 @@ import { Request, Response } from 'express'
 import { EffectInfo, InfoDetails } from 'sonolus-core'
 import { ItemsConfig, Sonolus } from '../..'
 import { toEffectItem } from '../../../api/effect-item'
-import {
-    defaultDetailsHandler,
-    DetailsHandler,
-    detailsRouteHandler,
-} from '../details'
+import { DetailsHandler, defaultDetailsHandler, detailsRouteHandler } from '../details'
 
 export type EffectDetailsHandler<
     TLevels extends ItemsConfig,
@@ -14,62 +10,31 @@ export type EffectDetailsHandler<
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
-> = DetailsHandler<
-    TLevels,
-    TSkins,
-    TBackgrounds,
-    TEffects,
-    TParticles,
-    TEngines,
-    EffectInfo
->
+    TEngines extends ItemsConfig,
+> = DetailsHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, EffectInfo>
 
-export function defaultEffectDetailsHandler<
+export const defaultEffectDetailsHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
-    name: string
-): InfoDetails<EffectInfo> | undefined {
-    return defaultDetailsHandler(sonolus.db.effects, name)
-}
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    name: string,
+): InfoDetails<EffectInfo> | undefined => defaultDetailsHandler(sonolus.db.effects, name)
 
-export function effectDetailsRouteHandler<
+export const effectDetailsRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig
+    TEngines extends ItemsConfig,
 >(
-    sonolus: Sonolus<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines
-    >,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
     req: Request,
-    res: Response
-): Promise<void> {
-    return detailsRouteHandler(
-        sonolus,
-        sonolus.effectDetailsHandler,
-        toEffectItem,
-        req,
-        res
-    )
-}
+    res: Response,
+): Promise<void> =>
+    detailsRouteHandler(sonolus, sonolus.effectDetailsHandler, toEffectItem, req, res)
