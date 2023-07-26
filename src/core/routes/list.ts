@@ -71,7 +71,7 @@ export const listRouteHandler = async <
         toList(
             sonolus.db,
             req.localize,
-            await handler(sonolus, parseQuery(req.query, search), +(req.query.page || '') || 0),
+            await handler(sonolus, parseQuery(req.query, search), +(req.query.page ?? '') || 0),
             toItem,
             search,
         ),
@@ -128,7 +128,7 @@ const matchTerm = <T>(info: T, keywordProps: (keyof T)[], term: string) => {
                 break
             case 'object':
                 if (value) {
-                    texts = Object.values(value).map((text) => text.toLowerCase())
+                    texts = Object.values(value as string[]).map((text) => text.toLowerCase())
                 } else {
                     texts = []
                 }

@@ -32,4 +32,4 @@ export const parseQuery = <T extends SearchInfo>(
                     return [key, parseSelectQuery(query[key], option)]
             }
         }),
-    )
+    ) as never
