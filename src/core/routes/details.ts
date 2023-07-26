@@ -27,10 +27,10 @@ export const defaultDetailsHandler = <
     infos: T[],
     name: string,
 ): InfoDetails<T> | undefined => {
-    const index = infos.findIndex((info) => info.name === name)
-    if (index === -1) return undefined
+    const info = infos.find((info) => info.name === name)
+    if (!info) return undefined
 
-    const info = infos[index]
+    const index = infos.indexOf(info)
     return {
         info,
         description: info.description,
@@ -54,7 +54,13 @@ export const detailsRouteHandler = async <
     req: Request,
     res: Response,
 ): Promise<void> => {
-    const infoDetails = await handler(sonolus, req.params.name)
+    const name = req.params.name
+    if (!name) {
+        res.status(404).end()
+        return
+    }
+
+    const infoDetails = await handler(sonolus, name)
     if (!infoDetails) {
         res.status(404).end()
         return
