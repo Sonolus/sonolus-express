@@ -19,13 +19,4 @@ export const getParser =
     }
 
 const formatPath = (path: (string | number)[]) =>
-    path
-        .map((segment) => {
-            switch (typeof segment) {
-                case 'string':
-                    return `.${segment}`
-                case 'number':
-                    return `[${segment}]`
-            }
-        })
-        .join('')
+    path.map((segment) => (typeof segment === 'number' ? `[${segment}]` : `.${segment}`)).join('')
