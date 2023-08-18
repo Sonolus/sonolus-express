@@ -4,7 +4,7 @@ import { getSRLSchema } from './srl'
 
 export const engineInfoSchema = z.object({
     name: z.string(),
-    version: z.literal(8),
+    version: z.literal(9),
     title: localizationTextSchema,
     subtitle: localizationTextSchema,
     author: localizationTextSchema,
@@ -14,7 +14,8 @@ export const engineInfoSchema = z.object({
     effect: z.string(),
     particle: z.string(),
     thumbnail: getSRLSchema('EngineThumbnail'),
-    data: getSRLSchema('EngineData'),
+    playData: getSRLSchema('EnginePlayData'),
+    tutorialData: getSRLSchema('EngineTutorialData'),
     rom: getSRLSchema('EngineRom').optional(),
     configuration: getSRLSchema('EngineConfiguration'),
     meta: z.unknown(),

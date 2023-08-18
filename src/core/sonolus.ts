@@ -358,7 +358,7 @@ export class Sonolus<
         app.use(basePath, this.router)
 
         if (mode === 'spa') {
-            if (!spaRoot) throw 'Missing SPA root'
+            if (!spaRoot) throw new Error('Missing SPA root')
 
             installSPA(app, basePath, spaRoot)
         } else if (mode === 'redirect') {
@@ -390,11 +390,11 @@ export class Sonolus<
 
         if (typeof data === 'string') {
             const path = resolve(data)
-            this.router.get(url, async (req, res) => {
+            this.router.get(url, (req, res) => {
                 res.sendFile(path)
             })
         } else {
-            this.router.get(url, async (req, res) => {
+            this.router.get(url, (req, res) => {
                 res.send(data)
             })
         }
@@ -462,7 +462,8 @@ export class Sonolus<
         handler: (sonolus: this, req: Request, res: Response) => Promise<void>,
     ) {
         this.router.get(path, async (req, res) => {
-            req.localize = (text) => this.localize(text, req.query.localization as string)
+            req.localize = (text: LocalizationText) =>
+                this.localize(text, req.query.localization as string)
 
             res.set('Sonolus-Version', version.sonolus)
 
@@ -481,13 +482,15 @@ export class Sonolus<
     }
 
     private async checkSession(req: Request) {
-        if (!this.findSessionHandler) throw 'Missing findSessionHandler'
-        if (!this.checkSessionHandler) throw 'Missing checkSessionHandler'
+        if (!this.findSessionHandler) throw new Error('Missing findSessionHandler')
+        if (!this.checkSessionHandler) throw new Error('Missing checkSessionHandler')
 
         if (!req.headers['sonolus-session-id']) return false
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         const id = `${req.headers['sonolus-session-id']}`
 
         if (!req.headers['sonolus-session-data']) return false
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         const data = `${req.headers['sonolus-session-data']}`
 
         const session = await this.findSessionHandler(this, id)
@@ -564,6 +567,7 @@ const getSearch = (query: ParsedQs) => {
     const params = new URLSearchParams()
 
     for (const key in query) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         params.append(key, `${query[key]}`)
     }
 

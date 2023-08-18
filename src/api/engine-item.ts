@@ -25,7 +25,8 @@ export const toEngineItem = (
         getByName(db.particles, info.particle, `Engine/${info.name}`),
     ),
     thumbnail: info.thumbnail,
-    data: info.data,
+    playData: info.playData,
+    tutorialData: info.tutorialData,
     rom: info.rom,
     configuration: info.configuration,
 })

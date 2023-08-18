@@ -2,9 +2,7 @@ import { LocalizationText, Search } from 'sonolus-core'
 import { SearchOptionInfo, toSearchOption } from './option/info'
 
 export type SearchInfo = {
-    options: {
-        [query: string]: SearchOptionInfo
-    }
+    options: Record<string, SearchOptionInfo>
 }
 
 export const toSearch = (
