@@ -30,7 +30,7 @@
   },
   "peerDependencies": {
     "express": "^4.18.2",
-    "sonolus-core": "~7.2.0"
+    "sonolus-core": "~7.3.0-beta.0"
   },
   "dependencies": {
     "zod": "^3.21.4"
