@@ -423,7 +423,9 @@ export class Sonolus<
                 const id = randomUUID()
                 const key = await webcrypto.subtle.exportKey(
                     'raw',
-                    await webcrypto.subtle.generateKey({ name: 'AES-CBC', length: 256 }, true, []),
+                    await webcrypto.subtle.generateKey({ name: 'AES-CBC', length: 256 }, true, [
+                        'encrypt',
+                    ]),
                 )
                 const iv = webcrypto.getRandomValues(new Uint8Array(16))
                 const expiration = Date.now() + this.sessionDuration
