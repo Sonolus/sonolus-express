@@ -12,9 +12,10 @@ export type DetailsHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
     T,
 > = (
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
     name: string,
 ) => Promisable<InfoDetails<T> | undefined>
 
@@ -45,11 +46,21 @@ export const detailsRouteHandler = async <
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
     T,
     U,
 >(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
-    handler: DetailsHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
+    handler: DetailsHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        TReplays,
+        T
+    >,
     toItem: ToItem<T, U>,
     req: Request,
     res: Response,

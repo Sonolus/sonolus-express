@@ -6,6 +6,7 @@ import { levelInfoSchema } from './level-info'
 import { localizationTextSchema } from './localization-text'
 import { getParser } from './parser'
 import { particleInfoSchema } from './particle-info'
+import { replayInfoSchema } from './replay-info'
 import { skinInfoSchema } from './skin-info'
 import { getSRLSchema } from './srl'
 
@@ -20,6 +21,7 @@ const databaseSchema = z.object({
     effects: z.array(effectInfoSchema),
     particles: z.array(particleInfoSchema),
     engines: z.array(engineInfoSchema),
+    replays: z.array(replayInfoSchema),
 })
 
 export const databaseParser = getParser(databaseSchema)

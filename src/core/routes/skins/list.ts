@@ -11,8 +11,19 @@ export type SkinListHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
     T,
-> = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, SkinInfo>
+> = ListHandler<
+    TLevels,
+    TSkins,
+    TBackgrounds,
+    TEffects,
+    TParticles,
+    TEngines,
+    TReplays,
+    T,
+    SkinInfo
+>
 
 export const defaultSkinListHandler = <
     TLevels extends ItemsConfig,
@@ -21,8 +32,9 @@ export const defaultSkinListHandler = <
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
 >(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
     query: Record<string, unknown>,
     page: number,
 ): {
@@ -40,8 +52,9 @@ export const skinListRouteHandler = <
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
 >(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
     req: Request,
     res: Response,
 ): Promise<void> =>

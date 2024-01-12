@@ -14,10 +14,11 @@ export type ListHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
     T,
     U,
 > = (
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
     query: T,
     page: number,
 ) => Promisable<{
@@ -47,11 +48,12 @@ export const listRouteHandler = async <
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
     T extends ItemsConfig,
     U,
     V,
 >(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
     handler: ListHandler<
         TLevels,
         TSkins,
@@ -59,6 +61,7 @@ export const listRouteHandler = async <
         TEffects,
         TParticles,
         TEngines,
+        TReplays,
         Query<T['search']>,
         U
     >,

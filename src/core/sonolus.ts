@@ -73,6 +73,14 @@ import {
     particleListRouteHandler,
 } from './routes/particles/list'
 import {
+    ReplayDetailsHandler,
+    ReplayListHandler,
+    defaultReplayDetailsHandler,
+    defaultReplayListHandler,
+    replayDetailsRouteHandler,
+    replayListRouteHandler,
+} from './routes/replays'
+import {
     SkinDetailsHandler,
     defaultSkinDetailsHandler,
     skinDetailsRouteHandler,
@@ -103,6 +111,7 @@ export class Sonolus<
     TEffects extends ItemsConfig = typeof defaultItemsConfig,
     TParticles extends ItemsConfig = typeof defaultItemsConfig,
     TEngines extends ItemsConfig = typeof defaultItemsConfig,
+    TReplays extends ItemsConfig = typeof defaultItemsConfig,
 > {
     private readonly authentication: boolean
     private readonly sessionDuration: number
@@ -118,6 +127,7 @@ export class Sonolus<
     readonly effectsConfig: TEffects
     readonly particlesConfig: TParticles
     readonly enginesConfig: TEngines
+    readonly replaysConfig: TReplays
 
     readonly db: Database
 
@@ -127,7 +137,8 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     >
     findSessionHandler?: FindSessionHandler<
         TLevels,
@@ -135,7 +146,8 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     >
     checkSessionHandler?: CheckSessionHandler<
         TLevels,
@@ -143,7 +155,8 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     >
 
     serverInfoHandler: ServerInfoHandler<
@@ -152,7 +165,8 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     > = defaultServerInfoHandler
 
     levelListHandler: LevelListHandler<
@@ -162,6 +176,7 @@ export class Sonolus<
         TEffects,
         TParticles,
         TEngines,
+        TReplays,
         Query<TLevels['search']>
     > = defaultLevelListHandler
     skinListHandler: SkinListHandler<
@@ -171,6 +186,7 @@ export class Sonolus<
         TEffects,
         TParticles,
         TEngines,
+        TReplays,
         Query<TSkins['search']>
     > = defaultSkinListHandler
     backgroundListHandler: BackgroundListHandler<
@@ -180,6 +196,7 @@ export class Sonolus<
         TEffects,
         TParticles,
         TEngines,
+        TReplays,
         Query<TBackgrounds['search']>
     > = defaultBackgroundListHandler
     effectListHandler: EffectListHandler<
@@ -189,6 +206,7 @@ export class Sonolus<
         TEffects,
         TParticles,
         TEngines,
+        TReplays,
         Query<TEffects['search']>
     > = defaultEffectListHandler
     particleListHandler: ParticleListHandler<
@@ -198,6 +216,7 @@ export class Sonolus<
         TEffects,
         TParticles,
         TEngines,
+        TReplays,
         Query<TParticles['search']>
     > = defaultParticleListHandler
     engineListHandler: EngineListHandler<
@@ -207,8 +226,19 @@ export class Sonolus<
         TEffects,
         TParticles,
         TEngines,
+        TReplays,
         Query<TEngines['search']>
     > = defaultEngineListHandler
+    replayListHandler: ReplayListHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        TReplays,
+        Query<TReplays['search']>
+    > = defaultReplayListHandler
 
     levelDetailsHandler: LevelDetailsHandler<
         TLevels,
@@ -216,7 +246,8 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     > = defaultLevelDetailsHandler
     skinDetailsHandler: SkinDetailsHandler<
         TLevels,
@@ -224,7 +255,8 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     > = defaultSkinDetailsHandler
     backgroundDetailsHandler: BackgroundDetailsHandler<
         TLevels,
@@ -232,7 +264,8 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     > = defaultBackgroundDetailsHandler
     effectDetailsHandler: EffectDetailsHandler<
         TLevels,
@@ -240,7 +273,8 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     > = defaultEffectDetailsHandler
     particleDetailsHandler: ParticleDetailsHandler<
         TLevels,
@@ -248,7 +282,8 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     > = defaultParticleDetailsHandler
     engineDetailsHandler: EngineDetailsHandler<
         TLevels,
@@ -256,8 +291,18 @@ export class Sonolus<
         TBackgrounds,
         TEffects,
         TParticles,
-        TEngines
+        TEngines,
+        TReplays
     > = defaultEngineDetailsHandler
+    replayDetailsHandler: ReplayDetailsHandler<
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        TReplays
+    > = defaultReplayDetailsHandler
 
     constructor(
         app: Express,
@@ -275,6 +320,7 @@ export class Sonolus<
             effects: TEffects
             particles: TParticles
             engines: TEngines
+            replays: TReplays
         }>,
     ) {
         const {
@@ -291,6 +337,7 @@ export class Sonolus<
             effects,
             particles,
             engines,
+            replays,
         } = Object.assign(
             {
                 basePath: '',
@@ -305,6 +352,7 @@ export class Sonolus<
                 effects: defaultItemsConfig,
                 particles: defaultItemsConfig,
                 engines: defaultItemsConfig,
+                replays: defaultItemsConfig,
             },
             options,
         )
@@ -323,6 +371,7 @@ export class Sonolus<
         this.effectsConfig = effects
         this.particlesConfig = particles
         this.enginesConfig = engines
+        this.replaysConfig = replays
 
         this.db = {
             info: {
@@ -335,6 +384,7 @@ export class Sonolus<
             effects: [],
             particles: [],
             engines: [],
+            replays: [],
         }
 
         this.postAuthenticate()
@@ -347,6 +397,7 @@ export class Sonolus<
         this.getAPI('/sonolus/effects/list', effectListRouteHandler)
         this.getAPI('/sonolus/particles/list', particleListRouteHandler)
         this.getAPI('/sonolus/engines/list', engineListRouteHandler)
+        this.getAPI('/sonolus/replays/list', replayListRouteHandler)
 
         this.getAPI('/sonolus/levels/:name', levelDetailsRouteHandler)
         this.getAPI('/sonolus/skins/:name', skinDetailsRouteHandler)
@@ -354,6 +405,7 @@ export class Sonolus<
         this.getAPI('/sonolus/effects/:name', effectDetailsRouteHandler)
         this.getAPI('/sonolus/particles/:name', particleDetailsRouteHandler)
         this.getAPI('/sonolus/engines/:name', engineDetailsRouteHandler)
+        this.getAPI('/sonolus/replays/:name', replayDetailsRouteHandler)
 
         app.use(basePath, this.router)
 
@@ -377,6 +429,7 @@ export class Sonolus<
         this.db.effects.push(...db.effects)
         this.db.particles.push(...db.particles)
         this.db.engines.push(...db.engines)
+        this.db.replays.push(...db.replays)
 
         this.router.use('/sonolus/repository', express.static(`${path}/repository`))
     }
@@ -532,7 +585,15 @@ const installSPA = (app: Express, basePath: string, spaRoot: string) => {
 
     app.use(basePath, express.static(spaRoot))
 
-    for (const type of ['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines']) {
+    for (const type of [
+        'levels',
+        'skins',
+        'backgrounds',
+        'effects',
+        'particles',
+        'engines',
+        'replays',
+    ]) {
         app.get(`${basePath}/${type}/:any`, (req, res) => {
             res.sendFile(indexPath)
         })
@@ -548,7 +609,15 @@ const installRedirect = (app: Express, basePath: string) => {
         res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}`)
     })
 
-    for (const type of ['levels', 'skins', 'backgrounds', 'effects', 'particles', 'engines']) {
+    for (const type of [
+        'levels',
+        'skins',
+        'backgrounds',
+        'effects',
+        'particles',
+        'engines',
+        'replays',
+    ]) {
         app.get(`${basePath}/${type}/list`, (req, res) => {
             res.redirect(
                 `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/list${getSearch(

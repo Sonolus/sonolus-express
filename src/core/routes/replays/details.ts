@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { LevelInfo } from 'sonolus-core'
-import { toLevelItem } from '../../../api/level-item'
-import { ItemsConfig, Sonolus } from '../../sonolus'
-import { ListHandler, defaultListHandler, filterInfosByKeywords, listRouteHandler } from '../list'
+import { InfoDetails, ReplayInfo } from 'sonolus-core'
+import { ItemsConfig, Sonolus } from '../..'
+import { toReplayItem } from '../../../api/replay-item'
+import { DetailsHandler, defaultDetailsHandler, detailsRouteHandler } from '../details'
 
-export type LevelListHandler<
+export type ReplayDetailsHandler<
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -12,8 +12,7 @@ export type LevelListHandler<
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
     TReplays extends ItemsConfig,
-    T,
-> = ListHandler<
+> = DetailsHandler<
     TLevels,
     TSkins,
     TBackgrounds,
@@ -21,11 +20,10 @@ export type LevelListHandler<
     TParticles,
     TEngines,
     TReplays,
-    T,
-    LevelInfo
+    ReplayInfo
 >
 
-export const defaultLevelListHandler = <
+export const defaultReplayDetailsHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -35,21 +33,10 @@ export const defaultLevelListHandler = <
     TReplays extends ItemsConfig,
 >(
     sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
-    query: Record<string, unknown>,
-    page: number,
-): {
-    pageCount: number
-    infos: LevelInfo[]
-} => defaultListHandler(sonolus.db.levels, filterLevelInfosByKeywords, query, page)
+    name: string,
+): InfoDetails<ReplayInfo> | undefined => defaultDetailsHandler(sonolus.db.replays, name)
 
-export const filterLevelInfosByKeywords = (infos: LevelInfo[], keywords: string): LevelInfo[] =>
-    filterInfosByKeywords(
-        infos,
-        ['name', 'rating', 'title', 'artists', 'author', 'description'],
-        keywords,
-    )
-
-export const levelListRouteHandler = <
+export const replayDetailsRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -62,11 +49,4 @@ export const levelListRouteHandler = <
     req: Request,
     res: Response,
 ): Promise<void> =>
-    listRouteHandler(
-        sonolus,
-        sonolus.levelListHandler,
-        toLevelItem,
-        sonolus.levelsConfig.search,
-        req,
-        res,
-    )
+    detailsRouteHandler(sonolus, sonolus.replayDetailsHandler, toReplayItem, req, res)

@@ -9,6 +9,7 @@ import {
     toSearch,
     toSkinItem,
 } from '.'
+import { toReplayItem } from './replay-item'
 
 export const toServerInfo = (
     serverInfo: Database,
@@ -20,6 +21,7 @@ export const toServerInfo = (
     effectsSearch: SearchInfo,
     particlesSearch: SearchInfo,
     enginesSearch: SearchInfo,
+    replaysSearch: SearchInfo,
 ): ServerInfo => ({
     title: localize(serverInfo.info.title),
     banner: serverInfo.info.banner,
@@ -46,5 +48,9 @@ export const toServerInfo = (
     engines: {
         items: serverInfo.engines.map((info) => toEngineItem(db, localize, info)),
         search: toSearch(localize, enginesSearch),
+    },
+    replays: {
+        items: serverInfo.replays.map((info) => toReplayItem(db, localize, info)),
+        search: toSearch(localize, replaysSearch),
     },
 })

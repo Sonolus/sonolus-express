@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { LevelInfo } from 'sonolus-core'
-import { toLevelItem } from '../../../api/level-item'
+import { ReplayInfo } from 'sonolus-core'
+import { toReplayItem } from '../../../api/replay-item'
 import { ItemsConfig, Sonolus } from '../../sonolus'
 import { ListHandler, defaultListHandler, filterInfosByKeywords, listRouteHandler } from '../list'
 
-export type LevelListHandler<
+export type ReplayListHandler<
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -22,10 +22,10 @@ export type LevelListHandler<
     TEngines,
     TReplays,
     T,
-    LevelInfo
+    ReplayInfo
 >
 
-export const defaultLevelListHandler = <
+export const defaultReplayListHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -39,17 +39,13 @@ export const defaultLevelListHandler = <
     page: number,
 ): {
     pageCount: number
-    infos: LevelInfo[]
-} => defaultListHandler(sonolus.db.levels, filterLevelInfosByKeywords, query, page)
+    infos: ReplayInfo[]
+} => defaultListHandler(sonolus.db.replays, filterReplayInfosByKeywords, query, page)
 
-export const filterLevelInfosByKeywords = (infos: LevelInfo[], keywords: string): LevelInfo[] =>
-    filterInfosByKeywords(
-        infos,
-        ['name', 'rating', 'title', 'artists', 'author', 'description'],
-        keywords,
-    )
+export const filterReplayInfosByKeywords = (infos: ReplayInfo[], keywords: string): ReplayInfo[] =>
+    filterInfosByKeywords(infos, ['name', 'title', 'subtitle', 'author', 'description'], keywords)
 
-export const levelListRouteHandler = <
+export const replayListRouteHandler = <
     TLevels extends ItemsConfig,
     TSkins extends ItemsConfig,
     TBackgrounds extends ItemsConfig,
@@ -64,9 +60,9 @@ export const levelListRouteHandler = <
 ): Promise<void> =>
     listRouteHandler(
         sonolus,
-        sonolus.levelListHandler,
-        toLevelItem,
-        sonolus.levelsConfig.search,
+        sonolus.replayListHandler,
+        toReplayItem,
+        sonolus.replaysConfig.search,
         req,
         res,
     )

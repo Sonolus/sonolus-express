@@ -11,8 +11,19 @@ export type BackgroundListHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
     T,
-> = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, BackgroundInfo>
+> = ListHandler<
+    TLevels,
+    TSkins,
+    TBackgrounds,
+    TEffects,
+    TParticles,
+    TEngines,
+    TReplays,
+    T,
+    BackgroundInfo
+>
 
 export const defaultBackgroundListHandler = <
     TLevels extends ItemsConfig,
@@ -21,8 +32,9 @@ export const defaultBackgroundListHandler = <
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
 >(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
     query: Record<string, unknown>,
     page: number,
 ): {
@@ -43,8 +55,9 @@ export const backgroundListRouteHandler = <
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
 >(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
     req: Request,
     res: Response,
 ): Promise<void> =>

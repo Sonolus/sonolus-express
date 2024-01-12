@@ -11,8 +11,9 @@ export type ServerInfoHandler<
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
 > = (
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
 ) => Promisable<Database>
 
 export const defaultServerInfoHandler = <
@@ -22,8 +23,9 @@ export const defaultServerInfoHandler = <
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
 >(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
 ): Database => ({
     info: sonolus.db.info,
     levels: sonolus.db.levels.slice(0, 5),
@@ -32,6 +34,7 @@ export const defaultServerInfoHandler = <
     effects: sonolus.db.effects.slice(0, 5),
     particles: sonolus.db.particles.slice(0, 5),
     engines: sonolus.db.engines.slice(0, 5),
+    replays: sonolus.db.replays.slice(0, 5),
 })
 
 export const serverInfoRouteHandler = async <
@@ -41,8 +44,9 @@ export const serverInfoRouteHandler = async <
     TEffects extends ItemsConfig,
     TParticles extends ItemsConfig,
     TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
 >(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
+    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
     req: Request,
     res: Response,
 ): Promise<void> => {
@@ -57,6 +61,7 @@ export const serverInfoRouteHandler = async <
             sonolus.effectsConfig.search,
             sonolus.particlesConfig.search,
             sonolus.enginesConfig.search,
+            sonolus.replaysConfig.search,
         ),
     )
 }
