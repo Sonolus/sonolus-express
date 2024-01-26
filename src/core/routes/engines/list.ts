@@ -1,68 +1,30 @@
-import { Request, Response } from 'express'
-import { EngineInfo } from 'sonolus-core'
+import { DatabaseEngineItem } from 'sonolus-core'
 import { toEngineItem } from '../../../api/engine-item'
-import { ItemsConfig, Sonolus } from '../../sonolus'
-import { ListHandler, defaultListHandler, filterInfosByKeywords, listRouteHandler } from '../list'
+import { SonolusRouteHandler } from '../../sonolus'
+import {
+    DefaultItemListHandler,
+    FilterItemsByKeyword,
+    defaultItemListHandler,
+    filterItemsByKeywords,
+    itemListRouteHandler,
+} from '../item-list'
 
-export type EngineListHandler<
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
-    TReplays extends ItemsConfig,
-    T,
-> = ListHandler<
-    TLevels,
-    TSkins,
-    TBackgrounds,
-    TEffects,
-    TParticles,
-    TEngines,
-    TReplays,
-    T,
-    EngineInfo
->
+export const defaultEngineListHandler: DefaultItemListHandler<DatabaseEngineItem> = (
+    sonolus,
+    session,
+    query,
+    page,
+) => defaultItemListHandler(sonolus.db.engines, filterEngineItemsByKeywords, query, page)
 
-export const defaultEngineListHandler = <
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
-    TReplays extends ItemsConfig,
->(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
-    query: Record<string, unknown>,
-    page: number,
-): {
-    pageCount: number
-    infos: EngineInfo[]
-} => defaultListHandler(sonolus.db.engines, filterEngineInfosByKeywords, query, page)
-
-export const filterEngineInfosByKeywords = (infos: EngineInfo[], keywords: string): EngineInfo[] =>
-    filterInfosByKeywords(infos, ['name', 'title', 'subtitle', 'author', 'description'], keywords)
-
-export const engineListRouteHandler = <
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
-    TReplays extends ItemsConfig,
->(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
-    req: Request,
-    res: Response,
-): Promise<void> =>
-    listRouteHandler(
-        sonolus,
-        sonolus.engineListHandler,
-        toEngineItem,
-        sonolus.enginesConfig.search,
-        req,
-        res,
+export const filterEngineItemsByKeywords: FilterItemsByKeyword<DatabaseEngineItem> = (
+    items,
+    keywords,
+) =>
+    filterItemsByKeywords(
+        items,
+        ['name', 'title', 'subtitle', 'author', 'tags', 'description'],
+        keywords,
     )
+
+export const engineListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
+    itemListRouteHandler(sonolus, sonolus.engines, toEngineItem, session, req, res)

@@ -1,110 +1,140 @@
-import { randomUUID, webcrypto } from 'crypto'
+import { webcrypto } from 'crypto'
 import type { Express, Request, Response, Router } from 'express'
 import * as express from 'express'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import type { ParsedQs } from 'qs'
 import {
-    AuthenticateInfo,
     Database,
+    DatabaseBackgroundItem,
+    DatabaseEffectItem,
+    DatabaseEngineItem,
+    DatabaseLevelItem,
+    DatabaseParticleItem,
+    DatabasePlaylistItem,
+    DatabasePostItem,
+    DatabaseReplayItem,
+    DatabaseSkinItem,
     LocalizationText,
-    NameText,
-    PlaceholderText,
     ResourceType,
     SRL,
-    SessionData,
-    SessionInfo,
-    getEncryptionPublicKey,
+    getSignaturePublicKey,
     localize,
     hash as sonolusHash,
     version,
 } from 'sonolus-core'
-import { Query, SearchInfo, databaseParser } from '..'
-import { sessionDataSchema } from '../schemas/session-data'
+import { ParsedQuery } from '../api/search/query'
+import { SearchesModel } from '../api/search/search'
+import { authenticateServerRequestSchema } from '../schemas/authenticate-server-request'
+import { databaseParser } from '../schemas/database'
 import {
-    BackgroundDetailsHandler,
+    AuthenticateHandler,
+    SessionHandler,
+    defaultAuthenticateHandler,
+    defaultSessionHandler,
+} from './authentication'
+import {
     backgroundDetailsRouteHandler,
     defaultBackgroundDetailsHandler,
 } from './routes/backgrounds/details'
+import { backgroundInfoRouteHandler, defaultBackgroundInfoHandler } from './routes/backgrounds/info'
+import { backgroundListRouteHandler, defaultBackgroundListHandler } from './routes/backgrounds/list'
+import { defaultEffectDetailsHandler, effectDetailsRouteHandler } from './routes/effects/details'
+import { defaultEffectInfoHandler, effectInfoRouteHandler } from './routes/effects/info'
+import { defaultEffectListHandler, effectListRouteHandler } from './routes/effects/list'
+import { defaultEngineDetailsHandler, engineDetailsRouteHandler } from './routes/engines/details'
+import { defaultEngineInfoHandler, engineInfoRouteHandler } from './routes/engines/info'
+import { defaultEngineListHandler, engineListRouteHandler } from './routes/engines/list'
+import { ItemDetailsHandler } from './routes/item-details'
+import { ItemInfoHandler } from './routes/item-info'
+import { ItemListHandler } from './routes/item-list'
+import { defaultLevelDetailsHandler, levelDetailsRouteHandler } from './routes/levels/details'
+import { defaultLevelInfoHandler, levelInfoRouteHandler } from './routes/levels/info'
+import { defaultLevelListHandler, levelListRouteHandler } from './routes/levels/list'
 import {
-    BackgroundListHandler,
-    backgroundListRouteHandler,
-    defaultBackgroundListHandler,
-} from './routes/backgrounds/list'
-import {
-    EffectDetailsHandler,
-    defaultEffectDetailsHandler,
-    effectDetailsRouteHandler,
-} from './routes/effects/details'
-import {
-    EffectListHandler,
-    defaultEffectListHandler,
-    effectListRouteHandler,
-} from './routes/effects/list'
-import {
-    EngineDetailsHandler,
-    defaultEngineDetailsHandler,
-    engineDetailsRouteHandler,
-} from './routes/engines/details'
-import {
-    EngineListHandler,
-    defaultEngineListHandler,
-    engineListRouteHandler,
-} from './routes/engines/list'
-import { ServerInfoHandler, defaultServerInfoHandler, serverInfoRouteHandler } from './routes/info'
-import {
-    LevelDetailsHandler,
-    defaultLevelDetailsHandler,
-    levelDetailsRouteHandler,
-} from './routes/levels/details'
-import {
-    LevelListHandler,
-    defaultLevelListHandler,
-    levelListRouteHandler,
-} from './routes/levels/list'
-import {
-    ParticleDetailsHandler,
     defaultParticleDetailsHandler,
     particleDetailsRouteHandler,
 } from './routes/particles/details'
+import { defaultParticleInfoHandler, particleInfoRouteHandler } from './routes/particles/info'
+import { defaultParticleListHandler, particleListRouteHandler } from './routes/particles/list'
 import {
-    ParticleListHandler,
-    defaultParticleListHandler,
-    particleListRouteHandler,
-} from './routes/particles/list'
+    defaultPlaylistDetailsHandler,
+    playlistDetailsRouteHandler,
+} from './routes/playlists/details'
+import { defaultPlaylistInfoHandler, playlistInfoRouteHandler } from './routes/playlists/info'
+import { defaultPlaylistListHandler, playlistListRouteHandler } from './routes/playlists/list'
+import { defaultPostDetailsHandler, postDetailsRouteHandler } from './routes/posts/details'
+import { defaultPostInfoHandler, postInfoRouteHandler } from './routes/posts/info'
+import { defaultPostListHandler, postListRouteHandler } from './routes/posts/list'
+import { defaultReplayDetailsHandler, replayDetailsRouteHandler } from './routes/replays/details'
+import { defaultReplayInfoHandler, replayInfoRouteHandler } from './routes/replays/info'
+import { defaultReplayListHandler, replayListRouteHandler } from './routes/replays/list'
 import {
-    ReplayDetailsHandler,
-    ReplayListHandler,
-    defaultReplayDetailsHandler,
-    defaultReplayListHandler,
-    replayDetailsRouteHandler,
-    replayListRouteHandler,
-} from './routes/replays'
-import {
-    SkinDetailsHandler,
-    defaultSkinDetailsHandler,
-    skinDetailsRouteHandler,
-} from './routes/skins/details'
-import { SkinListHandler, defaultSkinListHandler, skinListRouteHandler } from './routes/skins/list'
-import { CheckSessionHandler, CreateSessionHandler, FindSessionHandler } from './session'
+    ServerInfoHandler,
+    defaultServerInfoHandler,
+    serverInfoRouteHandler,
+} from './routes/server-info'
+import { defaultSkinDetailsHandler, skinDetailsRouteHandler } from './routes/skins/details'
+import { defaultSkinInfoHandler, skinInfoRouteHandler } from './routes/skins/info'
+import { defaultSkinListHandler, skinListRouteHandler } from './routes/skins/list'
 
 export type ItemsConfig = {
-    search: SearchInfo
+    searches: SearchesModel
+}
+
+export type SonolusBase = {
+    address?: string
+    db: Database
+}
+
+export type SonolusCallback<A extends unknown[], R> = <
+    TPosts extends ItemsConfig,
+    TPlaylists extends ItemsConfig,
+    TLevels extends ItemsConfig,
+    TSkins extends ItemsConfig,
+    TBackgrounds extends ItemsConfig,
+    TEffects extends ItemsConfig,
+    TParticles extends ItemsConfig,
+    TEngines extends ItemsConfig,
+    TReplays extends ItemsConfig,
+>(
+    sonolus: Sonolus<
+        TPosts,
+        TPlaylists,
+        TLevels,
+        TSkins,
+        TBackgrounds,
+        TEffects,
+        TParticles,
+        TEngines,
+        TReplays
+    >,
+    ...args: A
+) => R
+
+export type SonolusRouteHandler = SonolusCallback<
+    [session: string | undefined, req: Request, res: Response],
+    Promise<void>
+>
+
+export type SonolusItemsConfig<
+    TSonolus extends SonolusBase,
+    TConfig extends ItemsConfig,
+    TDatabaseItem,
+> = {
+    searches: TConfig['searches']
+    infoHandler: ItemInfoHandler<TSonolus, TDatabaseItem>
+    listHandler: ItemListHandler<TSonolus, ParsedQuery<TConfig['searches']>, TDatabaseItem>
+    detailsHandler: ItemDetailsHandler<TSonolus, TDatabaseItem>
 }
 
 export const defaultItemsConfig = {
-    search: {
-        options: {
-            keywords: {
-                name: { en: NameText.Keywords },
-                type: 'text',
-                placeholder: { en: PlaceholderText.Keywords },
-            },
-        },
-    },
-} as const
+    searches: {},
+} as const satisfies ItemsConfig
 
 export class Sonolus<
+    TPosts extends ItemsConfig = typeof defaultItemsConfig,
+    TPlaylists extends ItemsConfig = typeof defaultItemsConfig,
     TLevels extends ItemsConfig = typeof defaultItemsConfig,
     TSkins extends ItemsConfig = typeof defaultItemsConfig,
     TBackgrounds extends ItemsConfig = typeof defaultItemsConfig,
@@ -113,271 +143,96 @@ export class Sonolus<
     TEngines extends ItemsConfig = typeof defaultItemsConfig,
     TReplays extends ItemsConfig = typeof defaultItemsConfig,
 > {
-    private readonly authentication: boolean
-    private readonly sessionDuration: number
     private readonly fallbackLocale: string
 
-    readonly sessionAddress: string
-
-    readonly router: Router
-
-    readonly levelsConfig: TLevels
-    readonly skinsConfig: TSkins
-    readonly backgroundsConfig: TBackgrounds
-    readonly effectsConfig: TEffects
-    readonly particlesConfig: TParticles
-    readonly enginesConfig: TEngines
-    readonly replaysConfig: TReplays
+    readonly address?: string
+    readonly authentication: boolean
 
     readonly db: Database
+    readonly router: Router
 
-    createSessionHandler?: CreateSessionHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    >
-    findSessionHandler?: FindSessionHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    >
-    checkSessionHandler?: CheckSessionHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    >
+    authenticateHandler: AuthenticateHandler = defaultAuthenticateHandler
+    sessionHandler: SessionHandler = defaultSessionHandler
 
-    serverInfoHandler: ServerInfoHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    > = defaultServerInfoHandler
+    serverInfoHandler: ServerInfoHandler = defaultServerInfoHandler
 
-    levelListHandler: LevelListHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays,
-        Query<TLevels['search']>
-    > = defaultLevelListHandler
-    skinListHandler: SkinListHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays,
-        Query<TSkins['search']>
-    > = defaultSkinListHandler
-    backgroundListHandler: BackgroundListHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays,
-        Query<TBackgrounds['search']>
-    > = defaultBackgroundListHandler
-    effectListHandler: EffectListHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays,
-        Query<TEffects['search']>
-    > = defaultEffectListHandler
-    particleListHandler: ParticleListHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays,
-        Query<TParticles['search']>
-    > = defaultParticleListHandler
-    engineListHandler: EngineListHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays,
-        Query<TEngines['search']>
-    > = defaultEngineListHandler
-    replayListHandler: ReplayListHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays,
-        Query<TReplays['search']>
-    > = defaultReplayListHandler
-
-    levelDetailsHandler: LevelDetailsHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    > = defaultLevelDetailsHandler
-    skinDetailsHandler: SkinDetailsHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    > = defaultSkinDetailsHandler
-    backgroundDetailsHandler: BackgroundDetailsHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    > = defaultBackgroundDetailsHandler
-    effectDetailsHandler: EffectDetailsHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    > = defaultEffectDetailsHandler
-    particleDetailsHandler: ParticleDetailsHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    > = defaultParticleDetailsHandler
-    engineDetailsHandler: EngineDetailsHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    > = defaultEngineDetailsHandler
-    replayDetailsHandler: ReplayDetailsHandler<
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
-    > = defaultReplayDetailsHandler
+    readonly posts: SonolusItemsConfig<this, TPosts, DatabasePostItem>
+    readonly playlists: SonolusItemsConfig<this, TPlaylists, DatabasePlaylistItem>
+    readonly levels: SonolusItemsConfig<this, TLevels, DatabaseLevelItem>
+    readonly skins: SonolusItemsConfig<this, TSkins, DatabaseSkinItem>
+    readonly backgrounds: SonolusItemsConfig<this, TBackgrounds, DatabaseBackgroundItem>
+    readonly effects: SonolusItemsConfig<this, TEffects, DatabaseEffectItem>
+    readonly particles: SonolusItemsConfig<this, TParticles, DatabaseParticleItem>
+    readonly engines: SonolusItemsConfig<this, TEngines, DatabaseEngineItem>
+    readonly replays: SonolusItemsConfig<this, TReplays, DatabaseReplayItem>
 
     constructor(
         app: Express,
         options?: Partial<{
+            address: string
             basePath: string
             authentication: boolean
-            sessionAddress: string
-            sessionDuration: number
             fallbackLocale: string
             mode: 'custom' | 'redirect' | 'spa'
             spaRoot: string
-            levels: TLevels
-            skins: TSkins
-            backgrounds: TBackgrounds
-            effects: TEffects
-            particles: TParticles
-            engines: TEngines
-            replays: TReplays
+            postsConfig: TPosts
+            playlistsConfig: TPlaylists
+            levelsConfig: TLevels
+            skinsConfig: TSkins
+            backgroundsConfig: TBackgrounds
+            effectsConfig: TEffects
+            particlesConfig: TParticles
+            enginesConfig: TEngines
+            replaysConfig: TReplays
         }>,
     ) {
         const {
+            address,
             basePath,
             authentication,
-            sessionAddress,
-            sessionDuration,
             fallbackLocale,
             mode,
             spaRoot,
-            levels,
-            skins,
-            backgrounds,
-            effects,
-            particles,
-            engines,
-            replays,
+            postsConfig,
+            playlistsConfig,
+            levelsConfig,
+            skinsConfig,
+            backgroundsConfig,
+            effectsConfig,
+            particlesConfig,
+            enginesConfig,
+            replaysConfig,
         } = Object.assign(
             {
                 basePath: '',
                 authentication: false,
-                sessionAddress: '',
                 sessionDuration: 30 * 60 * 1000,
                 fallbackLocale: 'en',
                 mode: 'custom',
-                levels: defaultItemsConfig,
-                skins: defaultItemsConfig,
-                backgrounds: defaultItemsConfig,
-                effects: defaultItemsConfig,
-                particles: defaultItemsConfig,
-                engines: defaultItemsConfig,
-                replays: defaultItemsConfig,
+                postsConfig: defaultItemsConfig,
+                playlistsConfig: defaultItemsConfig,
+                levelsConfig: defaultItemsConfig,
+                skinsConfig: defaultItemsConfig,
+                backgroundsConfig: defaultItemsConfig,
+                effectsConfig: defaultItemsConfig,
+                particlesConfig: defaultItemsConfig,
+                enginesConfig: defaultItemsConfig,
+                replaysConfig: defaultItemsConfig,
             },
             options,
         )
 
-        this.authentication = authentication
-        this.sessionDuration = sessionDuration
         this.fallbackLocale = fallbackLocale
 
-        this.sessionAddress = sessionAddress
-
-        this.router = express.Router()
-
-        this.levelsConfig = levels
-        this.skinsConfig = skins
-        this.backgroundsConfig = backgrounds
-        this.effectsConfig = effects
-        this.particlesConfig = particles
-        this.enginesConfig = engines
-        this.replaysConfig = replays
+        this.address = address
+        this.authentication = authentication
 
         this.db = {
             info: {
                 title: {},
-                banner: { type: 'ServerBanner', hash: '', url: '' },
             },
+            posts: [],
+            playlists: [],
             levels: [],
             skins: [],
             backgrounds: [],
@@ -387,10 +242,79 @@ export class Sonolus<
             replays: [],
         }
 
+        this.router = express.Router()
+
+        this.posts = {
+            searches: postsConfig.searches,
+            infoHandler: defaultPostInfoHandler,
+            listHandler: defaultPostListHandler,
+            detailsHandler: defaultPostDetailsHandler,
+        }
+        this.playlists = {
+            searches: playlistsConfig.searches,
+            infoHandler: defaultPlaylistInfoHandler,
+            listHandler: defaultPlaylistListHandler,
+            detailsHandler: defaultPlaylistDetailsHandler,
+        }
+        this.levels = {
+            searches: levelsConfig.searches,
+            infoHandler: defaultLevelInfoHandler,
+            listHandler: defaultLevelListHandler,
+            detailsHandler: defaultLevelDetailsHandler,
+        }
+        this.skins = {
+            searches: skinsConfig.searches,
+            infoHandler: defaultSkinInfoHandler,
+            listHandler: defaultSkinListHandler,
+            detailsHandler: defaultSkinDetailsHandler,
+        }
+        this.backgrounds = {
+            searches: backgroundsConfig.searches,
+            infoHandler: defaultBackgroundInfoHandler,
+            listHandler: defaultBackgroundListHandler,
+            detailsHandler: defaultBackgroundDetailsHandler,
+        }
+        this.effects = {
+            searches: effectsConfig.searches,
+            infoHandler: defaultEffectInfoHandler,
+            listHandler: defaultEffectListHandler,
+            detailsHandler: defaultEffectDetailsHandler,
+        }
+        this.particles = {
+            searches: particlesConfig.searches,
+            infoHandler: defaultParticleInfoHandler,
+            listHandler: defaultParticleListHandler,
+            detailsHandler: defaultParticleDetailsHandler,
+        }
+        this.engines = {
+            searches: enginesConfig.searches,
+            infoHandler: defaultEngineInfoHandler,
+            listHandler: defaultEngineListHandler,
+            detailsHandler: defaultEngineDetailsHandler,
+        }
+        this.replays = {
+            searches: replaysConfig.searches,
+            infoHandler: defaultReplayInfoHandler,
+            listHandler: defaultReplayListHandler,
+            detailsHandler: defaultReplayDetailsHandler,
+        }
+
         this.postAuthenticate()
 
         this.getAPI('/sonolus/info', serverInfoRouteHandler)
 
+        this.getAPI('/sonolus/posts/info', postInfoRouteHandler)
+        this.getAPI('/sonolus/playlists/info', playlistInfoRouteHandler)
+        this.getAPI('/sonolus/levels/info', levelInfoRouteHandler)
+        this.getAPI('/sonolus/skins/info', skinInfoRouteHandler)
+        this.getAPI('/sonolus/backgrounds/info', backgroundInfoRouteHandler)
+        this.getAPI('/sonolus/effects/info', effectInfoRouteHandler)
+        this.getAPI('/sonolus/particles/info', particleInfoRouteHandler)
+        this.getAPI('/sonolus/engines/info', engineInfoRouteHandler)
+        this.getAPI('/sonolus/replays/info', replayInfoRouteHandler)
+
+        this.getAPI('/sonolus/posts/list', postListRouteHandler)
+        this.getAPI('/sonolus/playlists/list', playlistListRouteHandler)
         this.getAPI('/sonolus/levels/list', levelListRouteHandler)
         this.getAPI('/sonolus/skins/list', skinListRouteHandler)
         this.getAPI('/sonolus/backgrounds/list', backgroundListRouteHandler)
@@ -399,6 +323,8 @@ export class Sonolus<
         this.getAPI('/sonolus/engines/list', engineListRouteHandler)
         this.getAPI('/sonolus/replays/list', replayListRouteHandler)
 
+        this.getAPI('/sonolus/posts/:name', postDetailsRouteHandler)
+        this.getAPI('/sonolus/playlists/:name', playlistDetailsRouteHandler)
         this.getAPI('/sonolus/levels/:name', levelDetailsRouteHandler)
         this.getAPI('/sonolus/skins/:name', skinDetailsRouteHandler)
         this.getAPI('/sonolus/backgrounds/:name', backgroundDetailsRouteHandler)
@@ -423,6 +349,8 @@ export class Sonolus<
         const db = databaseParser(JSON.parse(readFileSync(dbPath, 'utf-8')), `${path}/db.json`)
 
         this.db.info = db.info
+        this.db.posts.push(...db.posts)
+        this.db.playlists.push(...db.playlists)
         this.db.levels.push(...db.levels)
         this.db.skins.push(...db.skins)
         this.db.backgrounds.push(...db.backgrounds)
@@ -462,60 +390,67 @@ export class Sonolus<
     private postAuthenticate() {
         if (!this.authentication) return
 
-        this.router.post('/sonolus/authenticate', async (req, res) => {
-            res.set('Sonolus-Version', version.sonolus)
+        this.router.post(
+            '/sonolus/authenticate',
+            express.raw({ type: 'application/json' }),
+            async (req, res) => {
+                res.set('Sonolus-Version', version.sonolus)
 
-            try {
-                if (!this.createSessionHandler) {
-                    res.status(401).end()
-                    return
+                try {
+                    const body = req.body as unknown
+                    if (!(body instanceof Buffer)) {
+                        res.status(400).end()
+                        return
+                    }
+
+                    const parseResult = authenticateServerRequestSchema.safeParse(
+                        JSON.parse(body as never),
+                    )
+                    if (!parseResult.success) {
+                        res.status(400).end()
+                        return
+                    }
+
+                    if (parseResult.data.address !== this.address) {
+                        res.status(400).end()
+                        return
+                    }
+
+                    const signature = req.headers['sonolus-signature']
+                    if (typeof signature !== 'string') {
+                        res.status(400).end()
+                        return
+                    }
+
+                    const signaturePublicKey = await getSignaturePublicKey()
+
+                    const verifyResult = await webcrypto.subtle.verify(
+                        { name: 'ECDSA', hash: 'SHA-256' },
+                        signaturePublicKey,
+                        Buffer.from(signature, 'base64'),
+                        body,
+                    )
+                    if (!verifyResult) {
+                        res.status(400).end()
+                        return
+                    }
+
+                    const response = await this.authenticateHandler(this, parseResult.data)
+                    if (!response) {
+                        res.status(401).end()
+                        return
+                    }
+
+                    res.json(response)
+                } catch (error) {
+                    console.error('[ERROR]', error)
+                    res.status(500).end()
                 }
-
-                const encryptionPublicKey = await getEncryptionPublicKey()
-
-                const id = randomUUID()
-                const key = await webcrypto.subtle.exportKey(
-                    'raw',
-                    await webcrypto.subtle.generateKey({ name: 'AES-CBC', length: 256 }, true, [
-                        'encrypt',
-                    ]),
-                )
-                const iv = webcrypto.getRandomValues(new Uint8Array(16))
-                const expiration = Date.now() + this.sessionDuration
-
-                await this.createSessionHandler(this, id, key, iv, expiration)
-
-                const sessionInfo: SessionInfo = {
-                    id,
-                    key: Buffer.from(key).toString('base64'),
-                    iv: Buffer.from(iv).toString('base64'),
-                }
-                const session = Buffer.from(
-                    await webcrypto.subtle.encrypt(
-                        'RSA-OAEP',
-                        encryptionPublicKey,
-                        Buffer.from(JSON.stringify(sessionInfo)),
-                    ),
-                ).toString('base64')
-
-                const response: AuthenticateInfo = {
-                    address: this.sessionAddress,
-                    session,
-                    expiration,
-                }
-
-                res.json(response)
-            } catch (error) {
-                console.error('[ERROR]', error)
-                res.status(500).end()
-            }
-        })
+            },
+        )
     }
 
-    private getAPI(
-        path: string,
-        handler: (sonolus: this, req: Request, res: Response) => Promise<void>,
-    ) {
+    private getAPI(path: string, handler: SonolusRouteHandler) {
         this.router.get(path, async (req, res) => {
             req.localize = (text: LocalizationText) =>
                 this.localize(text, req.query.localization as string)
@@ -523,60 +458,22 @@ export class Sonolus<
             res.set('Sonolus-Version', version.sonolus)
 
             try {
-                if (this.authentication && !(await this.checkSession(req))) {
+                const session =
+                    typeof req.headers['sonolus-session'] === 'string'
+                        ? req.headers['sonolus-session']
+                        : undefined
+
+                if (!(await this.sessionHandler(this, session))) {
                     res.status(401).end()
                     return
                 }
 
-                await handler(this, req, res)
+                await handler(this, session, req, res)
             } catch (error) {
                 console.error('[ERROR]', error)
                 res.status(500).end()
             }
         })
-    }
-
-    private async checkSession(req: Request) {
-        if (!this.findSessionHandler) throw new Error('Missing findSessionHandler')
-        if (!this.checkSessionHandler) throw new Error('Missing checkSessionHandler')
-
-        if (!req.headers['sonolus-session-id']) return false
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        const id = `${req.headers['sonolus-session-id']}`
-
-        if (!req.headers['sonolus-session-data']) return false
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        const data = `${req.headers['sonolus-session-data']}`
-
-        const session = await this.findSessionHandler(this, id)
-        if (!session || Date.now() >= session.expiration) return false
-
-        const key = await webcrypto.subtle.importKey(
-            'raw',
-            session.key,
-            { name: 'AES-CBC' },
-            false,
-            ['decrypt'],
-        )
-
-        let sessionData: SessionData
-        try {
-            sessionData = sessionDataSchema.parse(
-                JSON.parse(
-                    Buffer.from(
-                        await webcrypto.subtle.decrypt(
-                            { name: 'AES-CBC', iv: session.iv },
-                            key,
-                            Buffer.from(data, 'base64'),
-                        ),
-                    ).toString(),
-                ),
-            )
-        } catch (error) {
-            return false
-        }
-
-        return await this.checkSessionHandler(this, id, sessionData)
     }
 }
 
@@ -586,6 +483,8 @@ const installSPA = (app: Express, basePath: string, spaRoot: string) => {
     app.use(basePath, express.static(spaRoot))
 
     for (const type of [
+        'posts',
+        'playlists',
         'levels',
         'skins',
         'backgrounds',
@@ -610,6 +509,8 @@ const installRedirect = (app: Express, basePath: string) => {
     })
 
     for (const type of [
+        'posts',
+        'playlists',
         'levels',
         'skins',
         'backgrounds',
@@ -618,6 +519,10 @@ const installRedirect = (app: Express, basePath: string) => {
         'engines',
         'replays',
     ]) {
+        app.get(`${basePath}/${type}/info`, (req, res) => {
+            res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}/${type}/info`)
+        })
+
         app.get(`${basePath}/${type}/list`, (req, res) => {
             res.redirect(
                 `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/list${getSearch(

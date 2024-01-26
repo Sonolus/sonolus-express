@@ -1,18 +1,21 @@
-import { Database, LocalizationText, ReplayInfo, ReplayItem } from 'sonolus-core'
-import { toLevelItem } from '.'
-import { getByName } from '..'
+import { DatabaseReplayItem, ReplayItem } from 'sonolus-core'
+import { ToItem, getByName } from './item'
+import { toLevelItem } from './level-item'
+import { toTags } from './tag'
 
-export const toReplayItem = (
-    db: Database,
-    localize: (text: LocalizationText) => string,
-    info: ReplayInfo,
-): ReplayItem => ({
-    name: info.name,
-    version: info.version,
-    title: localize(info.title),
-    subtitle: localize(info.subtitle),
-    author: localize(info.author),
-    level: toLevelItem(db, localize, getByName(db.levels, info.level, `Replay/${info.name}`)),
-    data: info.data,
-    configuration: info.configuration,
+export const toReplayItem: ToItem<DatabaseReplayItem, ReplayItem> = (sonolus, localize, item) => ({
+    name: item.name,
+    source: sonolus.address,
+    version: item.version,
+    title: localize(item.title),
+    subtitle: localize(item.subtitle),
+    author: localize(item.author),
+    tags: toTags(localize, item.tags),
+    level: toLevelItem(
+        sonolus,
+        localize,
+        getByName(sonolus.db.levels, item.level, `Replay/${item.name}`, '.level'),
+    ),
+    data: item.data,
+    configuration: item.configuration,
 })

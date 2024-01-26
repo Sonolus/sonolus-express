@@ -1,24 +1,27 @@
 import { LocalizationText, SearchTextOption } from 'sonolus-core'
+import { Localize } from '../../localization'
 
-export type SearchTextOptionInfo = {
+export type SearchTextOptionModel = {
     name: LocalizationText
     type: 'text'
     placeholder: LocalizationText
 }
 
-export const parseTextQuery = (value: unknown): string => {
+export type ParsedTextOptionQuery = string
+
+export const parseTextQuery = (value: unknown): ParsedTextOptionQuery => {
     if (typeof value !== 'string') return ''
 
     return value
 }
 
 export const toSearchTextOption = (
-    localize: (text: LocalizationText) => string,
+    localize: Localize,
     query: string,
-    info: SearchTextOptionInfo,
+    option: SearchTextOptionModel,
 ): SearchTextOption => ({
     query,
-    name: localize(info.name),
+    name: localize(option.name),
     type: 'text',
-    placeholder: localize(info.placeholder),
+    placeholder: localize(option.placeholder),
 })

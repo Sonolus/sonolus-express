@@ -1,24 +1,30 @@
 import { LocalizationText, SearchToggleOption } from 'sonolus-core'
+import { Localize } from '../../localization'
 
-export type SearchToggleOptionInfo = {
+export type SearchToggleOptionModel = {
     name: LocalizationText
     type: 'toggle'
     def: boolean
 }
 
-export const parseToggleQuery = (value: unknown, option: SearchToggleOptionInfo): boolean => {
+export type ParsedToggleOptionQuery = boolean
+
+export const parseToggleQuery = (
+    value: unknown,
+    option: SearchToggleOptionModel,
+): ParsedToggleOptionQuery => {
     if (typeof value !== 'string') return option.def
 
     return value !== '0'
 }
 
 export const toSearchToggleOption = (
-    localize: (text: LocalizationText) => string,
+    localize: Localize,
     query: string,
-    info: SearchToggleOptionInfo,
+    option: SearchToggleOptionModel,
 ): SearchToggleOption => ({
     query,
-    name: localize(info.name),
+    name: localize(option.name),
     type: 'toggle',
-    def: info.def ? 1 : 0,
+    def: option.def ? 1 : 0,
 })

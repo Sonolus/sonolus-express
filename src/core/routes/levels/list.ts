@@ -1,72 +1,30 @@
-import { Request, Response } from 'express'
-import { LevelInfo } from 'sonolus-core'
+import { DatabaseLevelItem } from 'sonolus-core'
 import { toLevelItem } from '../../../api/level-item'
-import { ItemsConfig, Sonolus } from '../../sonolus'
-import { ListHandler, defaultListHandler, filterInfosByKeywords, listRouteHandler } from '../list'
+import { SonolusRouteHandler } from '../../sonolus'
+import {
+    DefaultItemListHandler,
+    FilterItemsByKeyword,
+    defaultItemListHandler,
+    filterItemsByKeywords,
+    itemListRouteHandler,
+} from '../item-list'
 
-export type LevelListHandler<
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
-    TReplays extends ItemsConfig,
-    T,
-> = ListHandler<
-    TLevels,
-    TSkins,
-    TBackgrounds,
-    TEffects,
-    TParticles,
-    TEngines,
-    TReplays,
-    T,
-    LevelInfo
->
+export const defaultLevelListHandler: DefaultItemListHandler<DatabaseLevelItem> = (
+    sonolus,
+    session,
+    query,
+    page,
+) => defaultItemListHandler(sonolus.db.levels, filterLevelItemsByKeywords, query, page)
 
-export const defaultLevelListHandler = <
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
-    TReplays extends ItemsConfig,
->(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
-    query: Record<string, unknown>,
-    page: number,
-): {
-    pageCount: number
-    infos: LevelInfo[]
-} => defaultListHandler(sonolus.db.levels, filterLevelInfosByKeywords, query, page)
-
-export const filterLevelInfosByKeywords = (infos: LevelInfo[], keywords: string): LevelInfo[] =>
-    filterInfosByKeywords(
-        infos,
-        ['name', 'rating', 'title', 'artists', 'author', 'description'],
+export const filterLevelItemsByKeywords: FilterItemsByKeyword<DatabaseLevelItem> = (
+    items,
+    keywords,
+) =>
+    filterItemsByKeywords(
+        items,
+        ['name', 'rating', 'title', 'artists', 'author', 'tags', 'description'],
         keywords,
     )
 
-export const levelListRouteHandler = <
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
-    TReplays extends ItemsConfig,
->(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, TReplays>,
-    req: Request,
-    res: Response,
-): Promise<void> =>
-    listRouteHandler(
-        sonolus,
-        sonolus.levelListHandler,
-        toLevelItem,
-        sonolus.levelsConfig.search,
-        req,
-        res,
-    )
+export const levelListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
+    itemListRouteHandler(sonolus, sonolus.levels, toLevelItem, session, req, res)
