@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { localizationTextSchema } from './localization-text'
-import { getSRLSchema } from './srl'
+import { srlSchema } from './srl'
 import { databaseTagSchema } from './tag'
 
 export const databaseEffectItemSchema = z.object({
@@ -11,8 +11,8 @@ export const databaseEffectItemSchema = z.object({
     author: localizationTextSchema,
     tags: databaseTagSchema.array(),
     description: localizationTextSchema,
-    thumbnail: getSRLSchema('EffectThumbnail'),
-    data: getSRLSchema('EffectData'),
-    audio: getSRLSchema('EffectAudio'),
+    thumbnail: srlSchema,
+    data: srlSchema,
+    audio: srlSchema,
     meta: z.unknown(),
 })

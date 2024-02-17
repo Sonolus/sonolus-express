@@ -16,7 +16,6 @@ import {
     DatabaseReplayItem,
     DatabaseSkinItem,
     LocalizationText,
-    ResourceType,
     SRL,
     getSignaturePublicKey,
     localize,
@@ -147,6 +146,7 @@ export class Sonolus<
 
     readonly address?: string
     readonly authentication: boolean
+    readonly multiplayer: boolean
 
     readonly db: Database
     readonly router: Router
@@ -172,6 +172,7 @@ export class Sonolus<
             address: string
             basePath: string
             authentication: boolean
+            multiplayer: boolean
             fallbackLocale: string
             mode: 'custom' | 'redirect' | 'spa'
             spaRoot: string
@@ -190,6 +191,7 @@ export class Sonolus<
             address,
             basePath,
             authentication,
+            multiplayer,
             fallbackLocale,
             mode,
             spaRoot,
@@ -206,6 +208,7 @@ export class Sonolus<
             {
                 basePath: '',
                 authentication: false,
+                multiplayer: false,
                 sessionDuration: 30 * 60 * 1000,
                 fallbackLocale: 'en',
                 mode: 'custom',
@@ -226,6 +229,7 @@ export class Sonolus<
 
         this.address = address
         this.authentication = authentication
+        this.multiplayer = multiplayer
 
         this.db = {
             info: {
@@ -362,12 +366,12 @@ export class Sonolus<
         this.router.use('/sonolus/repository', express.static(`${path}/repository`))
     }
 
-    public add<T extends ResourceType>(type: T, data: Buffer | string, hash?: string): SRL<T> {
+    public add(data: Buffer | string, hash?: string): SRL {
         if (!hash) {
             hash = sonolusHash(typeof data === 'string' ? readFileSync(data) : data)
         }
 
-        const url = `/sonolus/repository/${type}/${hash}`
+        const url = `/sonolus/repository/${hash}`
 
         if (typeof data === 'string') {
             const path = resolve(data)
@@ -380,7 +384,7 @@ export class Sonolus<
             })
         }
 
-        return { type, hash, url }
+        return { hash, url }
     }
 
     public localize(text: LocalizationText, locale: string): string {

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { localizationTextSchema } from './localization-text'
-import { getSRLSchema } from './srl'
+import { srlSchema } from './srl'
 import { databaseTagSchema } from './tag'
 
 const databaseUseItemSchema = z.discriminatedUnion('useDefault', [
@@ -22,9 +22,9 @@ export const databaseLevelItemSchema = z.object({
     useBackground: databaseUseItemSchema,
     useEffect: databaseUseItemSchema,
     useParticle: databaseUseItemSchema,
-    cover: getSRLSchema('LevelCover'),
-    bgm: getSRLSchema('LevelBgm'),
-    preview: getSRLSchema('LevelPreview').optional(),
-    data: getSRLSchema('LevelData'),
+    cover: srlSchema,
+    bgm: srlSchema,
+    preview: srlSchema.optional(),
+    data: srlSchema,
     meta: z.unknown(),
 })

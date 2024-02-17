@@ -15,6 +15,7 @@ export const serverInfoRouteHandler: SonolusRouteHandler = async (sonolus, sessi
         toServerInfo(
             await sonolus.serverInfoHandler(sonolus, session),
             sonolus.authentication,
+            sonolus.multiplayer,
             req.localize,
         ),
     )

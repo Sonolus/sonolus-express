@@ -1,7 +1,7 @@
-import { LocalizationText, SearchSelectOption } from 'sonolus-core'
-import { Localize } from '../../localization'
+import { LocalizationText, ServerSelectOption } from 'sonolus-core'
+import { Localize } from '../localization'
 
-export type SearchSelectOptionModel = {
+export type ServerSelectOptionModel = {
     name: LocalizationText
     type: 'select'
     def: number
@@ -12,7 +12,7 @@ export type ParsedSelectOptionQuery = number
 
 export const parseSelectQuery = (
     value: unknown,
-    option: SearchSelectOptionModel,
+    option: ServerSelectOptionModel,
 ): ParsedSelectOptionQuery => {
     if (typeof value !== 'string') return option.def
 
@@ -26,8 +26,8 @@ export const parseSelectQuery = (
 export const toSearchSelectOption = (
     localize: Localize,
     query: string,
-    option: SearchSelectOptionModel,
-): SearchSelectOption => ({
+    option: ServerSelectOptionModel,
+): ServerSelectOption => ({
     query,
     name: localize(option.name),
     type: 'select',

@@ -1,13 +1,13 @@
-import { LocalizationText, SearchMultiOption } from 'sonolus-core'
-import { Localize } from '../../localization'
+import { LocalizationText, ServerMultiOption } from 'sonolus-core'
+import { Localize } from '../localization'
 
-export type SearchMultiOptionModel = {
+export type ServerMultiOptionModel = {
     name: LocalizationText
     type: 'multi'
-    values: SearchMultiOptionValueModel[]
+    values: ServerMultiOptionValueModel[]
 }
 
-export type SearchMultiOptionValueModel = {
+export type ServerMultiOptionValueModel = {
     title: LocalizationText
     def: boolean
 }
@@ -16,7 +16,7 @@ export type ParsedMultiOptionQuery = boolean[]
 
 export const parseMultiQuery = (
     value: unknown,
-    option: SearchMultiOptionModel,
+    option: ServerMultiOptionModel,
 ): ParsedMultiOptionQuery => {
     const values = option.values.map(({ def }) => def)
 
@@ -32,8 +32,8 @@ export const parseMultiQuery = (
 export const toSearchMultiOption = (
     localize: Localize,
     query: string,
-    option: SearchMultiOptionModel,
-): SearchMultiOption => ({
+    option: ServerMultiOptionModel,
+): ServerMultiOption => ({
     query,
     name: localize(option.name),
     type: 'multi',

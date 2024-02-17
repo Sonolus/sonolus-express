@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { localizationTextSchema } from './localization-text'
-import { getSRLSchema } from './srl'
+import { srlSchema } from './srl'
 import { databaseTagSchema } from './tag'
 
 export const databaseBackgroundItemSchema = z.object({
@@ -11,9 +11,9 @@ export const databaseBackgroundItemSchema = z.object({
     author: localizationTextSchema,
     tags: databaseTagSchema.array(),
     description: localizationTextSchema,
-    thumbnail: getSRLSchema('BackgroundThumbnail'),
-    data: getSRLSchema('BackgroundData'),
-    image: getSRLSchema('BackgroundImage'),
-    configuration: getSRLSchema('BackgroundConfiguration'),
+    thumbnail: srlSchema,
+    data: srlSchema,
+    image: srlSchema,
+    configuration: srlSchema,
     meta: z.unknown(),
 })

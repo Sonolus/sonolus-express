@@ -1,12 +1,12 @@
-import { ParsedMultiOptionQuery, parseMultiQuery } from './option/multi'
-import { SearchOptionModel } from './option/option'
-import { ParsedSelectOptionQuery, parseSelectQuery } from './option/select'
-import { ParsedSliderOptionQuery, parseSliderQuery } from './option/slider'
-import { ParsedTextOptionQuery, parseTextQuery } from './option/text'
-import { ParsedToggleOptionQuery, parseToggleQuery } from './option/toggle'
+import { ParsedMultiOptionQuery, parseMultiQuery } from '../option/multi'
+import { ServerOptionModel } from '../option/option'
+import { ParsedSelectOptionQuery, parseSelectQuery } from '../option/select'
+import { ParsedSliderOptionQuery, parseSliderQuery } from '../option/slider'
+import { ParsedTextOptionQuery, parseTextQuery } from '../option/text'
+import { ParsedToggleOptionQuery, parseToggleQuery } from '../option/toggle'
 import { SearchesModel } from './search'
 
-export type ParsedOptionQuery<T extends SearchOptionModel> = {
+export type ParsedOptionQuery<T extends ServerOptionModel> = {
     text: ParsedTextOptionQuery
     slider: ParsedSliderOptionQuery
     toggle: ParsedToggleOptionQuery

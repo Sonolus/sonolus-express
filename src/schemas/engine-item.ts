@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { localizationTextSchema } from './localization-text'
-import { getSRLSchema } from './srl'
+import { srlSchema } from './srl'
 import { databaseTagSchema } from './tag'
 
 export const databaseEngineItemSchema = z.object({
@@ -15,12 +15,12 @@ export const databaseEngineItemSchema = z.object({
     background: z.string(),
     effect: z.string(),
     particle: z.string(),
-    thumbnail: getSRLSchema('EngineThumbnail'),
-    playData: getSRLSchema('EnginePlayData'),
-    watchData: getSRLSchema('EngineWatchData'),
-    previewData: getSRLSchema('EnginePreviewData'),
-    tutorialData: getSRLSchema('EngineTutorialData'),
-    rom: getSRLSchema('EngineRom').optional(),
-    configuration: getSRLSchema('EngineConfiguration'),
+    thumbnail: srlSchema,
+    playData: srlSchema,
+    watchData: srlSchema,
+    previewData: srlSchema,
+    tutorialData: srlSchema,
+    rom: srlSchema.optional(),
+    configuration: srlSchema,
     meta: z.unknown(),
 })

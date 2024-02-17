@@ -1,7 +1,7 @@
-import { LocalizationText, SearchTextOption } from 'sonolus-core'
-import { Localize } from '../../localization'
+import { LocalizationText, ServerTextOption } from 'sonolus-core'
+import { Localize } from '../localization'
 
-export type SearchTextOptionModel = {
+export type ServerTextOptionModel = {
     name: LocalizationText
     type: 'text'
     placeholder: LocalizationText
@@ -18,8 +18,8 @@ export const parseTextQuery = (value: unknown): ParsedTextOptionQuery => {
 export const toSearchTextOption = (
     localize: Localize,
     query: string,
-    option: SearchTextOptionModel,
-): SearchTextOption => ({
+    option: ServerTextOptionModel,
+): ServerTextOption => ({
     query,
     name: localize(option.name),
     type: 'text',

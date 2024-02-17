@@ -7,7 +7,7 @@ import { SearchesModel, toSearches } from './search/search'
 
 export type ItemInfoModel<T> = {
     sections: ItemSectionModel<T>[]
-    banner?: SRL<'ServerBanner'>
+    banner?: SRL
 }
 
 export const toItemInfo = <T, U>(

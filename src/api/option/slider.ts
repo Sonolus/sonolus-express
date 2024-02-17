@@ -1,7 +1,7 @@
-import { LocalizationText, SearchSliderOption } from 'sonolus-core'
-import { Localize } from '../../localization'
+import { LocalizationText, ServerSliderOption } from 'sonolus-core'
+import { Localize } from '../localization'
 
-export type SearchSliderOptionModel = {
+export type ServerSliderOptionModel = {
     name: LocalizationText
     type: 'slider'
     def: number
@@ -15,7 +15,7 @@ export type ParsedSliderOptionQuery = number
 
 export const parseSliderQuery = (
     value: unknown,
-    option: SearchSliderOptionModel,
+    option: ServerSliderOptionModel,
 ): ParsedSliderOptionQuery => {
     if (typeof value !== 'string') return option.def
 
@@ -30,8 +30,8 @@ export const parseSliderQuery = (
 export const toSearchSliderOption = (
     localize: Localize,
     query: string,
-    option: SearchSliderOptionModel,
-): SearchSliderOption => ({
+    option: ServerSliderOptionModel,
+): ServerSliderOption => ({
     query,
     name: localize(option.name),
     type: 'slider',
