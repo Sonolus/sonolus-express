@@ -175,6 +175,7 @@ export class Sonolus<
             multiplayer: boolean
             fallbackLocale: string
             mode: 'custom' | 'redirect' | 'spa'
+            redirectPath: string
             spaRoot: string
             postsConfig: TPosts
             playlistsConfig: TPlaylists
@@ -194,6 +195,7 @@ export class Sonolus<
             multiplayer,
             fallbackLocale,
             mode,
+            redirectPath,
             spaRoot,
             postsConfig,
             playlistsConfig,
@@ -344,7 +346,9 @@ export class Sonolus<
 
             installSPA(app, basePath, spaRoot)
         } else if (mode === 'redirect') {
-            installRedirect(app, basePath)
+            if (!redirectPath) throw new Error('Missing redirect path')
+
+            installRedirect(app, basePath, redirectPath)
         }
     }
 
@@ -507,9 +511,9 @@ const installSPA = (app: Express, basePath: string, spaRoot: string) => {
     })
 }
 
-const installRedirect = (app: Express, basePath: string) => {
+const installRedirect = (app: Express, basePath: string, redirectPath: string) => {
     app.get(basePath, (req, res) => {
-        res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}`)
+        res.redirect(`https://open.sonolus.com/${redirectPath}`)
     })
 
     for (const type of [
@@ -524,21 +528,17 @@ const installRedirect = (app: Express, basePath: string) => {
         'replays',
     ]) {
         app.get(`${basePath}/${type}/info`, (req, res) => {
-            res.redirect(`https://open.sonolus.com/${req.headers.host}${basePath}/${type}/info`)
+            res.redirect(`https://open.sonolus.com/${redirectPath}/${type}/info`)
         })
 
         app.get(`${basePath}/${type}/list`, (req, res) => {
             res.redirect(
-                `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/list${getSearch(
-                    req.query,
-                )}`,
+                `https://open.sonolus.com/${redirectPath}/${type}/list${getSearch(req.query)}`,
             )
         })
 
         app.get(`${basePath}/${type}/:name`, (req, res) => {
-            res.redirect(
-                `https://open.sonolus.com/${req.headers.host}${basePath}/${type}/${req.params.name}`,
-            )
+            res.redirect(`https://open.sonolus.com/${redirectPath}/${type}/${req.params.name}`)
         })
     }
 }

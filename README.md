@@ -53,6 +53,7 @@ Create a Sonolus server on `app` with `options`.
 -   `options.authentication`: if server has authentication.
 -   `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
 -   `options.mode`: share link handling mode, can be `custom`, `redirect`, or `spa`.
+-   `options.redirectPath`: path to use for redirect when `options.mode` is `redirect`.
 -   `options.spaRoot`: root of static SPA files to serve when `options.mode` is `spa`.
 -   `options.postsConfig`: configurations for posts.
 -   `options.levelsConfig`: configurations for levels.
