@@ -14,4 +14,4 @@ export const defaultSkinDetailsHandler: DefaultItemDetailsHandler<DatabaseSkinIt
 ) => defaultItemDetailsHandler(sonolus.db.skins, name)
 
 export const skinDetailsRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemDetailsRouteHandler(sonolus, sonolus.skins, toSkinItem, session, req, res)
+    itemDetailsRouteHandler(sonolus, sonolus.skinConfig, toSkinItem, session, req, res)

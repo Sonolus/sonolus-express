@@ -14,4 +14,4 @@ export const defaultReplayDetailsHandler: DefaultItemDetailsHandler<DatabaseRepl
 ) => defaultItemDetailsHandler(sonolus.db.replays, name)
 
 export const replayDetailsRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemDetailsRouteHandler(sonolus, sonolus.replays, toReplayItem, session, req, res)
+    itemDetailsRouteHandler(sonolus, sonolus.replayConfig, toReplayItem, session, req, res)

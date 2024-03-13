@@ -14,4 +14,4 @@ export const defaultPlaylistDetailsHandler: DefaultItemDetailsHandler<DatabasePl
 ) => defaultItemDetailsHandler(sonolus.db.playlists, name)
 
 export const playlistDetailsRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemDetailsRouteHandler(sonolus, sonolus.playlists, toPlaylistItem, session, req, res)
+    itemDetailsRouteHandler(sonolus, sonolus.playlistConfig, toPlaylistItem, session, req, res)

@@ -27,4 +27,4 @@ export const filterLevelItemsByKeywords: FilterItemsByKeyword<DatabaseLevelItem>
     )
 
 export const levelListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemListRouteHandler(sonolus, sonolus.levels, toLevelItem, session, req, res)
+    itemListRouteHandler(sonolus, sonolus.levelConfig, toLevelItem, session, req, res)

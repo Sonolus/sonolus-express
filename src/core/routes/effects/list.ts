@@ -27,4 +27,4 @@ export const filterEffectItemsByKeywords: FilterItemsByKeyword<DatabaseEffectIte
     )
 
 export const effectListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemListRouteHandler(sonolus, sonolus.effects, toEffectItem, session, req, res)
+    itemListRouteHandler(sonolus, sonolus.effectConfig, toEffectItem, session, req, res)

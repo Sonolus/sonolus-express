@@ -22,16 +22,26 @@ import {
     hash as sonolusHash,
     version,
 } from 'sonolus-core'
-import { ParsedQuery } from '../api/search/query'
-import { SearchesModel } from '../api/search/search'
+import { DatabaseRoomItem } from '../api/room-item'
+import { ParsedSearchQuery } from '../api/section/query'
+import { SectionsModel } from '../api/section/section'
 import { authenticateServerRequestSchema } from '../schemas/authenticate-server-request'
 import { databaseParser } from '../schemas/database'
+import { Promisable } from '../utils/types'
 import {
     AuthenticateHandler,
     SessionHandler,
     defaultAuthenticateHandler,
     defaultSessionHandler,
 } from './authentication'
+import {
+    CreateRoomHandler,
+    JoinRoomHandler,
+    createRoomRouteHandler,
+    defaultCreateRoomHandler,
+    defaultJoinRoomHandler,
+    joinRoomRouteHandler,
+} from './multiplayer'
 import {
     backgroundDetailsRouteHandler,
     defaultBackgroundDetailsHandler,
@@ -68,6 +78,9 @@ import { defaultPostListHandler, postListRouteHandler } from './routes/posts/lis
 import { defaultReplayDetailsHandler, replayDetailsRouteHandler } from './routes/replays/details'
 import { defaultReplayInfoHandler, replayInfoRouteHandler } from './routes/replays/info'
 import { defaultReplayListHandler, replayListRouteHandler } from './routes/replays/list'
+import { defaultRoomDetailsHandler } from './routes/rooms/details'
+import { defaultRoomInfoHandler, roomInfoRouteHandler } from './routes/rooms/info'
+import { defaultRoomListHandler, roomListRouteHandler } from './routes/rooms/list'
 import {
     ServerInfoHandler,
     defaultServerInfoHandler,
@@ -77,70 +90,75 @@ import { defaultSkinDetailsHandler, skinDetailsRouteHandler } from './routes/ski
 import { defaultSkinInfoHandler, skinInfoRouteHandler } from './routes/skins/info'
 import { defaultSkinListHandler, skinListRouteHandler } from './routes/skins/list'
 
-export type ItemsConfig = {
-    searches: SearchesModel
+export type SonolusDatabase = Database & {
+    rooms: DatabaseRoomItem[]
 }
 
 export type SonolusBase = {
     address?: string
-    db: Database
+    db: SonolusDatabase
 }
 
-export type SonolusCallback<A extends unknown[], R> = <
-    TPosts extends ItemsConfig,
-    TPlaylists extends ItemsConfig,
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
-    TReplays extends ItemsConfig,
+export type SonolusRouteHandler = <
+    TPostSearches extends SectionsModel,
+    TPlaylistSearches extends SectionsModel,
+    TLevelSearches extends SectionsModel,
+    TSkinSearches extends SectionsModel,
+    TBackgroundSearches extends SectionsModel,
+    TEffectSearches extends SectionsModel,
+    TParticleSearches extends SectionsModel,
+    TEngineSearches extends SectionsModel,
+    TReplaySearches extends SectionsModel,
+    TRoomSearches extends SectionsModel,
+    TRoomCreates extends SectionsModel,
 >(
     sonolus: Sonolus<
-        TPosts,
-        TPlaylists,
-        TLevels,
-        TSkins,
-        TBackgrounds,
-        TEffects,
-        TParticles,
-        TEngines,
-        TReplays
+        TPostSearches,
+        TPlaylistSearches,
+        TLevelSearches,
+        TSkinSearches,
+        TBackgroundSearches,
+        TEffectSearches,
+        TParticleSearches,
+        TEngineSearches,
+        TReplaySearches,
+        TRoomSearches,
+        TRoomCreates
     >,
-    ...args: A
-) => R
-
-export type SonolusRouteHandler = SonolusCallback<
-    [session: string | undefined, req: Request, res: Response],
-    Promise<void>
->
+    session: string | undefined,
+    req: Request,
+    res: Response,
+) => Promisable<void>
 
 export type SonolusItemsConfig<
     TSonolus extends SonolusBase,
-    TConfig extends ItemsConfig,
+    TSearches extends SectionsModel,
     TDatabaseItem,
 > = {
-    searches: TConfig['searches']
+    searches: TSearches
     infoHandler: ItemInfoHandler<TSonolus, TDatabaseItem>
-    listHandler: ItemListHandler<TSonolus, ParsedQuery<TConfig['searches']>, TDatabaseItem>
+    listHandler: ItemListHandler<TSonolus, ParsedSearchQuery<TSearches>, TDatabaseItem>
     detailsHandler: ItemDetailsHandler<TSonolus, TDatabaseItem>
 }
 
-export const defaultItemsConfig = {
-    searches: {},
-} as const satisfies ItemsConfig
+export type MultiplayerConfig<TSonolus extends SonolusBase, TRoomCreates extends SectionsModel> = {
+    creates: TRoomCreates
+    createRoomHandler: CreateRoomHandler<TSonolus>
+    joinRoomHandler: JoinRoomHandler<TSonolus, TRoomCreates>
+}
 
 export class Sonolus<
-    TPosts extends ItemsConfig = typeof defaultItemsConfig,
-    TPlaylists extends ItemsConfig = typeof defaultItemsConfig,
-    TLevels extends ItemsConfig = typeof defaultItemsConfig,
-    TSkins extends ItemsConfig = typeof defaultItemsConfig,
-    TBackgrounds extends ItemsConfig = typeof defaultItemsConfig,
-    TEffects extends ItemsConfig = typeof defaultItemsConfig,
-    TParticles extends ItemsConfig = typeof defaultItemsConfig,
-    TEngines extends ItemsConfig = typeof defaultItemsConfig,
-    TReplays extends ItemsConfig = typeof defaultItemsConfig,
+    TPostSearches extends SectionsModel = {},
+    TPlaylistSearches extends SectionsModel = {},
+    TLevelSearches extends SectionsModel = {},
+    TSkinSearches extends SectionsModel = {},
+    TBackgroundSearches extends SectionsModel = {},
+    TEffectSearches extends SectionsModel = {},
+    TParticleSearches extends SectionsModel = {},
+    TEngineSearches extends SectionsModel = {},
+    TReplaySearches extends SectionsModel = {},
+    TRoomSearches extends SectionsModel = {},
+    TRoomCreates extends SectionsModel = {},
 > {
     private readonly fallbackLocale: string
 
@@ -148,23 +166,26 @@ export class Sonolus<
     readonly authentication: boolean
     readonly multiplayer: boolean
 
-    readonly db: Database
+    readonly db: SonolusDatabase
     readonly router: Router
 
-    authenticateHandler: AuthenticateHandler = defaultAuthenticateHandler
-    sessionHandler: SessionHandler = defaultSessionHandler
+    authenticateHandler: AuthenticateHandler<this> = defaultAuthenticateHandler
+    sessionHandler: SessionHandler<this> = defaultSessionHandler
 
-    serverInfoHandler: ServerInfoHandler = defaultServerInfoHandler
+    serverInfoHandler: ServerInfoHandler<this> = defaultServerInfoHandler
 
-    readonly posts: SonolusItemsConfig<this, TPosts, DatabasePostItem>
-    readonly playlists: SonolusItemsConfig<this, TPlaylists, DatabasePlaylistItem>
-    readonly levels: SonolusItemsConfig<this, TLevels, DatabaseLevelItem>
-    readonly skins: SonolusItemsConfig<this, TSkins, DatabaseSkinItem>
-    readonly backgrounds: SonolusItemsConfig<this, TBackgrounds, DatabaseBackgroundItem>
-    readonly effects: SonolusItemsConfig<this, TEffects, DatabaseEffectItem>
-    readonly particles: SonolusItemsConfig<this, TParticles, DatabaseParticleItem>
-    readonly engines: SonolusItemsConfig<this, TEngines, DatabaseEngineItem>
-    readonly replays: SonolusItemsConfig<this, TReplays, DatabaseReplayItem>
+    readonly postConfig: SonolusItemsConfig<this, TPostSearches, DatabasePostItem>
+    readonly playlistConfig: SonolusItemsConfig<this, TPlaylistSearches, DatabasePlaylistItem>
+    readonly levelConfig: SonolusItemsConfig<this, TLevelSearches, DatabaseLevelItem>
+    readonly skinConfig: SonolusItemsConfig<this, TSkinSearches, DatabaseSkinItem>
+    readonly backgroundConfig: SonolusItemsConfig<this, TBackgroundSearches, DatabaseBackgroundItem>
+    readonly effectConfig: SonolusItemsConfig<this, TEffectSearches, DatabaseEffectItem>
+    readonly particleConfig: SonolusItemsConfig<this, TParticleSearches, DatabaseParticleItem>
+    readonly engineConfig: SonolusItemsConfig<this, TEngineSearches, DatabaseEngineItem>
+    readonly replayConfig: SonolusItemsConfig<this, TReplaySearches, DatabaseReplayItem>
+    readonly roomConfig: SonolusItemsConfig<this, TRoomSearches, DatabaseRoomItem>
+
+    readonly multiplayerConfig: MultiplayerConfig<this, TRoomCreates>
 
     constructor(
         app: Express,
@@ -177,15 +198,17 @@ export class Sonolus<
             mode: 'custom' | 'redirect' | 'spa'
             redirectPath: string
             spaRoot: string
-            postsConfig: TPosts
-            playlistsConfig: TPlaylists
-            levelsConfig: TLevels
-            skinsConfig: TSkins
-            backgroundsConfig: TBackgrounds
-            effectsConfig: TEffects
-            particlesConfig: TParticles
-            enginesConfig: TEngines
-            replaysConfig: TReplays
+            postSearches: TPostSearches
+            playlistSearches: TPlaylistSearches
+            levelSearches: TLevelSearches
+            skinSearches: TSkinSearches
+            backgroundSearches: TBackgroundSearches
+            effectSearches: TEffectSearches
+            particleSearches: TParticleSearches
+            engineSearches: TEngineSearches
+            replaySearches: TReplaySearches
+            roomSearches: TRoomSearches
+            roomCreates: TRoomCreates
         }>,
     ) {
         const {
@@ -197,15 +220,17 @@ export class Sonolus<
             mode,
             redirectPath,
             spaRoot,
-            postsConfig,
-            playlistsConfig,
-            levelsConfig,
-            skinsConfig,
-            backgroundsConfig,
-            effectsConfig,
-            particlesConfig,
-            enginesConfig,
-            replaysConfig,
+            postSearches,
+            playlistSearches,
+            levelSearches,
+            skinSearches,
+            backgroundSearches,
+            effectSearches,
+            particleSearches,
+            engineSearches,
+            replaySearches,
+            roomSearches,
+            roomCreates,
         } = Object.assign(
             {
                 basePath: '',
@@ -214,15 +239,17 @@ export class Sonolus<
                 sessionDuration: 30 * 60 * 1000,
                 fallbackLocale: 'en',
                 mode: 'custom',
-                postsConfig: defaultItemsConfig,
-                playlistsConfig: defaultItemsConfig,
-                levelsConfig: defaultItemsConfig,
-                skinsConfig: defaultItemsConfig,
-                backgroundsConfig: defaultItemsConfig,
-                effectsConfig: defaultItemsConfig,
-                particlesConfig: defaultItemsConfig,
-                enginesConfig: defaultItemsConfig,
-                replaysConfig: defaultItemsConfig,
+                postSearches: {},
+                playlistSearches: {},
+                levelSearches: {},
+                skinSearches: {},
+                backgroundSearches: {},
+                effectSearches: {},
+                particleSearches: {},
+                engineSearches: {},
+                replaySearches: {},
+                roomSearches: {},
+                roomCreates: {},
             },
             options,
         )
@@ -246,63 +273,75 @@ export class Sonolus<
             particles: [],
             engines: [],
             replays: [],
+            rooms: [],
         }
 
         this.router = express.Router()
 
-        this.posts = {
-            searches: postsConfig.searches,
+        this.postConfig = {
+            searches: postSearches,
             infoHandler: defaultPostInfoHandler,
             listHandler: defaultPostListHandler,
             detailsHandler: defaultPostDetailsHandler,
         }
-        this.playlists = {
-            searches: playlistsConfig.searches,
+        this.playlistConfig = {
+            searches: playlistSearches,
             infoHandler: defaultPlaylistInfoHandler,
             listHandler: defaultPlaylistListHandler,
             detailsHandler: defaultPlaylistDetailsHandler,
         }
-        this.levels = {
-            searches: levelsConfig.searches,
+        this.levelConfig = {
+            searches: levelSearches,
             infoHandler: defaultLevelInfoHandler,
             listHandler: defaultLevelListHandler,
             detailsHandler: defaultLevelDetailsHandler,
         }
-        this.skins = {
-            searches: skinsConfig.searches,
+        this.skinConfig = {
+            searches: skinSearches,
             infoHandler: defaultSkinInfoHandler,
             listHandler: defaultSkinListHandler,
             detailsHandler: defaultSkinDetailsHandler,
         }
-        this.backgrounds = {
-            searches: backgroundsConfig.searches,
+        this.backgroundConfig = {
+            searches: backgroundSearches,
             infoHandler: defaultBackgroundInfoHandler,
             listHandler: defaultBackgroundListHandler,
             detailsHandler: defaultBackgroundDetailsHandler,
         }
-        this.effects = {
-            searches: effectsConfig.searches,
+        this.effectConfig = {
+            searches: effectSearches,
             infoHandler: defaultEffectInfoHandler,
             listHandler: defaultEffectListHandler,
             detailsHandler: defaultEffectDetailsHandler,
         }
-        this.particles = {
-            searches: particlesConfig.searches,
+        this.particleConfig = {
+            searches: particleSearches,
             infoHandler: defaultParticleInfoHandler,
             listHandler: defaultParticleListHandler,
             detailsHandler: defaultParticleDetailsHandler,
         }
-        this.engines = {
-            searches: enginesConfig.searches,
+        this.engineConfig = {
+            searches: engineSearches,
             infoHandler: defaultEngineInfoHandler,
             listHandler: defaultEngineListHandler,
             detailsHandler: defaultEngineDetailsHandler,
         }
-        this.replays = {
-            searches: replaysConfig.searches,
+        this.replayConfig = {
+            searches: replaySearches,
             infoHandler: defaultReplayInfoHandler,
             listHandler: defaultReplayListHandler,
             detailsHandler: defaultReplayDetailsHandler,
+        }
+        this.roomConfig = {
+            searches: roomSearches,
+            infoHandler: defaultRoomInfoHandler,
+            listHandler: defaultRoomListHandler,
+            detailsHandler: defaultRoomDetailsHandler,
+        }
+        this.multiplayerConfig = {
+            creates: roomCreates,
+            createRoomHandler: defaultCreateRoomHandler,
+            joinRoomHandler: defaultJoinRoomHandler,
         }
 
         this.postAuthenticate()
@@ -338,6 +377,13 @@ export class Sonolus<
         this.getAPI('/sonolus/particles/:name', particleDetailsRouteHandler)
         this.getAPI('/sonolus/engines/:name', engineDetailsRouteHandler)
         this.getAPI('/sonolus/replays/:name', replayDetailsRouteHandler)
+
+        if (multiplayer) {
+            this.getAPI('/sonolus/rooms/info', roomInfoRouteHandler)
+            this.getAPI('/sonolus/rooms/list', roomListRouteHandler)
+            this.postAPI('/sonolus/rooms/create', createRoomRouteHandler)
+            this.postAPI('/sonolus/rooms/:name', joinRoomRouteHandler)
+        }
 
         app.use(basePath, this.router)
 
@@ -459,9 +505,18 @@ export class Sonolus<
     }
 
     private getAPI(path: string, handler: SonolusRouteHandler) {
-        this.router.get(path, async (req, res) => {
-            req.localize = (text: LocalizationText) =>
-                this.localize(text, req.query.localization as string)
+        this.router.get(path, this.toHandler(handler))
+    }
+
+    private postAPI(path: string, handler: SonolusRouteHandler) {
+        this.router.post(path, express.raw({ type: 'application/json' }), this.toHandler(handler))
+    }
+
+    private toHandler(handler: SonolusRouteHandler) {
+        return async (req: Request, res: Response) => {
+            req.localization =
+                typeof req.query.localization === 'string' ? req.query.localization : ''
+            req.localize = (text: LocalizationText) => this.localize(text, req.localization)
 
             res.set('Sonolus-Version', version.sonolus)
 
@@ -481,7 +536,7 @@ export class Sonolus<
                 console.error('[ERROR]', error)
                 res.status(500).end()
             }
-        })
+        }
     }
 }
 

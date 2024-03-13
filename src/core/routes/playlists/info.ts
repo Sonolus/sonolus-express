@@ -7,4 +7,4 @@ export const defaultPlaylistInfoHandler: DefaultItemInfoHandler<DatabasePlaylist
     defaultItemInfoHandler(sonolus, sonolus.db.playlists)
 
 export const playlistInfoRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemInfoRouteHandler(sonolus, sonolus.playlists, toPlaylistItem, session, req, res)
+    itemInfoRouteHandler(sonolus, sonolus.playlistConfig, toPlaylistItem, session, req, res)

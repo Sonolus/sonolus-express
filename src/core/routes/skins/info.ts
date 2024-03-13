@@ -7,4 +7,4 @@ export const defaultSkinInfoHandler: DefaultItemInfoHandler<DatabaseSkinItem> = 
     defaultItemInfoHandler(sonolus, sonolus.db.skins)
 
 export const skinInfoRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemInfoRouteHandler(sonolus, sonolus.skins, toSkinItem, session, req, res)
+    itemInfoRouteHandler(sonolus, sonolus.skinConfig, toSkinItem, session, req, res)

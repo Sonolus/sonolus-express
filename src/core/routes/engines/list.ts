@@ -27,4 +27,4 @@ export const filterEngineItemsByKeywords: FilterItemsByKeyword<DatabaseEngineIte
     )
 
 export const engineListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemListRouteHandler(sonolus, sonolus.engines, toEngineItem, session, req, res)
+    itemListRouteHandler(sonolus, sonolus.engineConfig, toEngineItem, session, req, res)

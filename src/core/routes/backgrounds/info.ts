@@ -8,4 +8,4 @@ export const defaultBackgroundInfoHandler: DefaultItemInfoHandler<DatabaseBackgr
 ) => defaultItemInfoHandler(sonolus, sonolus.db.backgrounds)
 
 export const backgroundInfoRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemInfoRouteHandler(sonolus, sonolus.backgrounds, toBackgroundItem, session, req, res)
+    itemInfoRouteHandler(sonolus, sonolus.backgroundConfig, toBackgroundItem, session, req, res)

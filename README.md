@@ -51,18 +51,21 @@ Create a Sonolus server on `app` with `options`.
 -   `options.address`: address of server (should not have ending `/`).
 -   `options.basePath`: base path of server (should not have ending `/`).
 -   `options.authentication`: if server has authentication.
+-   `options.multiplayer`: if server has multiplayer.
 -   `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
 -   `options.mode`: share link handling mode, can be `custom`, `redirect`, or `spa`.
 -   `options.redirectPath`: path to use for redirect when `options.mode` is `redirect`.
 -   `options.spaRoot`: root of static SPA files to serve when `options.mode` is `spa`.
--   `options.postsConfig`: configurations for posts.
--   `options.levelsConfig`: configurations for levels.
--   `options.skinsConfig`: configurations for skins.
--   `options.backgroundsConfig`: configurations for backgrounds.
--   `options.effectsConfig`: configurations for effects.
--   `options.particlesConfig`: configurations for particles.
--   `options.enginesConfig`: configurations for engines.
--   `options.replaysConfig`: configurations for replays.
+-   `options.postSearches`: searches for posts.
+-   `options.levelSearches`: searches for levels.
+-   `options.skinSearches`: searches for skins.
+-   `options.backgroundSearches`: searches for backgrounds.
+-   `options.effectSearches`: searches for effects.
+-   `options.particleSearches`: searches for particles.
+-   `options.engineSearches`: searches for engines.
+-   `options.replaySearches`: searches for replays.
+-   `options.roomSearches`: searches for rooms.
+-   `options.roomCreates`: creates for rooms.
 
 #### `address`
 
@@ -85,6 +88,7 @@ Sonolus database. Can be modified to dynamically add/remove/reorder items.
 -   `db.particles`: particles.
 -   `db.engines`: engines.
 -   `db.replays`: replays.
+-   `db.rooms`: multiplayer rooms.
 
 #### `router`
 
@@ -129,14 +133,22 @@ Returning `true` to allow request to proceed, and returning `false` rejects the 
 
 Handler for requesting server info. Defaults to `defaultServerInfoHandler`.
 
-#### `posts`, `playlists`, `levels`, etc
+#### `postsConfig`, `playlistsConfig`, `levelsConfig`, etc
 
 Config for items.
 
 -   `*.searches`: searches.
--   `*.infoHandler`: Handler for requesting item info. Defaults to `default*InfoHandler`.
--   `*.listHandler`: Handler for requesting item list. Defaults to `default*ListHandler`.
--   `*.detailsHandler`: Handler for requesting item details. Defaults to `default*DetailsHandler`.
+-   `*.infoHandler`: handler for requesting item info. Defaults to `default*InfoHandler`.
+-   `*.listHandler`: handler for requesting item list. Defaults to `default*ListHandler`.
+-   `*.detailsHandler`: handler for requesting item details. Defaults to `default*DetailsHandler`.
+
+#### `multiplayerConfig`
+
+Config for multiplayer.
+
+-   `multiplayerConfig.creates`: creates.
+-   `multiplayerConfig.createRoomHandler`: handler for requesting server info. Defaults to `defaultServerInfoHandler`.
+-   `multiplayerConfig.joinRoomHandler`: handler for joining room. Defaults to `defaultJoinRoomHandler`.
 
 ### `filter*ItemsByKeywords(items, keywords)`
 

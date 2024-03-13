@@ -22,4 +22,4 @@ export const filterPostItemsByKeywords: FilterItemsByKeyword<DatabasePostItem> =
 ) => filterItemsByKeywords(items, ['name', 'title', 'author', 'tags', 'description'], keywords)
 
 export const postListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemListRouteHandler(sonolus, sonolus.posts, toPostItem, session, req, res)
+    itemListRouteHandler(sonolus, sonolus.postConfig, toPostItem, session, req, res)

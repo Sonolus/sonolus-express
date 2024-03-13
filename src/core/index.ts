@@ -5,11 +5,4 @@ export {
     defaultSessionHandler,
 } from './authentication'
 export * from './routes'
-export {
-    ItemsConfig,
-    Sonolus,
-    SonolusBase,
-    SonolusCallback,
-    SonolusItemsConfig,
-    defaultItemsConfig,
-} from './sonolus'
+export { Sonolus, SonolusBase, SonolusDatabase, SonolusItemsConfig } from './sonolus'

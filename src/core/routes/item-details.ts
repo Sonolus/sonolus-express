@@ -2,8 +2,9 @@ import { Request, Response } from 'express'
 import { Icon, LocalizationText, Text } from 'sonolus-core'
 import { ToItem } from '../../api/item'
 import { ItemDetailsModel, toItemDetails } from '../../api/item-details'
+import { SectionsModel } from '../../api/section/section'
 import { Promisable } from '../../utils/types'
-import { ItemsConfig, SonolusBase, SonolusItemsConfig } from '../sonolus'
+import { SonolusBase, SonolusItemsConfig } from '../sonolus'
 
 export type ItemDetailsHandler<TSonolus extends SonolusBase, TDatabaseItem> = (
     sonolus: TSonolus,
@@ -45,12 +46,12 @@ export const defaultItemDetailsHandler = <
 
 export const itemDetailsRouteHandler = async <
     TSonolus extends SonolusBase,
-    TConfig extends ItemsConfig,
+    TSearches extends SectionsModel,
     TDatabaseItem,
     TItem,
 >(
     sonolus: TSonolus,
-    { detailsHandler }: SonolusItemsConfig<TSonolus, TConfig, TDatabaseItem>,
+    { detailsHandler }: SonolusItemsConfig<TSonolus, TSearches, TDatabaseItem>,
     toItem: ToItem<TDatabaseItem, TItem>,
     session: string | undefined,
     req: Request,

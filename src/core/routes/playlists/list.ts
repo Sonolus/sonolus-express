@@ -27,4 +27,4 @@ export const filterPlaylistItemsByKeywords: FilterItemsByKeyword<DatabasePlaylis
     )
 
 export const playlistListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemListRouteHandler(sonolus, sonolus.playlists, toPlaylistItem, session, req, res)
+    itemListRouteHandler(sonolus, sonolus.playlistConfig, toPlaylistItem, session, req, res)

@@ -14,4 +14,4 @@ export const defaultBackgroundDetailsHandler: DefaultItemDetailsHandler<Database
 ) => defaultItemDetailsHandler(sonolus.db.backgrounds, name)
 
 export const backgroundDetailsRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemDetailsRouteHandler(sonolus, sonolus.backgrounds, toBackgroundItem, session, req, res)
+    itemDetailsRouteHandler(sonolus, sonolus.backgroundConfig, toBackgroundItem, session, req, res)

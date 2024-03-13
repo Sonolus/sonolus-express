@@ -14,4 +14,4 @@ export const defaultEngineDetailsHandler: DefaultItemDetailsHandler<DatabaseEngi
 ) => defaultItemDetailsHandler(sonolus.db.engines, name)
 
 export const engineDetailsRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemDetailsRouteHandler(sonolus, sonolus.engines, toEngineItem, session, req, res)
+    itemDetailsRouteHandler(sonolus, sonolus.engineConfig, toEngineItem, session, req, res)

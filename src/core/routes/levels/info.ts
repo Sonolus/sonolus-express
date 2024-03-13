@@ -7,4 +7,4 @@ export const defaultLevelInfoHandler: DefaultItemInfoHandler<DatabaseLevelItem> 
     defaultItemInfoHandler(sonolus, sonolus.db.levels)
 
 export const levelInfoRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemInfoRouteHandler(sonolus, sonolus.levels, toLevelItem, session, req, res)
+    itemInfoRouteHandler(sonolus, sonolus.levelConfig, toLevelItem, session, req, res)

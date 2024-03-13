@@ -7,4 +7,4 @@ export const defaultParticleInfoHandler: DefaultItemInfoHandler<DatabaseParticle
     defaultItemInfoHandler(sonolus, sonolus.db.particles)
 
 export const particleInfoRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemInfoRouteHandler(sonolus, sonolus.particles, toParticleItem, session, req, res)
+    itemInfoRouteHandler(sonolus, sonolus.particleConfig, toParticleItem, session, req, res)

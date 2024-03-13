@@ -3,7 +3,7 @@ import { SonolusBase } from '../core/sonolus'
 import { ToItem } from './item'
 import { ItemSectionModel, toItemSections } from './item-section'
 import { Localize } from './localization'
-import { SearchesModel, toSearches } from './search/search'
+import { SectionsModel, toSections } from './section/section'
 
 export type ItemInfoModel<T> = {
     sections: ItemSectionModel<T>[]
@@ -15,9 +15,9 @@ export const toItemInfo = <T, U>(
     localize: Localize,
     toItem: ToItem<T, U>,
     info: ItemInfoModel<T>,
-    searches: SearchesModel,
+    searches: SectionsModel,
 ): ItemInfo<U> => ({
-    searches: toSearches(localize, searches),
+    searches: toSections(localize, searches),
     sections: toItemSections(sonolus, localize, toItem, info.sections),
     banner: info.banner,
 })

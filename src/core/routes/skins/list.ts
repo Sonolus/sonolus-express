@@ -27,4 +27,4 @@ export const filterSkinItemsByKeywords: FilterItemsByKeyword<DatabaseSkinItem> =
     )
 
 export const skinListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemListRouteHandler(sonolus, sonolus.skins, toSkinItem, session, req, res)
+    itemListRouteHandler(sonolus, sonolus.skinConfig, toSkinItem, session, req, res)

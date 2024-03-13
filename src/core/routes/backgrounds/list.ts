@@ -27,4 +27,4 @@ export const filterBackgroundItemsByKeywords: FilterItemsByKeyword<DatabaseBackg
     )
 
 export const backgroundListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemListRouteHandler(sonolus, sonolus.backgrounds, toBackgroundItem, session, req, res)
+    itemListRouteHandler(sonolus, sonolus.backgroundConfig, toBackgroundItem, session, req, res)

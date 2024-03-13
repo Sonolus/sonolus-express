@@ -27,4 +27,4 @@ export const filterReplayItemsByKeywords: FilterItemsByKeyword<DatabaseReplayIte
     )
 
 export const replayListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemListRouteHandler(sonolus, sonolus.replays, toReplayItem, session, req, res)
+    itemListRouteHandler(sonolus, sonolus.replayConfig, toReplayItem, session, req, res)

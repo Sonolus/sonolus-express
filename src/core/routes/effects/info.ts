@@ -7,4 +7,4 @@ export const defaultEffectInfoHandler: DefaultItemInfoHandler<DatabaseEffectItem
     defaultItemInfoHandler(sonolus, sonolus.db.effects)
 
 export const effectInfoRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemInfoRouteHandler(sonolus, sonolus.effects, toEffectItem, session, req, res)
+    itemInfoRouteHandler(sonolus, sonolus.effectConfig, toEffectItem, session, req, res)

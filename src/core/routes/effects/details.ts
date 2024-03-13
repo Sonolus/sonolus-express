@@ -14,4 +14,4 @@ export const defaultEffectDetailsHandler: DefaultItemDetailsHandler<DatabaseEffe
 ) => defaultItemDetailsHandler(sonolus.db.effects, name)
 
 export const effectDetailsRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemDetailsRouteHandler(sonolus, sonolus.effects, toEffectItem, session, req, res)
+    itemDetailsRouteHandler(sonolus, sonolus.effectConfig, toEffectItem, session, req, res)

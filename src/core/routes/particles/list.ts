@@ -27,4 +27,4 @@ export const filterParticleItemsByKeywords: FilterItemsByKeyword<DatabaseParticl
     )
 
 export const particleListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemListRouteHandler(sonolus, sonolus.particles, toParticleItem, session, req, res)
+    itemListRouteHandler(sonolus, sonolus.particleConfig, toParticleItem, session, req, res)

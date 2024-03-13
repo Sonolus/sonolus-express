@@ -7,4 +7,4 @@ export const defaultPostInfoHandler: DefaultItemInfoHandler<DatabasePostItem> = 
     defaultItemInfoHandler(sonolus, sonolus.db.posts)
 
 export const postInfoRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemInfoRouteHandler(sonolus, sonolus.posts, toPostItem, session, req, res)
+    itemInfoRouteHandler(sonolus, sonolus.postConfig, toPostItem, session, req, res)

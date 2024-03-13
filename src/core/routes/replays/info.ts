@@ -7,4 +7,4 @@ export const defaultReplayInfoHandler: DefaultItemInfoHandler<DatabaseReplayItem
     defaultItemInfoHandler(sonolus, sonolus.db.replays)
 
 export const replayInfoRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
-    itemInfoRouteHandler(sonolus, sonolus.replays, toReplayItem, session, req, res)
+    itemInfoRouteHandler(sonolus, sonolus.replayConfig, toReplayItem, session, req, res)
