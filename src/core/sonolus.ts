@@ -546,6 +546,7 @@ const installSPA = (app: Express, basePath: string, spaRoot: string) => {
     app.use(basePath, express.static(spaRoot))
 
     for (const type of [
+        'rooms',
         'posts',
         'playlists',
         'levels',
@@ -572,6 +573,7 @@ const installRedirect = (app: Express, basePath: string, redirectPath: string) =
     })
 
     for (const type of [
+        'rooms',
         'posts',
         'playlists',
         'levels',
