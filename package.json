@@ -1,5 +1,5 @@
 {
-  "name": "sonolus-express",
+  "name": "@sonolus/express",
   "version": "6.3.1",
   "description": "TypeScript based developer toolkit for Sonolus servers with Express.js",
   "author": "NonSpicyBurrito",
