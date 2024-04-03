@@ -1,4 +1,4 @@
-import { DatabaseEffectItem, EffectItem } from 'sonolus-core'
+import { DatabaseEffectItem, EffectItem } from '@sonolus/core'
 import { ToItem } from './item'
 import { toTags } from './tag'
 

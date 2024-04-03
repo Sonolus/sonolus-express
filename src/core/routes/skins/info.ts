@@ -1,4 +1,4 @@
-import { DatabaseSkinItem } from 'sonolus-core'
+import { DatabaseSkinItem } from '@sonolus/core'
 import { toSkinItem } from '../../../api/skin-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import { DefaultItemInfoHandler, defaultItemInfoHandler, itemInfoRouteHandler } from '../item-info'

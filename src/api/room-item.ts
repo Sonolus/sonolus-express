@@ -1,4 +1,4 @@
-import { DatabaseTag, LocalizationText, RoomItem, SRL } from 'sonolus-core'
+import { DatabaseTag, LocalizationText, RoomItem, SRL } from '@sonolus/core'
 import { ToItem } from './item'
 import { toTags } from './tag'
 

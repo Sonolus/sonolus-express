@@ -1,4 +1,4 @@
-import { DatabasePostItem, PostItem } from 'sonolus-core'
+import { DatabasePostItem, PostItem } from '@sonolus/core'
 import { ToItem } from './item'
 import { toTags } from './tag'
 

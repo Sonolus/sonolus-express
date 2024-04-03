@@ -1,4 +1,4 @@
-import { Icon, ItemSection, LocalizationText } from 'sonolus-core'
+import { Icon, ItemSection, LocalizationText } from '@sonolus/core'
 import { SonolusBase } from '../core/sonolus'
 import { ToItem, toItems } from './item'
 import { Localize } from './localization'

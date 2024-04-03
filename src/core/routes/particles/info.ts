@@ -1,4 +1,4 @@
-import { DatabaseParticleItem } from 'sonolus-core'
+import { DatabaseParticleItem } from '@sonolus/core'
 import { toParticleItem } from '../../../api/particle-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import { DefaultItemInfoHandler, defaultItemInfoHandler, itemInfoRouteHandler } from '../item-info'

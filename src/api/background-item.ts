@@ -1,4 +1,4 @@
-import { BackgroundItem, DatabaseBackgroundItem } from 'sonolus-core'
+import { BackgroundItem, DatabaseBackgroundItem } from '@sonolus/core'
 import { ToItem } from './item'
 import { toTags } from './tag'
 

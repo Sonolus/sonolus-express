@@ -1,4 +1,4 @@
-import { DatabasePostItem } from 'sonolus-core'
+import { DatabasePostItem } from '@sonolus/core'
 import { toPostItem } from '../../../api/post-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {

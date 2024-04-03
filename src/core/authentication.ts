@@ -1,4 +1,4 @@
-import { AuthenticateServerRequest, AuthenticateServerResponse } from 'sonolus-core'
+import { AuthenticateServerRequest, AuthenticateServerResponse } from '@sonolus/core'
 import { Promisable } from '../utils/types'
 import { SonolusBase } from './sonolus'
 

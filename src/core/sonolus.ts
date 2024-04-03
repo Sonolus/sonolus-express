@@ -1,9 +1,3 @@
-import { webcrypto } from 'crypto'
-import type { Express, Request, Response, Router } from 'express'
-import * as express from 'express'
-import { readFileSync } from 'fs'
-import { resolve } from 'path'
-import type { ParsedQs } from 'qs'
 import {
     Database,
     DatabaseBackgroundItem,
@@ -21,7 +15,13 @@ import {
     localize,
     hash as sonolusHash,
     version,
-} from 'sonolus-core'
+} from '@sonolus/core'
+import { webcrypto } from 'crypto'
+import type { Express, Request, Response, Router } from 'express'
+import * as express from 'express'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
+import type { ParsedQs } from 'qs'
 import { DatabaseRoomItem } from '../api/room-item'
 import { ParsedSearchQuery } from '../api/section/query'
 import { SectionsModel } from '../api/section/section'

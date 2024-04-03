@@ -1,4 +1,4 @@
-import { ServerOption } from 'sonolus-core'
+import { ServerOption } from '@sonolus/core'
 import { Localize } from '../localization'
 import { ServerMultiOptionModel, toSearchMultiOption } from './multi'
 import { ServerSelectOptionModel, toSearchSelectOption } from './select'

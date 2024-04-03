@@ -1,4 +1,4 @@
-import { DatabaseLevelItem, DatabaseUseItem, LevelItem, UseItem } from 'sonolus-core'
+import { DatabaseLevelItem, DatabaseUseItem, LevelItem, UseItem } from '@sonolus/core'
 import { SonolusBase } from '../core/sonolus'
 import { toBackgroundItem } from './background-item'
 import { toEffectItem } from './effect-item'

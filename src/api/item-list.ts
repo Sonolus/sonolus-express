@@ -1,4 +1,4 @@
-import { ItemList } from 'sonolus-core'
+import { ItemList } from '@sonolus/core'
 import { SonolusBase } from '../core/sonolus'
 import { ToItem, toItems } from './item'
 import { Localize } from './localization'

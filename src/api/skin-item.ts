@@ -1,4 +1,4 @@
-import { DatabaseSkinItem, SkinItem } from 'sonolus-core'
+import { DatabaseSkinItem, SkinItem } from '@sonolus/core'
 import { ToItem } from './item'
 import { toTags } from './tag'
 

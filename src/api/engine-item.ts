@@ -1,4 +1,4 @@
-import { DatabaseEngineItem, EngineItem } from 'sonolus-core'
+import { DatabaseEngineItem, EngineItem } from '@sonolus/core'
 import { toBackgroundItem } from './background-item'
 import { toEffectItem } from './effect-item'
 import { ToItem, getByName } from './item'

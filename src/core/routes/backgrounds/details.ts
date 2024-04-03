@@ -1,4 +1,4 @@
-import { DatabaseBackgroundItem } from 'sonolus-core'
+import { DatabaseBackgroundItem } from '@sonolus/core'
 import { toBackgroundItem } from '../../../api/background-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {

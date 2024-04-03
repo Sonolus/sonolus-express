@@ -1,5 +1,5 @@
+import { JoinRoomResponse, getSignaturePublicKey } from '@sonolus/core'
 import { webcrypto } from 'node:crypto'
-import { JoinRoomResponse, getSignaturePublicKey } from 'sonolus-core'
 import { toCreateRoomResponse } from '../api/create-room-response'
 import { ParsedQuery, parseQuery } from '../api/section/query'
 import { SectionsModel } from '../api/section/section'

@@ -1,4 +1,4 @@
-import { DatabasePlaylistItem } from 'sonolus-core'
+import { DatabasePlaylistItem } from '@sonolus/core'
 import { toPlaylistItem } from '../../../api/playlist-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import { DefaultItemInfoHandler, defaultItemInfoHandler, itemInfoRouteHandler } from '../item-info'

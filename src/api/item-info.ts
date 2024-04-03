@@ -1,4 +1,4 @@
-import { ItemInfo, SRL } from 'sonolus-core'
+import { ItemInfo, SRL } from '@sonolus/core'
 import { SonolusBase } from '../core/sonolus'
 import { ToItem } from './item'
 import { ItemSectionModel, toItemSections } from './item-section'

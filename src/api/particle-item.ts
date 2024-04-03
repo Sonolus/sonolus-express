@@ -1,4 +1,4 @@
-import { DatabaseParticleItem, ParticleItem } from 'sonolus-core'
+import { DatabaseParticleItem, ParticleItem } from '@sonolus/core'
 import { ToItem } from './item'
 import { toTags } from './tag'
 

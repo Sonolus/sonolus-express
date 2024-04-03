@@ -1,4 +1,4 @@
-import { DatabaseReplayItem } from 'sonolus-core'
+import { DatabaseReplayItem } from '@sonolus/core'
 import { toReplayItem } from '../../../api/replay-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {

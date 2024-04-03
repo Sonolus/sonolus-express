@@ -1,4 +1,4 @@
-import { CreateRoomResponse } from 'sonolus-core'
+import { CreateRoomResponse } from '@sonolus/core'
 import { Localize } from './localization'
 import { SectionsModel, toSections } from './section/section'
 

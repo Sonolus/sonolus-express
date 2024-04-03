@@ -1,4 +1,4 @@
-import { Icon, LocalizationText, ServerOptionsSection } from 'sonolus-core'
+import { Icon, LocalizationText, ServerOptionsSection } from '@sonolus/core'
 import { Localize } from '../localization'
 import { ServerOptionModel, toServerOption } from '../option/option'
 

@@ -1,4 +1,4 @@
-import { DatabaseServerInfo } from 'sonolus-core'
+import { DatabaseServerInfo } from '@sonolus/core'
 import { toServerInfo } from '../../api/server-info'
 import { Promisable } from '../../utils/types'
 import { SonolusBase, SonolusRouteHandler } from '../sonolus'

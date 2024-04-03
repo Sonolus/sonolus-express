@@ -1,5 +1,5 @@
+import { Icon, LocalizationText, Text } from '@sonolus/core'
 import { Request, Response } from 'express'
-import { Icon, LocalizationText, Text } from 'sonolus-core'
 import { ToItem } from '../../api/item'
 import { ItemDetailsModel, toItemDetails } from '../../api/item-details'
 import { SectionsModel } from '../../api/section/section'

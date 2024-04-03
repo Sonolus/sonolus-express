@@ -1,4 +1,4 @@
-import { DatabaseLevelItem } from 'sonolus-core'
+import { DatabaseLevelItem } from '@sonolus/core'
 import { toLevelItem } from '../../../api/level-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {

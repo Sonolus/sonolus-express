@@ -1,4 +1,4 @@
-import { ItemDetails, LocalizationText } from 'sonolus-core'
+import { ItemDetails, LocalizationText } from '@sonolus/core'
 import { SonolusBase } from '../core/sonolus'
 import { ToItem } from './item'
 import { ItemSectionModel, toItemSections } from './item-section'

@@ -1,4 +1,4 @@
-import { DatabaseReplayItem, ReplayItem } from 'sonolus-core'
+import { DatabaseReplayItem, ReplayItem } from '@sonolus/core'
 import { ToItem, getByName } from './item'
 import { toLevelItem } from './level-item'
 import { toTags } from './tag'

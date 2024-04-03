@@ -1,4 +1,4 @@
-import { DatabaseServerInfo, ServerInfo } from 'sonolus-core'
+import { DatabaseServerInfo, ServerInfo } from '@sonolus/core'
 import { Localize } from './localization'
 
 export const toServerInfo = (

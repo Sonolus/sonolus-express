@@ -1,5 +1,5 @@
+import { Text } from '@sonolus/core'
 import { Request, Response } from 'express'
-import { Text } from 'sonolus-core'
 import { ToItem } from '../../api/item'
 import { ItemInfoModel, toItemInfo } from '../../api/item-info'
 import { SectionsModel } from '../../api/section/section'

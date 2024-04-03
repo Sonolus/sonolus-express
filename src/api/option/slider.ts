@@ -1,4 +1,4 @@
-import { LocalizationText, ServerSliderOption } from 'sonolus-core'
+import { LocalizationText, ServerSliderOption } from '@sonolus/core'
 import { Localize } from '../localization'
 
 export type ServerSliderOptionModel = {

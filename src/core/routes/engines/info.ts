@@ -1,4 +1,4 @@
-import { DatabaseEngineItem } from 'sonolus-core'
+import { DatabaseEngineItem } from '@sonolus/core'
 import { toEngineItem } from '../../../api/engine-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import { DefaultItemInfoHandler, defaultItemInfoHandler, itemInfoRouteHandler } from '../item-info'

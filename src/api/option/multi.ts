@@ -1,4 +1,4 @@
-import { LocalizationText, ServerMultiOption } from 'sonolus-core'
+import { LocalizationText, ServerMultiOption } from '@sonolus/core'
 import { Localize } from '../localization'
 
 export type ServerMultiOptionModel = {

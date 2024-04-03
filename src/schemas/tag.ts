@@ -1,4 +1,4 @@
-import { Icon } from 'sonolus-core'
+import { Icon } from '@sonolus/core'
 import { z } from 'zod'
 import { localizationTextSchema } from './localization-text'
 
