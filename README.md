@@ -1,4 +1,4 @@
-# sonolus-express
+# Sonolus Express
 
 TypeScript based developer toolkit for Sonolus servers with [Express.js](https://expressjs.com).
 
@@ -17,7 +17,7 @@ TypeScript based developer toolkit for Sonolus servers with [Express.js](https:/
 ## Installation
 
 ```
-npm install sonolus-express
+npm install @sonolus/express
 ```
 
 A compatible version of [sonolus-core](https://github.com/Sonolus/sonolus-core) is also required as peer dependency. If it isn't installed automatically, you can do so with:
@@ -48,40 +48,53 @@ app.listen(port, () => {
 Create a Sonolus server on `app` with `options`.
 
 -   `app`: [Express.js](https://expressjs.com) app.
--   `options.basePath`: base path of the Sonolus server (should not have ending `/`).
--   `options.authentication`: if Sonolus server requires authentication.
--   `options.sessionAddress`: session address to be used in authentication.
--   `options.sessionDuration`: session duration to be used in authentication.
+-   `options.address`: address of server (should not have ending `/`).
+-   `options.basePath`: base path of server (should not have ending `/`).
+-   `options.authentication`: if server has authentication.
+-   `options.multiplayer`: if server has multiplayer.
 -   `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
 -   `options.mode`: share link handling mode, can be `custom`, `redirect`, or `spa`.
+-   `options.redirectPath`: path to use for redirect when `options.mode` is `redirect`.
 -   `options.spaRoot`: root of static SPA files to serve when `options.mode` is `spa`.
--   `options.levels`: configurations for levels.
--   `options.skins`: configurations for skins.
--   `options.backgrounds`: configurations for backgrounds.
--   `options.effects`: configurations for effects.
--   `options.particles`: configurations for particles.
--   `options.engines`: configurations for engines.
+-   `options.postSearches`: searches for posts.
+-   `options.levelSearches`: searches for levels.
+-   `options.skinSearches`: searches for skins.
+-   `options.backgroundSearches`: searches for backgrounds.
+-   `options.effectSearches`: searches for effects.
+-   `options.particleSearches`: searches for particles.
+-   `options.engineSearches`: searches for engines.
+-   `options.replaySearches`: searches for replays.
+-   `options.roomSearches`: searches for rooms.
+-   `options.roomCreates`: creates for rooms.
 
-#### `sessionAddress`
+#### `address`
 
-Session address. As passed in from `constructor(app, options)`.
+As passed in from `constructor(app, options)`.
 
-#### `router`
+#### `authentication`
 
-Express router.
-
-Installing more routes under `options.basePath` may not work due to SPA mode catch all routes. Instead install onto `router` rather than the original Express app.
+As passed in from `constructor(app, options)`.
 
 #### `db`
 
 Sonolus database. Can be modified to dynamically add/remove/reorder items.
 
+-   `db.posts`: posts.
+-   `db.playlists`: playlists.
 -   `db.levels`: levels.
 -   `db.skins`: skins.
 -   `db.backgrounds`: backgrounds.
 -   `db.effects`: effects.
 -   `db.particles`: particles.
 -   `db.engines`: engines.
+-   `db.replays`: replays.
+-   `db.rooms`: multiplayer rooms.
+
+#### `router`
+
+Express router.
+
+Installing more routes under `options.basePath` may not work due to SPA mode catch all routes. Instead install onto `router` rather than the original Express app.
 
 #### `load(path)`
 
@@ -104,127 +117,61 @@ Localize text using target and fallback locales.
 -   `text`: text to localize.
 -   `locale`: target locale.
 
-#### `createSessionHandler`
+#### `authenticateHandler`
 
-Handler for creating an authentication session.
+Handler for authentication. Defaults to `defaultAuthenticateHandler`.
 
-#### `findSessionHandler`
+Returning `AuthenticateServerResponse` causes authentication to succeed, and returning `undefined` rejects the authentication attempt.
 
-Handler for finding an authentication session.
+#### `sessionHandler`
 
-#### `checkSessionHandler`
+Handler for authentication session. Defaults to `defaultSessionHandler`.
 
-Handler for checking an authentication session.
+Returning `true` to allow request to proceed, and returning `false` rejects the request.
 
 #### `serverInfoHandler`
 
 Handler for requesting server info. Defaults to `defaultServerInfoHandler`.
 
-#### `levelListHandler`
+#### `postsConfig`, `playlistsConfig`, `levelsConfig`, etc
 
-Handler for requesting level list. Defaults to `defaultLevelListHandler`.
+Config for items.
 
-#### `skinListHandler`
+-   `*.searches`: searches.
+-   `*.infoHandler`: handler for requesting item info. Defaults to `default*InfoHandler`.
+-   `*.listHandler`: handler for requesting item list. Defaults to `default*ListHandler`.
+-   `*.detailsHandler`: handler for requesting item details. Defaults to `default*DetailsHandler`.
 
-Handler for requesting skin list. Defaults to `defaultSkinListHandler`.
+#### `multiplayerConfig`
 
-#### `backgroundListHandler`
+Config for multiplayer.
 
-Handler for requesting background list. Defaults to `defaultBackgroundListHandler`.
+-   `multiplayerConfig.creates`: creates.
+-   `multiplayerConfig.createRoomHandler`: handler for requesting server info. Defaults to `defaultServerInfoHandler`.
+-   `multiplayerConfig.joinRoomHandler`: handler for joining room. Defaults to `defaultJoinRoomHandler`.
 
-#### `effectListHandler`
+### `filter*ItemsByKeywords(items, keywords)`
 
-Handler for requesting effect list. Defaults to `defaultEffectListHandler`.
+Filter items by keywords.
 
-#### `particleListHandler`
-
-Handler for requesting particle list. Defaults to `defaultParticleListHandler`.
-
-#### `engineListHandler`
-
-Handler for requesting engine list. Defaults to `defaultEngineListHandler`.
-
-#### `levelDetailsHandler`
-
-Handler for requesting level details. Defaults to `defaultLevelDetailsHandler`.
-
-#### `skinDetailsHandler`
-
-Handler for requesting skin details. Defaults to `defaultSkinDetailsHandler`.
-
-#### `backgroundDetailsHandler`
-
-Handler for requesting background details. Defaults to `defaultBackgroundDetailsHandler`.
-
-#### `effectDetailsHandler`
-
-Handler for requesting effect details. Defaults to `defaultEffectDetailsHandler`.
-
-#### `particleDetailsHandler`
-
-Handler for requesting particle details. Defaults to `defaultParticleDetailsHandler`.
-
-#### `engineDetailsHandler`
-
-Handler for requesting engine details. Defaults to `defaultEngineDetailsHandler`.
-
-### `filterLevelInfosByKeywords(infos, keywords)`
-
-Filter level infos by keywords on `name`, `rating`, `title`, `artists`, `author`, and `description`.
-
--   `infos`: level infos.
+-   `items`: items.
 -   `keywords`: keywords.
 
-### `filterSkinInfosByKeywords(infos, keywords)`
+### `filterItemsByKeywords(items, props, keywords)`
 
-Filter skin infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
+Filter items by keywords on specified props.
 
--   `infos`: skin infos.
--   `keywords`: keywords.
+Recommended to use functions for the specific item type (`filter*ItemsByKeywords`) instead.
 
-### `filterBackgroundInfosByKeywords(infos, keywords)`
-
-Filter background infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
-
--   `infos`: background infos.
--   `keywords`: keywords.
-
-### `filterEffectInfosByKeywords(infos, keywords)`
-
-Filter effect infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
-
--   `infos`: effect infos.
--   `keywords`: keywords.
-
-### `filterParticleInfosByKeywords(infos, keywords)`
-
-Filter particle infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
-
--   `infos`: particle infos.
--   `keywords`: keywords.
-
-### `filterEngineInfosByKeywords(infos, keywords)`
-
-Filter engine infos by keywords on `name`, `title`, `subtitle`, `author`, and `description`.
-
--   `infos`: engine infos.
--   `keywords`: keywords.
-
-### `filterInfosByKeywords(infos, props, keywords)`
-
-Filter item infos by keywords on specified props.
-
-Recommended to use functions for the specific info type instead.
-
--   `infos`: item infos.
+-   `items`: items.
 -   `props`: props to filter keywords on.
 -   `keywords`: keywords.
 
-### `paginateInfos(infos, page, perPage)`
+### `paginateItems(items, page, perPage)`
 
-Paginate item infos by page and per page size.
+Paginate items by page and per page size.
 
--   `infos`: item infos.
+-   `items`: items.
 -   `page`: page.
 -   `perPage`: per page size, defaults to 20.
 
@@ -234,7 +181,7 @@ Use [declaration merging](https://www.typescriptlang.org/docs/handbook/declarati
 
 ```ts
 declare module 'sonolus-core' {
-    interface LevelInfo {
+    interface DatabaseLevelItem {
         meta: {
             // user-defined meta information
         }

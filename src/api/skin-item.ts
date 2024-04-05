@@ -1,16 +1,16 @@
-import { Database, LocalizationText, SkinInfo, SkinItem } from 'sonolus-core'
+import { DatabaseSkinItem, SkinItem } from '@sonolus/core'
+import { ToItem } from './item'
+import { toTags } from './tag'
 
-export const toSkinItem = (
-    db: Database,
-    localize: (text: LocalizationText) => string,
-    info: SkinInfo,
-): SkinItem => ({
-    name: info.name,
-    version: info.version,
-    title: localize(info.title),
-    subtitle: localize(info.subtitle),
-    author: localize(info.author),
-    thumbnail: info.thumbnail,
-    data: info.data,
-    texture: info.texture,
+export const toSkinItem: ToItem<DatabaseSkinItem, SkinItem> = (sonolus, localize, item) => ({
+    name: item.name,
+    source: sonolus.address,
+    version: item.version,
+    title: localize(item.title),
+    subtitle: localize(item.subtitle),
+    author: localize(item.author),
+    tags: toTags(localize, item.tags),
+    thumbnail: item.thumbnail,
+    data: item.data,
+    texture: item.texture,
 })

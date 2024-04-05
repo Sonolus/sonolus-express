@@ -1,58 +1,30 @@
-import { Request, Response } from 'express'
-import { BackgroundInfo } from 'sonolus-core'
+import { DatabaseBackgroundItem } from '@sonolus/core'
 import { toBackgroundItem } from '../../../api/background-item'
-import { ItemsConfig, Sonolus } from '../../sonolus'
-import { ListHandler, defaultListHandler, filterInfosByKeywords, listRouteHandler } from '../list'
+import { SonolusRouteHandler } from '../../sonolus'
+import {
+    DefaultItemListHandler,
+    FilterItemsByKeyword,
+    defaultItemListHandler,
+    filterItemsByKeywords,
+    itemListRouteHandler,
+} from '../item-list'
 
-export type BackgroundListHandler<
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
-    T,
-> = ListHandler<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines, T, BackgroundInfo>
+export const defaultBackgroundListHandler: DefaultItemListHandler<DatabaseBackgroundItem> = (
+    sonolus,
+    session,
+    query,
+    page,
+) => defaultItemListHandler(sonolus.db.backgrounds, filterBackgroundItemsByKeywords, query, page)
 
-export const defaultBackgroundListHandler = <
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
->(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
-    query: Record<string, unknown>,
-    page: number,
-): {
-    pageCount: number
-    infos: BackgroundInfo[]
-} => defaultListHandler(sonolus.db.backgrounds, filterBackgroundInfosByKeywords, query, page)
-
-export const filterBackgroundInfosByKeywords = (
-    infos: BackgroundInfo[],
-    keywords: string,
-): BackgroundInfo[] =>
-    filterInfosByKeywords(infos, ['name', 'title', 'subtitle', 'author', 'description'], keywords)
-
-export const backgroundListRouteHandler = <
-    TLevels extends ItemsConfig,
-    TSkins extends ItemsConfig,
-    TBackgrounds extends ItemsConfig,
-    TEffects extends ItemsConfig,
-    TParticles extends ItemsConfig,
-    TEngines extends ItemsConfig,
->(
-    sonolus: Sonolus<TLevels, TSkins, TBackgrounds, TEffects, TParticles, TEngines>,
-    req: Request,
-    res: Response,
-): Promise<void> =>
-    listRouteHandler(
-        sonolus,
-        sonolus.backgroundListHandler,
-        toBackgroundItem,
-        sonolus.backgroundsConfig.search,
-        req,
-        res,
+export const filterBackgroundItemsByKeywords: FilterItemsByKeyword<DatabaseBackgroundItem> = (
+    items,
+    keywords,
+) =>
+    filterItemsByKeywords(
+        items,
+        ['name', 'title', 'subtitle', 'author', 'tags', 'description'],
+        keywords,
     )
+
+export const backgroundListRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>
+    itemListRouteHandler(sonolus, sonolus.backgroundConfig, toBackgroundItem, session, req, res)

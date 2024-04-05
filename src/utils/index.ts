@@ -1,1 +1,1 @@
-export * from './types'
+export { Promisable } from './types'

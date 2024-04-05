@@ -1,13 +1,22 @@
-import { Database, InfoDetails, ItemDetails, LocalizationText } from 'sonolus-core'
+import { ItemDetails, LocalizationText } from '@sonolus/core'
+import { SonolusBase } from '../core/sonolus'
 import { ToItem } from './item'
+import { ItemSectionModel, toItemSections } from './item-section'
+import { Localize } from './localization'
+
+export type ItemDetailsModel<T> = {
+    item: T
+    description: LocalizationText
+    sections: ItemSectionModel<T>[]
+}
 
 export const toItemDetails = <T, U>(
-    db: Database,
-    localize: (text: LocalizationText) => string,
+    sonolus: SonolusBase,
+    localize: Localize,
     toItem: ToItem<T, U>,
-    infoDetails: InfoDetails<T>,
+    details: ItemDetailsModel<T>,
 ): ItemDetails<U> => ({
-    item: toItem(db, localize, infoDetails.info),
-    description: localize(infoDetails.description),
-    recommended: infoDetails.recommended.map((info) => toItem(db, localize, info)),
+    item: toItem(sonolus, localize, details.item),
+    description: localize(details.description),
+    sections: toItemSections(sonolus, localize, toItem, details.sections),
 })
