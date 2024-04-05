@@ -27,6 +27,7 @@ import { ParsedSearchQuery } from '../api/section/query'
 import { SectionsModel } from '../api/section/section'
 import { authenticateServerRequestSchema } from '../schemas/authenticate-server-request'
 import { databaseParser } from '../schemas/database'
+import { safeJsonParse } from '../utils/safe-json-parse'
 import { Promisable } from '../utils/types'
 import {
     AuthenticateHandler,
@@ -458,7 +459,7 @@ export class Sonolus<
                     }
 
                     const parseResult = authenticateServerRequestSchema.safeParse(
-                        JSON.parse(body as never),
+                        safeJsonParse(body.toString('utf8')),
                     )
                     if (!parseResult.success) {
                         res.status(400).end()

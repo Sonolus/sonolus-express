@@ -4,6 +4,7 @@ import { toCreateRoomResponse } from '../api/create-room-response'
 import { ParsedQuery, parseQuery } from '../api/section/query'
 import { SectionsModel } from '../api/section/section'
 import { joinRoomRequestSchema } from '../schemas/join-room-request'
+import { safeJsonParse } from '../utils/safe-json-parse'
 import { Promisable } from '../utils/types'
 import { SonolusBase, SonolusRouteHandler } from './sonolus'
 
@@ -67,7 +68,7 @@ export const joinRoomRouteHandler: SonolusRouteHandler = async (sonolus, session
             return
         }
 
-        const parseResult = joinRoomRequestSchema.safeParse(JSON.parse(body as never))
+        const parseResult = joinRoomRequestSchema.safeParse(safeJsonParse(body.toString('utf8')))
         if (!parseResult.success) {
             res.status(400).end()
             return
