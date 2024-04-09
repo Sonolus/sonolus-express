@@ -24,7 +24,6 @@ export const parseQuery = <T extends SectionsModel>(
     query: Record<string, unknown>,
     sections: T,
 ): ParsedQuery<T> | undefined => {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const type = `${query.type}`
 
     const section = sections[type]
@@ -62,7 +61,6 @@ export const parseSearchQuery = <T extends SectionsModel>(
     query: Record<string, unknown>,
     searches: T,
 ): ParsedSearchQuery<T> => {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const type = `${query.type}`
 
     if (type === 'quick')
