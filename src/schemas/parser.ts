@@ -8,7 +8,6 @@ export const getParser =
         try {
             return schema.parse(data)
         } catch (error) {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             if (!(error instanceof ZodError)) throw new Error(`${logPath}: ${error}`)
 
             const messages = error.issues.map(({ message, path }) =>

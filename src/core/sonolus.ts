@@ -605,7 +605,6 @@ const getSearch = (query: ParsedQs) => {
     const params = new URLSearchParams()
 
     for (const key in query) {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         params.append(key, `${query[key]}`)
     }
 
