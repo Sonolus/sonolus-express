@@ -1,5 +1,4 @@
-import { DatabaseReplayItem } from '@sonolus/core'
-import { toReplayItem } from '../../../api/replay-item'
+import { ReplayItemModel, toReplayItem } from '../../../api/replay-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemDetailsHandler,
@@ -7,7 +6,7 @@ import {
     itemDetailsRouteHandler,
 } from '../item-details'
 
-export const defaultReplayDetailsHandler: DefaultItemDetailsHandler<DatabaseReplayItem> = (
+export const defaultReplayDetailsHandler: DefaultItemDetailsHandler<ReplayItemModel> = (
     sonolus,
     session,
     name,

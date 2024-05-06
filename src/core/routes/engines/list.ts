@@ -1,5 +1,4 @@
-import { DatabaseEngineItem } from '@sonolus/core'
-import { toEngineItem } from '../../../api/engine-item'
+import { EngineItemModel, toEngineItem } from '../../../api/engine-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemListHandler,
@@ -9,14 +8,14 @@ import {
     itemListRouteHandler,
 } from '../item-list'
 
-export const defaultEngineListHandler: DefaultItemListHandler<DatabaseEngineItem> = (
+export const defaultEngineListHandler: DefaultItemListHandler<EngineItemModel> = (
     sonolus,
     session,
     query,
     page,
 ) => defaultItemListHandler(sonolus.db.engines, filterEngineItemsByKeywords, query, page)
 
-export const filterEngineItemsByKeywords: FilterItemsByKeyword<DatabaseEngineItem> = (
+export const filterEngineItemsByKeywords: FilterItemsByKeyword<EngineItemModel> = (
     items,
     keywords,
 ) =>

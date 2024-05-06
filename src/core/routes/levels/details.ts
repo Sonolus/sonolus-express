@@ -1,5 +1,4 @@
-import { DatabaseLevelItem } from '@sonolus/core'
-import { toLevelItem } from '../../../api/level-item'
+import { LevelItemModel, toLevelItem } from '../../../api/level-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemDetailsHandler,
@@ -7,7 +6,7 @@ import {
     itemDetailsRouteHandler,
 } from '../item-details'
 
-export const defaultLevelDetailsHandler: DefaultItemDetailsHandler<DatabaseLevelItem> = (
+export const defaultLevelDetailsHandler: DefaultItemDetailsHandler<LevelItemModel> = (
     sonolus,
     session,
     name,

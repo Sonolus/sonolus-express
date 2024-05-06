@@ -1,15 +1,37 @@
-import { DatabaseLevelItem, DatabaseUseItem, LevelItem, UseItem } from '@sonolus/core'
+import { DatabaseLevelItem, LevelItem, UseItem } from '@sonolus/core'
 import { SonolusBase } from '../core/sonolus'
-import { toBackgroundItem } from './background-item'
-import { toEffectItem } from './effect-item'
-import { toEngineItem } from './engine-item'
-import { ToItem, getByName } from './item'
+import { BackgroundItemModel, toBackgroundItem } from './background-item'
+import { EffectItemModel, toEffectItem } from './effect-item'
+import { EngineItemModel, toEngineItem } from './engine-item'
+import { Model, ToItem, getItem } from './item'
 import { Localize } from './localization'
-import { toParticleItem } from './particle-item'
-import { toSkinItem } from './skin-item'
+import { ParticleItemModel, toParticleItem } from './particle-item'
+import { SkinItemModel, toSkinItem } from './skin-item'
 import { toTags } from './tag'
 
-export const toLevelItem: ToItem<DatabaseLevelItem, LevelItem> = (sonolus, localize, item) => ({
+export type UseItemModel<T> =
+    | {
+          useDefault: true
+      }
+    | {
+          useDefault: false
+          item: string | T
+      }
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+export interface LevelItemModel
+    extends Model<
+        DatabaseLevelItem,
+        {
+            engine: string | EngineItemModel
+            useSkin: UseItemModel<SkinItemModel>
+            useBackground: UseItemModel<BackgroundItemModel>
+            useEffect: UseItemModel<EffectItemModel>
+            useParticle: UseItemModel<ParticleItemModel>
+        }
+    > {}
+
+export const toLevelItem: ToItem<LevelItemModel, LevelItem> = (sonolus, localize, item) => ({
     name: item.name,
     source: sonolus.address,
     version: item.version,
@@ -17,7 +39,7 @@ export const toLevelItem: ToItem<DatabaseLevelItem, LevelItem> = (sonolus, local
     engine: toEngineItem(
         sonolus,
         localize,
-        getByName(sonolus.db.engines, item.engine, `Level/${item.name}`, '.engine'),
+        getItem(sonolus.db.engines, item.engine, `Level/${item.name}`, '.engine'),
     ),
     useSkin: toUseItem(
         sonolus,
@@ -69,7 +91,7 @@ export const toUseItem = <T extends { name: string }, U>(
     sonolus: SonolusBase,
     localize: Localize,
     toItem: ToItem<T, U>,
-    useItem: DatabaseUseItem,
+    useItem: UseItemModel<T>,
     items: T[],
     parent: string,
     path: string,
@@ -80,5 +102,5 @@ export const toUseItem = <T extends { name: string }, U>(
           }
         : {
               useDefault: false,
-              item: toItem(sonolus, localize, getByName(items, useItem.item, parent, path)),
+              item: toItem(sonolus, localize, getItem(items, useItem.item, parent, path)),
           }

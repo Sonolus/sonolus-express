@@ -1,5 +1,4 @@
-import { DatabaseEngineItem } from '@sonolus/core'
-import { toEngineItem } from '../../../api/engine-item'
+import { EngineItemModel, toEngineItem } from '../../../api/engine-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemDetailsHandler,
@@ -7,7 +6,7 @@ import {
     itemDetailsRouteHandler,
 } from '../item-details'
 
-export const defaultEngineDetailsHandler: DefaultItemDetailsHandler<DatabaseEngineItem> = (
+export const defaultEngineDetailsHandler: DefaultItemDetailsHandler<EngineItemModel> = (
     sonolus,
     session,
     name,

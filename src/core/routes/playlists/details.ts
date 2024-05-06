@@ -1,5 +1,4 @@
-import { DatabasePlaylistItem } from '@sonolus/core'
-import { toPlaylistItem } from '../../../api/playlist-item'
+import { PlaylistItemModel, toPlaylistItem } from '../../../api/playlist-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemDetailsHandler,
@@ -7,7 +6,7 @@ import {
     itemDetailsRouteHandler,
 } from '../item-details'
 
-export const defaultPlaylistDetailsHandler: DefaultItemDetailsHandler<DatabasePlaylistItem> = (
+export const defaultPlaylistDetailsHandler: DefaultItemDetailsHandler<PlaylistItemModel> = (
     sonolus,
     session,
     name,

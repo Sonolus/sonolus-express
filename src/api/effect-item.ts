@@ -1,8 +1,11 @@
 import { DatabaseEffectItem, EffectItem } from '@sonolus/core'
-import { ToItem } from './item'
+import { Model, ToItem } from './item'
 import { toTags } from './tag'
 
-export const toEffectItem: ToItem<DatabaseEffectItem, EffectItem> = (sonolus, localize, item) => ({
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+export interface EffectItemModel extends Model<DatabaseEffectItem, {}> {}
+
+export const toEffectItem: ToItem<EffectItemModel, EffectItem> = (sonolus, localize, item) => ({
     name: item.name,
     source: sonolus.address,
     version: item.version,

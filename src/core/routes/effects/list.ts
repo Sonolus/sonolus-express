@@ -1,5 +1,4 @@
-import { DatabaseEffectItem } from '@sonolus/core'
-import { toEffectItem } from '../../../api/effect-item'
+import { EffectItemModel, toEffectItem } from '../../../api/effect-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemListHandler,
@@ -9,14 +8,14 @@ import {
     itemListRouteHandler,
 } from '../item-list'
 
-export const defaultEffectListHandler: DefaultItemListHandler<DatabaseEffectItem> = (
+export const defaultEffectListHandler: DefaultItemListHandler<EffectItemModel> = (
     sonolus,
     session,
     query,
     page,
 ) => defaultItemListHandler(sonolus.db.effects, filterEffectItemsByKeywords, query, page)
 
-export const filterEffectItemsByKeywords: FilterItemsByKeyword<DatabaseEffectItem> = (
+export const filterEffectItemsByKeywords: FilterItemsByKeyword<EffectItemModel> = (
     items,
     keywords,
 ) =>

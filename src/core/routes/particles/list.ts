@@ -1,5 +1,4 @@
-import { DatabaseParticleItem } from '@sonolus/core'
-import { toParticleItem } from '../../../api/particle-item'
+import { ParticleItemModel, toParticleItem } from '../../../api/particle-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemListHandler,
@@ -9,14 +8,14 @@ import {
     itemListRouteHandler,
 } from '../item-list'
 
-export const defaultParticleListHandler: DefaultItemListHandler<DatabaseParticleItem> = (
+export const defaultParticleListHandler: DefaultItemListHandler<ParticleItemModel> = (
     sonolus,
     session,
     query,
     page,
 ) => defaultItemListHandler(sonolus.db.particles, filterParticleItemsByKeywords, query, page)
 
-export const filterParticleItemsByKeywords: FilterItemsByKeyword<DatabaseParticleItem> = (
+export const filterParticleItemsByKeywords: FilterItemsByKeyword<ParticleItemModel> = (
     items,
     keywords,
 ) =>

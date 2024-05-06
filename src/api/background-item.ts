@@ -1,8 +1,11 @@
 import { BackgroundItem, DatabaseBackgroundItem } from '@sonolus/core'
-import { ToItem } from './item'
+import { Model, ToItem } from './item'
 import { toTags } from './tag'
 
-export const toBackgroundItem: ToItem<DatabaseBackgroundItem, BackgroundItem> = (
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+export interface BackgroundItemModel extends Model<DatabaseBackgroundItem, {}> {}
+
+export const toBackgroundItem: ToItem<BackgroundItemModel, BackgroundItem> = (
     sonolus,
     localize,
     item,

@@ -1,14 +1,5 @@
 import {
-    Database,
-    DatabaseBackgroundItem,
-    DatabaseEffectItem,
-    DatabaseEngineItem,
-    DatabaseLevelItem,
-    DatabaseParticleItem,
-    DatabasePlaylistItem,
-    DatabasePostItem,
-    DatabaseReplayItem,
-    DatabaseSkinItem,
+    DatabaseServerInfo,
     LocalizationText,
     SRL,
     getSignaturePublicKey,
@@ -22,9 +13,18 @@ import * as express from 'express'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import type { ParsedQs } from 'qs'
-import { DatabaseRoomItem } from '../api/room-item'
+import { BackgroundItemModel } from '../api/background-item'
+import { EffectItemModel } from '../api/effect-item'
+import { EngineItemModel } from '../api/engine-item'
+import { LevelItemModel } from '../api/level-item'
+import { ParticleItemModel } from '../api/particle-item'
+import { PlaylistItemModel } from '../api/playlist-item'
+import { PostItemModel } from '../api/post-item'
+import { ReplayItemModel } from '../api/replay-item'
+import { RoomItemModel } from '../api/room-item'
 import { ParsedSearchQuery } from '../api/section/query'
 import { SectionsModel } from '../api/section/section'
+import { SkinItemModel } from '../api/skin-item'
 import { authenticateServerRequestSchema } from '../schemas/authenticate-server-request'
 import { databaseParser } from '../schemas/database'
 import { safeJsonParse } from '../utils/safe-json-parse'
@@ -91,8 +91,18 @@ import { defaultSkinDetailsHandler, skinDetailsRouteHandler } from './routes/ski
 import { defaultSkinInfoHandler, skinInfoRouteHandler } from './routes/skins/info'
 import { defaultSkinListHandler, skinListRouteHandler } from './routes/skins/list'
 
-export type SonolusDatabase = Database & {
-    rooms: DatabaseRoomItem[]
+export type SonolusDatabase = {
+    info: DatabaseServerInfo
+    posts: PostItemModel[]
+    playlists: PlaylistItemModel[]
+    levels: LevelItemModel[]
+    skins: SkinItemModel[]
+    backgrounds: BackgroundItemModel[]
+    effects: EffectItemModel[]
+    particles: ParticleItemModel[]
+    engines: EngineItemModel[]
+    replays: ReplayItemModel[]
+    rooms: RoomItemModel[]
 }
 
 export type SonolusBase = {
@@ -175,16 +185,16 @@ export class Sonolus<
 
     serverInfoHandler: ServerInfoHandler<this> = defaultServerInfoHandler
 
-    readonly postConfig: SonolusItemsConfig<this, TPostSearches, DatabasePostItem>
-    readonly playlistConfig: SonolusItemsConfig<this, TPlaylistSearches, DatabasePlaylistItem>
-    readonly levelConfig: SonolusItemsConfig<this, TLevelSearches, DatabaseLevelItem>
-    readonly skinConfig: SonolusItemsConfig<this, TSkinSearches, DatabaseSkinItem>
-    readonly backgroundConfig: SonolusItemsConfig<this, TBackgroundSearches, DatabaseBackgroundItem>
-    readonly effectConfig: SonolusItemsConfig<this, TEffectSearches, DatabaseEffectItem>
-    readonly particleConfig: SonolusItemsConfig<this, TParticleSearches, DatabaseParticleItem>
-    readonly engineConfig: SonolusItemsConfig<this, TEngineSearches, DatabaseEngineItem>
-    readonly replayConfig: SonolusItemsConfig<this, TReplaySearches, DatabaseReplayItem>
-    readonly roomConfig: SonolusItemsConfig<this, TRoomSearches, DatabaseRoomItem>
+    readonly postConfig: SonolusItemsConfig<this, TPostSearches, PostItemModel>
+    readonly playlistConfig: SonolusItemsConfig<this, TPlaylistSearches, PlaylistItemModel>
+    readonly levelConfig: SonolusItemsConfig<this, TLevelSearches, LevelItemModel>
+    readonly skinConfig: SonolusItemsConfig<this, TSkinSearches, SkinItemModel>
+    readonly backgroundConfig: SonolusItemsConfig<this, TBackgroundSearches, BackgroundItemModel>
+    readonly effectConfig: SonolusItemsConfig<this, TEffectSearches, EffectItemModel>
+    readonly particleConfig: SonolusItemsConfig<this, TParticleSearches, ParticleItemModel>
+    readonly engineConfig: SonolusItemsConfig<this, TEngineSearches, EngineItemModel>
+    readonly replayConfig: SonolusItemsConfig<this, TReplaySearches, ReplayItemModel>
+    readonly roomConfig: SonolusItemsConfig<this, TRoomSearches, RoomItemModel>
 
     readonly multiplayerConfig: MultiplayerConfig<this, TRoomCreates>
 

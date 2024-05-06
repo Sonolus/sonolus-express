@@ -1,5 +1,4 @@
-import { DatabaseLevelItem } from '@sonolus/core'
-import { toLevelItem } from '../../../api/level-item'
+import { LevelItemModel, toLevelItem } from '../../../api/level-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemListHandler,
@@ -9,17 +8,14 @@ import {
     itemListRouteHandler,
 } from '../item-list'
 
-export const defaultLevelListHandler: DefaultItemListHandler<DatabaseLevelItem> = (
+export const defaultLevelListHandler: DefaultItemListHandler<LevelItemModel> = (
     sonolus,
     session,
     query,
     page,
 ) => defaultItemListHandler(sonolus.db.levels, filterLevelItemsByKeywords, query, page)
 
-export const filterLevelItemsByKeywords: FilterItemsByKeyword<DatabaseLevelItem> = (
-    items,
-    keywords,
-) =>
+export const filterLevelItemsByKeywords: FilterItemsByKeyword<LevelItemModel> = (items, keywords) =>
     filterItemsByKeywords(
         items,
         ['name', 'rating', 'title', 'artists', 'author', 'tags', 'description'],

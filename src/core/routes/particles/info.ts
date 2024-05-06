@@ -1,9 +1,8 @@
-import { DatabaseParticleItem } from '@sonolus/core'
-import { toParticleItem } from '../../../api/particle-item'
+import { ParticleItemModel, toParticleItem } from '../../../api/particle-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import { DefaultItemInfoHandler, defaultItemInfoHandler, itemInfoRouteHandler } from '../item-info'
 
-export const defaultParticleInfoHandler: DefaultItemInfoHandler<DatabaseParticleItem> = (sonolus) =>
+export const defaultParticleInfoHandler: DefaultItemInfoHandler<ParticleItemModel> = (sonolus) =>
     defaultItemInfoHandler(sonolus, sonolus.db.particles)
 
 export const particleInfoRouteHandler: SonolusRouteHandler = (sonolus, session, req, res) =>

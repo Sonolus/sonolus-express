@@ -1,5 +1,4 @@
-import { DatabaseRoomItem } from '../../../api/room-item'
+import { RoomItemModel } from '../../../api/room-item'
 import { DefaultItemDetailsHandler } from '../item-details'
 
-export const defaultRoomDetailsHandler: DefaultItemDetailsHandler<DatabaseRoomItem> = () =>
-    undefined
+export const defaultRoomDetailsHandler: DefaultItemDetailsHandler<RoomItemModel> = () => undefined

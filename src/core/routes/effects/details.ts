@@ -1,5 +1,4 @@
-import { DatabaseEffectItem } from '@sonolus/core'
-import { toEffectItem } from '../../../api/effect-item'
+import { EffectItemModel, toEffectItem } from '../../../api/effect-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemDetailsHandler,
@@ -7,7 +6,7 @@ import {
     itemDetailsRouteHandler,
 } from '../item-details'
 
-export const defaultEffectDetailsHandler: DefaultItemDetailsHandler<DatabaseEffectItem> = (
+export const defaultEffectDetailsHandler: DefaultItemDetailsHandler<EffectItemModel> = (
     sonolus,
     session,
     name,

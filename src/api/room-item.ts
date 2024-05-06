@@ -3,7 +3,7 @@ import { ToItem } from './item'
 import { toTags } from './tag'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export interface DatabaseRoomItem {
+export interface RoomItemModel {
     name: string
     title: LocalizationText
     subtitle: LocalizationText
@@ -14,7 +14,7 @@ export interface DatabaseRoomItem {
     preview?: SRL
 }
 
-export const toRoomItem: ToItem<DatabaseRoomItem, RoomItem> = (sonolus, localize, item) => ({
+export const toRoomItem: ToItem<RoomItemModel, RoomItem> = (sonolus, localize, item) => ({
     name: item.name,
     title: localize(item.title),
     subtitle: localize(item.subtitle),

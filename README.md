@@ -174,8 +174,8 @@ Paginate items by page and per page size.
 Use [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html):
 
 ```ts
-declare module 'sonolus-core' {
-    interface DatabaseLevelItem {
+declare module '@sonolus/express' {
+    interface LevelItemModel {
         meta: {
             // user-defined meta information
         }
