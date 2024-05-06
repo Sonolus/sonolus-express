@@ -1,9 +1,18 @@
 import { DatabaseReplayItem, ReplayItem } from '@sonolus/core'
-import { ToItem, getByName } from './item'
-import { toLevelItem } from './level-item'
+import { Model, ToItem, getItem } from './item'
+import { LevelItemModel, toLevelItem } from './level-item'
 import { toTags } from './tag'
 
-export const toReplayItem: ToItem<DatabaseReplayItem, ReplayItem> = (sonolus, localize, item) => ({
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+export interface ReplayItemModel
+    extends Model<
+        DatabaseReplayItem,
+        {
+            level: string | LevelItemModel
+        }
+    > {}
+
+export const toReplayItem: ToItem<ReplayItemModel, ReplayItem> = (sonolus, localize, item) => ({
     name: item.name,
     source: sonolus.address,
     version: item.version,
@@ -14,7 +23,7 @@ export const toReplayItem: ToItem<DatabaseReplayItem, ReplayItem> = (sonolus, lo
     level: toLevelItem(
         sonolus,
         localize,
-        getByName(sonolus.db.levels, item.level, `Replay/${item.name}`, '.level'),
+        getItem(sonolus.db.levels, item.level, `Replay/${item.name}`, '.level'),
     ),
     data: item.data,
     configuration: item.configuration,

@@ -1,9 +1,8 @@
-import { DatabaseBackgroundItem } from '@sonolus/core'
-import { toBackgroundItem } from '../../../api/background-item'
+import { BackgroundItemModel, toBackgroundItem } from '../../../api/background-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import { DefaultItemInfoHandler, defaultItemInfoHandler, itemInfoRouteHandler } from '../item-info'
 
-export const defaultBackgroundInfoHandler: DefaultItemInfoHandler<DatabaseBackgroundItem> = (
+export const defaultBackgroundInfoHandler: DefaultItemInfoHandler<BackgroundItemModel> = (
     sonolus,
 ) => defaultItemInfoHandler(sonolus, sonolus.db.backgrounds)
 

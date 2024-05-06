@@ -1,5 +1,4 @@
-import { DatabaseSkinItem } from '@sonolus/core'
-import { toSkinItem } from '../../../api/skin-item'
+import { SkinItemModel, toSkinItem } from '../../../api/skin-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemDetailsHandler,
@@ -7,7 +6,7 @@ import {
     itemDetailsRouteHandler,
 } from '../item-details'
 
-export const defaultSkinDetailsHandler: DefaultItemDetailsHandler<DatabaseSkinItem> = (
+export const defaultSkinDetailsHandler: DefaultItemDetailsHandler<SkinItemModel> = (
     sonolus,
     session,
     name,

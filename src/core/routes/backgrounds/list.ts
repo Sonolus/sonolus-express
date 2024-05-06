@@ -1,5 +1,4 @@
-import { DatabaseBackgroundItem } from '@sonolus/core'
-import { toBackgroundItem } from '../../../api/background-item'
+import { BackgroundItemModel, toBackgroundItem } from '../../../api/background-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemListHandler,
@@ -9,14 +8,14 @@ import {
     itemListRouteHandler,
 } from '../item-list'
 
-export const defaultBackgroundListHandler: DefaultItemListHandler<DatabaseBackgroundItem> = (
+export const defaultBackgroundListHandler: DefaultItemListHandler<BackgroundItemModel> = (
     sonolus,
     session,
     query,
     page,
 ) => defaultItemListHandler(sonolus.db.backgrounds, filterBackgroundItemsByKeywords, query, page)
 
-export const filterBackgroundItemsByKeywords: FilterItemsByKeyword<DatabaseBackgroundItem> = (
+export const filterBackgroundItemsByKeywords: FilterItemsByKeyword<BackgroundItemModel> = (
     items,
     keywords,
 ) =>

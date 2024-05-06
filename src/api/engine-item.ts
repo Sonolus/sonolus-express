@@ -1,12 +1,24 @@
 import { DatabaseEngineItem, EngineItem } from '@sonolus/core'
-import { toBackgroundItem } from './background-item'
-import { toEffectItem } from './effect-item'
-import { ToItem, getByName } from './item'
-import { toParticleItem } from './particle-item'
-import { toSkinItem } from './skin-item'
+import { BackgroundItemModel, toBackgroundItem } from './background-item'
+import { EffectItemModel, toEffectItem } from './effect-item'
+import { Model, ToItem, getItem } from './item'
+import { ParticleItemModel, toParticleItem } from './particle-item'
+import { SkinItemModel, toSkinItem } from './skin-item'
 import { toTags } from './tag'
 
-export const toEngineItem: ToItem<DatabaseEngineItem, EngineItem> = (sonolus, localize, item) => ({
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+export interface EngineItemModel
+    extends Model<
+        DatabaseEngineItem,
+        {
+            skin: string | SkinItemModel
+            background: string | BackgroundItemModel
+            effect: string | EffectItemModel
+            particle: string | ParticleItemModel
+        }
+    > {}
+
+export const toEngineItem: ToItem<EngineItemModel, EngineItem> = (sonolus, localize, item) => ({
     name: item.name,
     source: sonolus.address,
     version: item.version,
@@ -17,22 +29,22 @@ export const toEngineItem: ToItem<DatabaseEngineItem, EngineItem> = (sonolus, lo
     skin: toSkinItem(
         sonolus,
         localize,
-        getByName(sonolus.db.skins, item.skin, `Engine/${item.name}`, '.skin'),
+        getItem(sonolus.db.skins, item.skin, `Engine/${item.name}`, '.skin'),
     ),
     background: toBackgroundItem(
         sonolus,
         localize,
-        getByName(sonolus.db.backgrounds, item.background, `Engine/${item.name}`, '.background'),
+        getItem(sonolus.db.backgrounds, item.background, `Engine/${item.name}`, '.background'),
     ),
     effect: toEffectItem(
         sonolus,
         localize,
-        getByName(sonolus.db.effects, item.effect, `Engine/${item.name}`, '.effect'),
+        getItem(sonolus.db.effects, item.effect, `Engine/${item.name}`, '.effect'),
     ),
     particle: toParticleItem(
         sonolus,
         localize,
-        getByName(sonolus.db.particles, item.particle, `Engine/${item.name}`, '.particle'),
+        getItem(sonolus.db.particles, item.particle, `Engine/${item.name}`, '.particle'),
     ),
     thumbnail: item.thumbnail,
     playData: item.playData,

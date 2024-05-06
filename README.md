@@ -20,12 +20,6 @@ TypeScript based developer toolkit for Sonolus servers with [Express.js](https:/
 npm install @sonolus/express
 ```
 
-A compatible version of [sonolus-core](https://github.com/Sonolus/sonolus-core) is also required as peer dependency. If it isn't installed automatically, you can do so with:
-
-```
-npm install sonolus-core
-```
-
 ## Example
 
 ```ts
@@ -180,8 +174,8 @@ Paginate items by page and per page size.
 Use [declaration merging](https://www.typescriptlang.org/docs/handbook/declaration-merging.html):
 
 ```ts
-declare module 'sonolus-core' {
-    interface DatabaseLevelItem {
+declare module '@sonolus/express' {
+    interface LevelItemModel {
         meta: {
             // user-defined meta information
         }

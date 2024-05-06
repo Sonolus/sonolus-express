@@ -1,9 +1,18 @@
 import { DatabasePlaylistItem, PlaylistItem } from '@sonolus/core'
-import { ToItem, getByName } from './item'
-import { toLevelItem } from './level-item'
+import { Model, ToItem, getItem } from './item'
+import { LevelItemModel, toLevelItem } from './level-item'
 import { toTags } from './tag'
 
-export const toPlaylistItem: ToItem<DatabasePlaylistItem, PlaylistItem> = (
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+export interface PlaylistItemModel
+    extends Model<
+        DatabasePlaylistItem,
+        {
+            levels: (string | LevelItemModel)[]
+        }
+    > {}
+
+export const toPlaylistItem: ToItem<PlaylistItemModel, PlaylistItem> = (
     sonolus,
     localize,
     item,
@@ -19,7 +28,7 @@ export const toPlaylistItem: ToItem<DatabasePlaylistItem, PlaylistItem> = (
         toLevelItem(
             sonolus,
             localize,
-            getByName(sonolus.db.levels, level, `Playlist/${item.name}`, `.levels[${index}]`),
+            getItem(sonolus.db.levels, level, `Playlist/${item.name}`, `.levels[${index}]`),
         ),
     ),
     thumbnail: item.thumbnail,

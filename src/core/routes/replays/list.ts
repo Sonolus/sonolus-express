@@ -1,5 +1,4 @@
-import { DatabaseReplayItem } from '@sonolus/core'
-import { toReplayItem } from '../../../api/replay-item'
+import { ReplayItemModel, toReplayItem } from '../../../api/replay-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemListHandler,
@@ -9,14 +8,14 @@ import {
     itemListRouteHandler,
 } from '../item-list'
 
-export const defaultReplayListHandler: DefaultItemListHandler<DatabaseReplayItem> = (
+export const defaultReplayListHandler: DefaultItemListHandler<ReplayItemModel> = (
     sonolus,
     session,
     query,
     page,
 ) => defaultItemListHandler(sonolus.db.replays, filterReplayItemsByKeywords, query, page)
 
-export const filterReplayItemsByKeywords: FilterItemsByKeyword<DatabaseReplayItem> = (
+export const filterReplayItemsByKeywords: FilterItemsByKeyword<ReplayItemModel> = (
     items,
     keywords,
 ) =>

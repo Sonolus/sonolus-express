@@ -1,5 +1,4 @@
-import { DatabasePostItem } from '@sonolus/core'
-import { toPostItem } from '../../../api/post-item'
+import { PostItemModel, toPostItem } from '../../../api/post-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemDetailsHandler,
@@ -7,7 +6,7 @@ import {
     itemDetailsRouteHandler,
 } from '../item-details'
 
-export const defaultPostDetailsHandler: DefaultItemDetailsHandler<DatabasePostItem> = (
+export const defaultPostDetailsHandler: DefaultItemDetailsHandler<PostItemModel> = (
     sonolus,
     session,
     name,

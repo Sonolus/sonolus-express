@@ -1,5 +1,4 @@
-import { DatabasePlaylistItem } from '@sonolus/core'
-import { toPlaylistItem } from '../../../api/playlist-item'
+import { PlaylistItemModel, toPlaylistItem } from '../../../api/playlist-item'
 import { SonolusRouteHandler } from '../../sonolus'
 import {
     DefaultItemListHandler,
@@ -9,14 +8,14 @@ import {
     itemListRouteHandler,
 } from '../item-list'
 
-export const defaultPlaylistListHandler: DefaultItemListHandler<DatabasePlaylistItem> = (
+export const defaultPlaylistListHandler: DefaultItemListHandler<PlaylistItemModel> = (
     sonolus,
     session,
     query,
     page,
 ) => defaultItemListHandler(sonolus.db.playlists, filterPlaylistItemsByKeywords, query, page)
 
-export const filterPlaylistItemsByKeywords: FilterItemsByKeyword<DatabasePlaylistItem> = (
+export const filterPlaylistItemsByKeywords: FilterItemsByKeyword<PlaylistItemModel> = (
     items,
     keywords,
 ) =>

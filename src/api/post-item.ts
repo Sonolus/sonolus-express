@@ -1,8 +1,11 @@
 import { DatabasePostItem, PostItem } from '@sonolus/core'
-import { ToItem } from './item'
+import { Model, ToItem } from './item'
 import { toTags } from './tag'
 
-export const toPostItem: ToItem<DatabasePostItem, PostItem> = (sonolus, localize, item) => ({
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+export interface PostItemModel extends Model<DatabasePostItem, {}> {}
+
+export const toPostItem: ToItem<PostItemModel, PostItem> = (sonolus, localize, item) => ({
     name: item.name,
     source: sonolus.address,
     version: item.version,
