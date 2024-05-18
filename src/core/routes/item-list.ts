@@ -35,11 +35,15 @@ export const defaultItemListHandler = <T>(
 export const itemListRouteHandler = async <
     TSonolus extends SonolusBase,
     TSearches extends ServerFormsModel,
+    TCommunityActions extends ServerFormsModel | undefined,
     TDatabaseItem,
     TItem,
 >(
     sonolus: TSonolus,
-    { searches, listHandler }: SonolusItemsConfig<TSonolus, TSearches, TDatabaseItem>,
+    {
+        searches,
+        listHandler,
+    }: SonolusItemsConfig<TSonolus, TSearches, TCommunityActions, TDatabaseItem>,
     toItem: ToItem<TDatabaseItem, TItem>,
     session: string | undefined,
     req: Request,

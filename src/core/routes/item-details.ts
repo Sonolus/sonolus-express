@@ -47,11 +47,15 @@ export const defaultItemDetailsHandler = <
 export const itemDetailsRouteHandler = async <
     TSonolus extends SonolusBase,
     TSearches extends ServerFormsModel,
+    TCommunityActions extends ServerFormsModel | undefined,
     TDatabaseItem,
     TItem,
 >(
     sonolus: TSonolus,
-    { detailsHandler }: SonolusItemsConfig<TSonolus, TSearches, TDatabaseItem>,
+    {
+        communityActions,
+        detailsHandler,
+    }: SonolusItemsConfig<TSonolus, TSearches, TCommunityActions, TDatabaseItem>,
     toItem: ToItem<TDatabaseItem, TItem>,
     session: string | undefined,
     req: Request,
@@ -69,5 +73,5 @@ export const itemDetailsRouteHandler = async <
         return
     }
 
-    res.json(toItemDetails(sonolus, req.localize, toItem, details))
+    res.json(toItemDetails(sonolus, req.localize, toItem, !!communityActions, details))
 }

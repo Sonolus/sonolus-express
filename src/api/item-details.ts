@@ -14,10 +14,11 @@ export const toItemDetails = <T, U>(
     sonolus: SonolusBase,
     localize: Localize,
     toItem: ToItem<T, U>,
+    hasCommunity: boolean,
     details: ItemDetailsModel<T>,
 ): ItemDetails<U> => ({
     item: toItem(sonolus, localize, details.item),
     description: localize(details.description),
-    hasCommunity: false,
+    hasCommunity,
     sections: toItemSections(sonolus, localize, toItem, details.sections),
 })

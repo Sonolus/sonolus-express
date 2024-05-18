@@ -26,11 +26,15 @@ export const defaultItemInfoHandler = <T>(sonolus: SonolusBase, items: T[]): Ite
 export const itemInfoRouteHandler = async <
     TSonolus extends SonolusBase,
     TSearches extends ServerFormsModel,
+    TCommunityActions extends ServerFormsModel | undefined,
     TDatabaseItem,
     TItem,
 >(
     sonolus: TSonolus,
-    { searches, infoHandler }: SonolusItemsConfig<TSonolus, TSearches, TDatabaseItem>,
+    {
+        searches,
+        infoHandler,
+    }: SonolusItemsConfig<TSonolus, TSearches, TCommunityActions, TDatabaseItem>,
     toItem: ToItem<TDatabaseItem, TItem>,
     session: string | undefined,
     req: Request,

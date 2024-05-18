@@ -1,4 +1,4 @@
-export { ServerFormModel, ServerFormsModel, toServerForms } from './form'
+export { ServerFormModel, ServerFormsModel, toServerForm, toServerForms } from './form'
 export {
     ParsedOptionQuery,
     ParsedQuery,

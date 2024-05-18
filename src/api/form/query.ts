@@ -4,7 +4,7 @@ import { ParsedSelectOptionQuery, parseSelectQuery } from '../option/select'
 import { ParsedSliderOptionQuery, parseSliderQuery } from '../option/slider'
 import { ParsedTextOptionQuery, parseTextQuery } from '../option/text'
 import { ParsedToggleOptionQuery, parseToggleQuery } from '../option/toggle'
-import { ServerFormsModel } from './form'
+import { ServerFormModel, ServerFormsModel } from './form'
 
 export type ParsedOptionQuery<T extends ServerOptionModel> = {
     text: ParsedTextOptionQuery
@@ -20,6 +20,24 @@ export type ParsedQuery<T extends ServerFormsModel> = {
     }
 }[keyof T]
 
+const parseQueryByForm = (query: Record<string, unknown>, form: ServerFormModel) =>
+    Object.fromEntries(
+        Object.entries(form.options).map(([key, option]) => {
+            switch (option.type) {
+                case 'text':
+                    return [key, parseTextQuery(query[key])]
+                case 'slider':
+                    return [key, parseSliderQuery(query[key], option)]
+                case 'toggle':
+                    return [key, parseToggleQuery(query[key], option)]
+                case 'select':
+                    return [key, parseSelectQuery(query[key], option)]
+                case 'multi':
+                    return [key, parseMultiQuery(query[key], option)]
+            }
+        }),
+    ) as object
+
 export const parseQuery = <T extends ServerFormsModel>(
     query: Record<string, unknown>,
     forms: T,
@@ -31,22 +49,7 @@ export const parseQuery = <T extends ServerFormsModel>(
 
     return {
         type,
-        ...Object.fromEntries(
-            Object.entries(form.options).map(([key, option]) => {
-                switch (option.type) {
-                    case 'text':
-                        return [key, parseTextQuery(query[key])]
-                    case 'slider':
-                        return [key, parseSliderQuery(query[key], option)]
-                    case 'toggle':
-                        return [key, parseToggleQuery(query[key], option)]
-                    case 'select':
-                        return [key, parseSelectQuery(query[key], option)]
-                    case 'multi':
-                        return [key, parseMultiQuery(query[key], option)]
-                }
-            }),
-        ),
+        ...parseQueryByForm(query, form),
     } as never
 }
 
@@ -75,4 +78,28 @@ export const parseSearchQuery = <T extends ServerFormsModel>(
             keywords: '',
         }
     )
+}
+
+export type ParsedActionQuery<T extends ServerFormsModel> = {
+    id: string
+    query: ParsedQuery<T>
+}
+
+export const parseActionQuery = <T extends ServerFormsModel>(
+    query: Record<string, unknown>,
+    forms: T,
+): ParsedActionQuery<T> | undefined => {
+    const typeWithId = `${query.type}`
+
+    const result = Object.entries(forms).find(([type]) => typeWithId.startsWith(`${type}:`))
+    if (!result) return
+
+    const [type, form] = result
+    return {
+        id: typeWithId.slice(type.length + 1),
+        query: {
+            type,
+            ...parseQueryByForm(query, form),
+        },
+    } as never
 }

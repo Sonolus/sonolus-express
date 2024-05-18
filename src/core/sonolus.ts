@@ -17,7 +17,7 @@ import { BackgroundItemModel } from '../api/background-item'
 import { EffectItemModel } from '../api/effect-item'
 import { EngineItemModel } from '../api/engine-item'
 import { ServerFormsModel } from '../api/form/form'
-import { ParsedSearchQuery } from '../api/form/query'
+import { ParsedQuery, ParsedSearchQuery } from '../api/form/query'
 import { LevelItemModel } from '../api/level-item'
 import { ParticleItemModel } from '../api/particle-item'
 import { PlaylistItemModel } from '../api/playlist-item'
@@ -43,39 +43,72 @@ import {
     defaultJoinRoomHandler,
     joinRoomRouteHandler,
 } from './multiplayer'
+import { ItemCommunityHandler, defaultItemCommunityHandler } from './routes'
+import { backgroundCommunityRouteHandler } from './routes/backgrounds/community'
+import { backgroundCommunityActionRouteHandler } from './routes/backgrounds/community-action'
+import { backgroundCommunityCommentListRouteHandler } from './routes/backgrounds/community-comment-list'
 import {
     backgroundDetailsRouteHandler,
     defaultBackgroundDetailsHandler,
 } from './routes/backgrounds/details'
 import { backgroundInfoRouteHandler, defaultBackgroundInfoHandler } from './routes/backgrounds/info'
 import { backgroundListRouteHandler, defaultBackgroundListHandler } from './routes/backgrounds/list'
+import { effectCommunityRouteHandler } from './routes/effects/community'
+import { effectCommunityActionRouteHandler } from './routes/effects/community-action'
+import { effectCommunityCommentListRouteHandler } from './routes/effects/community-comment-list'
 import { defaultEffectDetailsHandler, effectDetailsRouteHandler } from './routes/effects/details'
 import { defaultEffectInfoHandler, effectInfoRouteHandler } from './routes/effects/info'
 import { defaultEffectListHandler, effectListRouteHandler } from './routes/effects/list'
+import { engineCommunityRouteHandler } from './routes/engines/community'
+import { engineCommunityActionRouteHandler } from './routes/engines/community-action'
+import { engineCommunityCommentListRouteHandler } from './routes/engines/community-comment-list'
 import { defaultEngineDetailsHandler, engineDetailsRouteHandler } from './routes/engines/details'
 import { defaultEngineInfoHandler, engineInfoRouteHandler } from './routes/engines/info'
 import { defaultEngineListHandler, engineListRouteHandler } from './routes/engines/list'
+import {
+    ItemCommunityActionHandler,
+    defaultItemCommunityActionHandler,
+} from './routes/item-community-action'
+import {
+    ItemCommunityCommentListHandler,
+    defaultItemCommunityCommentListHandler,
+} from './routes/item-community-comment-list'
 import { ItemDetailsHandler } from './routes/item-details'
 import { ItemInfoHandler } from './routes/item-info'
 import { ItemListHandler } from './routes/item-list'
+import { levelCommunityRouteHandler } from './routes/levels/community'
+import { levelCommunityActionRouteHandler } from './routes/levels/community-action'
+import { levelCommunityCommentListRouteHandler } from './routes/levels/community-comment-list'
 import { defaultLevelDetailsHandler, levelDetailsRouteHandler } from './routes/levels/details'
 import { defaultLevelInfoHandler, levelInfoRouteHandler } from './routes/levels/info'
 import { defaultLevelListHandler, levelListRouteHandler } from './routes/levels/list'
+import { particleCommunityRouteHandler } from './routes/particles/community'
+import { particleCommunityActionRouteHandler } from './routes/particles/community-action'
+import { particleCommunityCommentListRouteHandler } from './routes/particles/community-comment-list'
 import {
     defaultParticleDetailsHandler,
     particleDetailsRouteHandler,
 } from './routes/particles/details'
 import { defaultParticleInfoHandler, particleInfoRouteHandler } from './routes/particles/info'
 import { defaultParticleListHandler, particleListRouteHandler } from './routes/particles/list'
+import { playlistCommunityRouteHandler } from './routes/playlists/community'
+import { playlistCommunityActionRouteHandler } from './routes/playlists/community-action'
+import { playlistCommunityCommentListRouteHandler } from './routes/playlists/community-comment-list'
 import {
     defaultPlaylistDetailsHandler,
     playlistDetailsRouteHandler,
 } from './routes/playlists/details'
 import { defaultPlaylistInfoHandler, playlistInfoRouteHandler } from './routes/playlists/info'
 import { defaultPlaylistListHandler, playlistListRouteHandler } from './routes/playlists/list'
+import { postCommunityRouteHandler } from './routes/posts/community'
+import { postCommunityActionRouteHandler } from './routes/posts/community-action'
+import { postCommunityCommentListRouteHandler } from './routes/posts/community-comment-list'
 import { defaultPostDetailsHandler, postDetailsRouteHandler } from './routes/posts/details'
 import { defaultPostInfoHandler, postInfoRouteHandler } from './routes/posts/info'
 import { defaultPostListHandler, postListRouteHandler } from './routes/posts/list'
+import { replayCommunityRouteHandler } from './routes/replays/community'
+import { replayCommunityActionRouteHandler } from './routes/replays/community-action'
+import { replayCommunityCommentListRouteHandler } from './routes/replays/community-comment-list'
 import { defaultReplayDetailsHandler, replayDetailsRouteHandler } from './routes/replays/details'
 import { defaultReplayInfoHandler, replayInfoRouteHandler } from './routes/replays/info'
 import { defaultReplayListHandler, replayListRouteHandler } from './routes/replays/list'
@@ -87,6 +120,9 @@ import {
     defaultServerInfoHandler,
     serverInfoRouteHandler,
 } from './routes/server-info'
+import { skinCommunityRouteHandler } from './routes/skins/community'
+import { skinCommunityActionRouteHandler } from './routes/skins/community-action'
+import { skinCommunityCommentListRouteHandler } from './routes/skins/community-comment-list'
 import { defaultSkinDetailsHandler, skinDetailsRouteHandler } from './routes/skins/details'
 import { defaultSkinInfoHandler, skinInfoRouteHandler } from './routes/skins/info'
 import { defaultSkinListHandler, skinListRouteHandler } from './routes/skins/list'
@@ -121,6 +157,16 @@ export type SonolusRouteHandler = <
     TEngineSearches extends ServerFormsModel,
     TReplaySearches extends ServerFormsModel,
     TRoomSearches extends ServerFormsModel,
+    TPostCommunityActions extends ServerFormsModel | undefined,
+    TPlaylistCommunityActions extends ServerFormsModel | undefined,
+    TLevelCommunityActions extends ServerFormsModel | undefined,
+    TSkinCommunityActions extends ServerFormsModel | undefined,
+    TBackgroundCommunityActions extends ServerFormsModel | undefined,
+    TEffectCommunityActions extends ServerFormsModel | undefined,
+    TParticleCommunityActions extends ServerFormsModel | undefined,
+    TEngineCommunityActions extends ServerFormsModel | undefined,
+    TReplayCommunityActions extends ServerFormsModel | undefined,
+    TRoomCommunityActions extends ServerFormsModel | undefined,
     TRoomCreates extends ServerFormsModel,
 >(
     sonolus: Sonolus<
@@ -134,6 +180,16 @@ export type SonolusRouteHandler = <
         TEngineSearches,
         TReplaySearches,
         TRoomSearches,
+        TPostCommunityActions,
+        TPlaylistCommunityActions,
+        TLevelCommunityActions,
+        TSkinCommunityActions,
+        TBackgroundCommunityActions,
+        TEffectCommunityActions,
+        TParticleCommunityActions,
+        TEngineCommunityActions,
+        TReplayCommunityActions,
+        TRoomCommunityActions,
         TRoomCreates
     >,
     session: string | undefined,
@@ -144,12 +200,20 @@ export type SonolusRouteHandler = <
 export type SonolusItemsConfig<
     TSonolus extends SonolusBase,
     TSearches extends ServerFormsModel,
+    TCommunityActions extends ServerFormsModel | undefined,
     TDatabaseItem,
 > = {
     searches: TSearches
+    communityActions: TCommunityActions
     infoHandler: ItemInfoHandler<TSonolus, TDatabaseItem>
     listHandler: ItemListHandler<TSonolus, ParsedSearchQuery<TSearches>, TDatabaseItem>
     detailsHandler: ItemDetailsHandler<TSonolus, TDatabaseItem>
+    communityHandler: ItemCommunityHandler<TSonolus, TCommunityActions>
+    communityCommentListHandler: ItemCommunityCommentListHandler<TSonolus, TCommunityActions>
+    communityActionHandler: ItemCommunityActionHandler<
+        TSonolus,
+        ParsedQuery<NonNullable<TCommunityActions>>
+    >
 }
 
 export type MultiplayerConfig<
@@ -172,6 +236,16 @@ export class Sonolus<
     TEngineSearches extends ServerFormsModel = {},
     TReplaySearches extends ServerFormsModel = {},
     TRoomSearches extends ServerFormsModel = {},
+    TPostCommunityActions extends ServerFormsModel | undefined = undefined,
+    TPlaylistCommunityActions extends ServerFormsModel | undefined = undefined,
+    TLevelCommunityActions extends ServerFormsModel | undefined = undefined,
+    TSkinCommunityActions extends ServerFormsModel | undefined = undefined,
+    TBackgroundCommunityActions extends ServerFormsModel | undefined = undefined,
+    TEffectCommunityActions extends ServerFormsModel | undefined = undefined,
+    TParticleCommunityActions extends ServerFormsModel | undefined = undefined,
+    TEngineCommunityActions extends ServerFormsModel | undefined = undefined,
+    TReplayCommunityActions extends ServerFormsModel | undefined = undefined,
+    TRoomCommunityActions extends ServerFormsModel | undefined = undefined,
     TRoomCreates extends ServerFormsModel = {},
 > {
     private readonly fallbackLocale: string
@@ -188,16 +262,66 @@ export class Sonolus<
 
     serverInfoHandler: ServerInfoHandler<this> = defaultServerInfoHandler
 
-    readonly postConfig: SonolusItemsConfig<this, TPostSearches, PostItemModel>
-    readonly playlistConfig: SonolusItemsConfig<this, TPlaylistSearches, PlaylistItemModel>
-    readonly levelConfig: SonolusItemsConfig<this, TLevelSearches, LevelItemModel>
-    readonly skinConfig: SonolusItemsConfig<this, TSkinSearches, SkinItemModel>
-    readonly backgroundConfig: SonolusItemsConfig<this, TBackgroundSearches, BackgroundItemModel>
-    readonly effectConfig: SonolusItemsConfig<this, TEffectSearches, EffectItemModel>
-    readonly particleConfig: SonolusItemsConfig<this, TParticleSearches, ParticleItemModel>
-    readonly engineConfig: SonolusItemsConfig<this, TEngineSearches, EngineItemModel>
-    readonly replayConfig: SonolusItemsConfig<this, TReplaySearches, ReplayItemModel>
-    readonly roomConfig: SonolusItemsConfig<this, TRoomSearches, RoomItemModel>
+    readonly postConfig: SonolusItemsConfig<
+        this,
+        TPostSearches,
+        TPostCommunityActions,
+        PostItemModel
+    >
+    readonly playlistConfig: SonolusItemsConfig<
+        this,
+        TPlaylistSearches,
+        TPlaylistCommunityActions,
+        PlaylistItemModel
+    >
+    readonly levelConfig: SonolusItemsConfig<
+        this,
+        TLevelSearches,
+        TLevelCommunityActions,
+        LevelItemModel
+    >
+    readonly skinConfig: SonolusItemsConfig<
+        this,
+        TSkinSearches,
+        TSkinCommunityActions,
+        SkinItemModel
+    >
+    readonly backgroundConfig: SonolusItemsConfig<
+        this,
+        TBackgroundSearches,
+        TBackgroundCommunityActions,
+        BackgroundItemModel
+    >
+    readonly effectConfig: SonolusItemsConfig<
+        this,
+        TEffectSearches,
+        TEffectCommunityActions,
+        EffectItemModel
+    >
+    readonly particleConfig: SonolusItemsConfig<
+        this,
+        TParticleSearches,
+        TParticleCommunityActions,
+        ParticleItemModel
+    >
+    readonly engineConfig: SonolusItemsConfig<
+        this,
+        TEngineSearches,
+        TEngineCommunityActions,
+        EngineItemModel
+    >
+    readonly replayConfig: SonolusItemsConfig<
+        this,
+        TReplaySearches,
+        TReplayCommunityActions,
+        ReplayItemModel
+    >
+    readonly roomConfig: SonolusItemsConfig<
+        this,
+        TRoomSearches,
+        TRoomCommunityActions,
+        RoomItemModel
+    >
 
     readonly multiplayerConfig: MultiplayerConfig<this, TRoomCreates>
 
@@ -222,51 +346,50 @@ export class Sonolus<
             engineSearches: TEngineSearches
             replaySearches: TReplaySearches
             roomSearches: TRoomSearches
+            postCommunityActions: TPostCommunityActions
+            playlistCommunityActions: TPlaylistCommunityActions
+            levelCommunityActions: TLevelCommunityActions
+            skinCommunityActions: TSkinCommunityActions
+            backgroundCommunityActions: TBackgroundCommunityActions
+            effectCommunityActions: TEffectCommunityActions
+            particleCommunityActions: TParticleCommunityActions
+            engineCommunityActions: TEngineCommunityActions
+            replayCommunityActions: TReplayCommunityActions
+            roomCommunityActions: TRoomCommunityActions
             roomCreates: TRoomCreates
         }>,
     ) {
         const {
             address,
-            basePath,
-            authentication,
-            multiplayer,
-            fallbackLocale,
-            mode,
+            basePath = '',
+            authentication = false,
+            multiplayer = false,
+            fallbackLocale = 'en',
+            mode = 'custom',
             redirectPath,
             spaRoot,
-            postSearches,
-            playlistSearches,
-            levelSearches,
-            skinSearches,
-            backgroundSearches,
-            effectSearches,
-            particleSearches,
-            engineSearches,
-            replaySearches,
-            roomSearches,
+            postSearches = {},
+            playlistSearches = {},
+            levelSearches = {},
+            skinSearches = {},
+            backgroundSearches = {},
+            effectSearches = {},
+            particleSearches = {},
+            engineSearches = {},
+            replaySearches = {},
+            roomSearches = {},
+            postCommunityActions,
+            playlistCommunityActions,
+            levelCommunityActions,
+            skinCommunityActions,
+            backgroundCommunityActions,
+            effectCommunityActions,
+            particleCommunityActions,
+            engineCommunityActions,
+            replayCommunityActions,
+            roomCommunityActions,
             roomCreates,
-        } = Object.assign(
-            {
-                basePath: '',
-                authentication: false,
-                multiplayer: false,
-                sessionDuration: 30 * 60 * 1000,
-                fallbackLocale: 'en',
-                mode: 'custom',
-                postSearches: {},
-                playlistSearches: {},
-                levelSearches: {},
-                skinSearches: {},
-                backgroundSearches: {},
-                effectSearches: {},
-                particleSearches: {},
-                engineSearches: {},
-                replaySearches: {},
-                roomSearches: {},
-                roomCreates: {},
-            },
-            options,
-        )
+        } = options ?? {}
 
         this.fallbackLocale = fallbackLocale
 
@@ -293,67 +416,107 @@ export class Sonolus<
         this.router = express.Router()
 
         this.postConfig = {
-            searches: postSearches,
+            searches: postSearches as never,
+            communityActions: postCommunityActions as never,
             infoHandler: defaultPostInfoHandler,
             listHandler: defaultPostListHandler,
             detailsHandler: defaultPostDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.playlistConfig = {
-            searches: playlistSearches,
+            searches: playlistSearches as never,
+            communityActions: playlistCommunityActions as never,
             infoHandler: defaultPlaylistInfoHandler,
             listHandler: defaultPlaylistListHandler,
             detailsHandler: defaultPlaylistDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.levelConfig = {
-            searches: levelSearches,
+            searches: levelSearches as never,
+            communityActions: levelCommunityActions as never,
             infoHandler: defaultLevelInfoHandler,
             listHandler: defaultLevelListHandler,
             detailsHandler: defaultLevelDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.skinConfig = {
-            searches: skinSearches,
+            searches: skinSearches as never,
+            communityActions: skinCommunityActions as never,
             infoHandler: defaultSkinInfoHandler,
             listHandler: defaultSkinListHandler,
             detailsHandler: defaultSkinDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.backgroundConfig = {
-            searches: backgroundSearches,
+            searches: backgroundSearches as never,
+            communityActions: backgroundCommunityActions as never,
             infoHandler: defaultBackgroundInfoHandler,
             listHandler: defaultBackgroundListHandler,
             detailsHandler: defaultBackgroundDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.effectConfig = {
-            searches: effectSearches,
+            searches: effectSearches as never,
+            communityActions: effectCommunityActions as never,
             infoHandler: defaultEffectInfoHandler,
             listHandler: defaultEffectListHandler,
             detailsHandler: defaultEffectDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.particleConfig = {
-            searches: particleSearches,
+            searches: particleSearches as never,
+            communityActions: particleCommunityActions as never,
             infoHandler: defaultParticleInfoHandler,
             listHandler: defaultParticleListHandler,
             detailsHandler: defaultParticleDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.engineConfig = {
-            searches: engineSearches,
+            searches: engineSearches as never,
+            communityActions: engineCommunityActions as never,
             infoHandler: defaultEngineInfoHandler,
             listHandler: defaultEngineListHandler,
             detailsHandler: defaultEngineDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.replayConfig = {
-            searches: replaySearches,
+            searches: replaySearches as never,
+            communityActions: replayCommunityActions as never,
             infoHandler: defaultReplayInfoHandler,
             listHandler: defaultReplayListHandler,
             detailsHandler: defaultReplayDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.roomConfig = {
-            searches: roomSearches,
+            searches: roomSearches as never,
+            communityActions: roomCommunityActions as never,
             infoHandler: defaultRoomInfoHandler,
             listHandler: defaultRoomListHandler,
             detailsHandler: defaultRoomDetailsHandler,
+            communityHandler: defaultItemCommunityHandler,
+            communityCommentListHandler: defaultItemCommunityCommentListHandler,
+            communityActionHandler: defaultItemCommunityActionHandler,
         }
         this.multiplayerConfig = {
-            creates: roomCreates,
+            creates: roomCreates as never,
             createRoomHandler: defaultCreateRoomHandler,
             joinRoomHandler: defaultJoinRoomHandler,
         }
@@ -391,6 +554,63 @@ export class Sonolus<
         this.getAPI('/sonolus/particles/:name', particleDetailsRouteHandler)
         this.getAPI('/sonolus/engines/:name', engineDetailsRouteHandler)
         this.getAPI('/sonolus/replays/:name', replayDetailsRouteHandler)
+
+        this.getAPI('/sonolus/posts/:name/community', postCommunityRouteHandler)
+        this.getAPI('/sonolus/playlists/:name/community', playlistCommunityRouteHandler)
+        this.getAPI('/sonolus/levels/:name/community', levelCommunityRouteHandler)
+        this.getAPI('/sonolus/skins/:name/community', skinCommunityRouteHandler)
+        this.getAPI('/sonolus/backgrounds/:name/community', backgroundCommunityRouteHandler)
+        this.getAPI('/sonolus/effects/:name/community', effectCommunityRouteHandler)
+        this.getAPI('/sonolus/particles/:name/community', particleCommunityRouteHandler)
+        this.getAPI('/sonolus/engines/:name/community', engineCommunityRouteHandler)
+        this.getAPI('/sonolus/replays/:name/community', replayCommunityRouteHandler)
+
+        this.getAPI(
+            '/sonolus/posts/:name/community/comments/list',
+            postCommunityCommentListRouteHandler,
+        )
+        this.getAPI(
+            '/sonolus/playlists/:name/community/comments/list',
+            playlistCommunityCommentListRouteHandler,
+        )
+        this.getAPI(
+            '/sonolus/levels/:name/community/comments/list',
+            levelCommunityCommentListRouteHandler,
+        )
+        this.getAPI(
+            '/sonolus/skins/:name/community/comments/list',
+            skinCommunityCommentListRouteHandler,
+        )
+        this.getAPI(
+            '/sonolus/backgrounds/:name/community/comments/list',
+            backgroundCommunityCommentListRouteHandler,
+        )
+        this.getAPI(
+            '/sonolus/effects/:name/community/comments/list',
+            effectCommunityCommentListRouteHandler,
+        )
+        this.getAPI(
+            '/sonolus/particles/:name/community/comments/list',
+            particleCommunityCommentListRouteHandler,
+        )
+        this.getAPI(
+            '/sonolus/engines/:name/community/comments/list',
+            engineCommunityCommentListRouteHandler,
+        )
+        this.getAPI(
+            '/sonolus/replays/:name/community/comments/list',
+            replayCommunityCommentListRouteHandler,
+        )
+
+        this.postAPI('/sonolus/posts/:name/community', postCommunityActionRouteHandler)
+        this.postAPI('/sonolus/playlists/:name/community', playlistCommunityActionRouteHandler)
+        this.postAPI('/sonolus/levels/:name/community', levelCommunityActionRouteHandler)
+        this.postAPI('/sonolus/skins/:name/community', skinCommunityActionRouteHandler)
+        this.postAPI('/sonolus/backgrounds/:name/community', backgroundCommunityActionRouteHandler)
+        this.postAPI('/sonolus/effects/:name/community', effectCommunityActionRouteHandler)
+        this.postAPI('/sonolus/particles/:name/community', particleCommunityActionRouteHandler)
+        this.postAPI('/sonolus/engines/:name/community', engineCommunityActionRouteHandler)
+        this.postAPI('/sonolus/replays/:name/community', replayCommunityActionRouteHandler)
 
         if (multiplayer) {
             this.getAPI('/sonolus/rooms/info', roomInfoRouteHandler)

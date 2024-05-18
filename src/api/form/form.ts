@@ -10,12 +10,18 @@ export type ServerFormModel = {
     options: Record<string, ServerOptionModel>
 }
 
+export const toServerForm = (
+    localize: Localize,
+    type: string,
+    form: ServerFormModel,
+): ServerForm => ({
+    type,
+    title: localize(form.title),
+    icon: form.icon,
+    options: Object.entries(form.options).map(([query, option]) =>
+        toServerOption(localize, query, option),
+    ),
+})
+
 export const toServerForms = (localize: Localize, forms: ServerFormsModel): ServerForm[] =>
-    Object.entries(forms).map(([type, form]) => ({
-        type,
-        title: localize(form.title),
-        icon: form.icon,
-        options: Object.entries(form.options).map(([query, option]) =>
-            toServerOption(localize, query, option),
-        ),
-    }))
+    Object.entries(forms).map(([type, form]) => toServerForm(localize, type, form))
