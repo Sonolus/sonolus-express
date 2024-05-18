@@ -18,5 +18,6 @@ export const toItemDetails = <T, U>(
 ): ItemDetails<U> => ({
     item: toItem(sonolus, localize, details.item),
     description: localize(details.description),
+    hasCommunity: false,
     sections: toItemSections(sonolus, localize, toItem, details.sections),
 })

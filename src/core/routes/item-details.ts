@@ -1,8 +1,8 @@
 import { Icon, LocalizationText, Text } from '@sonolus/core'
 import { Request, Response } from 'express'
+import { ServerFormsModel } from '../../api/form/form'
 import { ToItem } from '../../api/item'
 import { ItemDetailsModel, toItemDetails } from '../../api/item-details'
-import { SectionsModel } from '../../api/section/section'
 import { Promisable } from '../../utils/types'
 import { SonolusBase, SonolusItemsConfig } from '../sonolus'
 
@@ -46,7 +46,7 @@ export const defaultItemDetailsHandler = <
 
 export const itemDetailsRouteHandler = async <
     TSonolus extends SonolusBase,
-    TSearches extends SectionsModel,
+    TSearches extends ServerFormsModel,
     TDatabaseItem,
     TItem,
 >(

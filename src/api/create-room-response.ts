@@ -1,14 +1,14 @@
 import { CreateRoomResponse } from '@sonolus/core'
+import { ServerFormsModel, toServerForms } from './form/form'
 import { Localize } from './localization'
-import { SectionsModel, toSections } from './section/section'
 
 export const toCreateRoomResponse = (
     localize: Localize,
     name: string,
     key: string,
-    creates: SectionsModel,
+    creates: ServerFormsModel,
 ): CreateRoomResponse => ({
     name,
     key,
-    creates: toSections(localize, creates),
+    creates: toServerForms(localize, creates),
 })

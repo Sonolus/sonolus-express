@@ -16,14 +16,14 @@ import type { ParsedQs } from 'qs'
 import { BackgroundItemModel } from '../api/background-item'
 import { EffectItemModel } from '../api/effect-item'
 import { EngineItemModel } from '../api/engine-item'
+import { ServerFormsModel } from '../api/form/form'
+import { ParsedSearchQuery } from '../api/form/query'
 import { LevelItemModel } from '../api/level-item'
 import { ParticleItemModel } from '../api/particle-item'
 import { PlaylistItemModel } from '../api/playlist-item'
 import { PostItemModel } from '../api/post-item'
 import { ReplayItemModel } from '../api/replay-item'
 import { RoomItemModel } from '../api/room-item'
-import { ParsedSearchQuery } from '../api/section/query'
-import { SectionsModel } from '../api/section/section'
 import { SkinItemModel } from '../api/skin-item'
 import { authenticateServerRequestSchema } from '../schemas/authenticate-server-request'
 import { databaseParser } from '../schemas/database'
@@ -111,17 +111,17 @@ export type SonolusBase = {
 }
 
 export type SonolusRouteHandler = <
-    TPostSearches extends SectionsModel,
-    TPlaylistSearches extends SectionsModel,
-    TLevelSearches extends SectionsModel,
-    TSkinSearches extends SectionsModel,
-    TBackgroundSearches extends SectionsModel,
-    TEffectSearches extends SectionsModel,
-    TParticleSearches extends SectionsModel,
-    TEngineSearches extends SectionsModel,
-    TReplaySearches extends SectionsModel,
-    TRoomSearches extends SectionsModel,
-    TRoomCreates extends SectionsModel,
+    TPostSearches extends ServerFormsModel,
+    TPlaylistSearches extends ServerFormsModel,
+    TLevelSearches extends ServerFormsModel,
+    TSkinSearches extends ServerFormsModel,
+    TBackgroundSearches extends ServerFormsModel,
+    TEffectSearches extends ServerFormsModel,
+    TParticleSearches extends ServerFormsModel,
+    TEngineSearches extends ServerFormsModel,
+    TReplaySearches extends ServerFormsModel,
+    TRoomSearches extends ServerFormsModel,
+    TRoomCreates extends ServerFormsModel,
 >(
     sonolus: Sonolus<
         TPostSearches,
@@ -143,7 +143,7 @@ export type SonolusRouteHandler = <
 
 export type SonolusItemsConfig<
     TSonolus extends SonolusBase,
-    TSearches extends SectionsModel,
+    TSearches extends ServerFormsModel,
     TDatabaseItem,
 > = {
     searches: TSearches
@@ -152,24 +152,27 @@ export type SonolusItemsConfig<
     detailsHandler: ItemDetailsHandler<TSonolus, TDatabaseItem>
 }
 
-export type MultiplayerConfig<TSonolus extends SonolusBase, TRoomCreates extends SectionsModel> = {
+export type MultiplayerConfig<
+    TSonolus extends SonolusBase,
+    TRoomCreates extends ServerFormsModel,
+> = {
     creates: TRoomCreates
     createRoomHandler: CreateRoomHandler<TSonolus>
     joinRoomHandler: JoinRoomHandler<TSonolus, TRoomCreates>
 }
 
 export class Sonolus<
-    TPostSearches extends SectionsModel = {},
-    TPlaylistSearches extends SectionsModel = {},
-    TLevelSearches extends SectionsModel = {},
-    TSkinSearches extends SectionsModel = {},
-    TBackgroundSearches extends SectionsModel = {},
-    TEffectSearches extends SectionsModel = {},
-    TParticleSearches extends SectionsModel = {},
-    TEngineSearches extends SectionsModel = {},
-    TReplaySearches extends SectionsModel = {},
-    TRoomSearches extends SectionsModel = {},
-    TRoomCreates extends SectionsModel = {},
+    TPostSearches extends ServerFormsModel = {},
+    TPlaylistSearches extends ServerFormsModel = {},
+    TLevelSearches extends ServerFormsModel = {},
+    TSkinSearches extends ServerFormsModel = {},
+    TBackgroundSearches extends ServerFormsModel = {},
+    TEffectSearches extends ServerFormsModel = {},
+    TParticleSearches extends ServerFormsModel = {},
+    TEngineSearches extends ServerFormsModel = {},
+    TReplaySearches extends ServerFormsModel = {},
+    TRoomSearches extends ServerFormsModel = {},
+    TRoomCreates extends ServerFormsModel = {},
 > {
     private readonly fallbackLocale: string
 

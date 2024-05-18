@@ -4,7 +4,7 @@ import { ParsedSelectOptionQuery, parseSelectQuery } from '../option/select'
 import { ParsedSliderOptionQuery, parseSliderQuery } from '../option/slider'
 import { ParsedTextOptionQuery, parseTextQuery } from '../option/text'
 import { ParsedToggleOptionQuery, parseToggleQuery } from '../option/toggle'
-import { SectionsModel } from './section'
+import { ServerFormsModel } from './form'
 
 export type ParsedOptionQuery<T extends ServerOptionModel> = {
     text: ParsedTextOptionQuery
@@ -14,25 +14,25 @@ export type ParsedOptionQuery<T extends ServerOptionModel> = {
     multi: ParsedMultiOptionQuery
 }[T['type']]
 
-export type ParsedQuery<T extends SectionsModel> = {
+export type ParsedQuery<T extends ServerFormsModel> = {
     [K in keyof T]: { type: K } & {
         [P in keyof T[K]['options']]: ParsedOptionQuery<T[K]['options'][P]>
     }
 }[keyof T]
 
-export const parseQuery = <T extends SectionsModel>(
+export const parseQuery = <T extends ServerFormsModel>(
     query: Record<string, unknown>,
-    sections: T,
+    forms: T,
 ): ParsedQuery<T> | undefined => {
     const type = `${query.type}`
 
-    const section = sections[type]
-    if (!section) return
+    const form = forms[type]
+    if (!form) return
 
     return {
         type,
         ...Object.fromEntries(
-            Object.entries(section.options).map(([key, option]) => {
+            Object.entries(form.options).map(([key, option]) => {
                 switch (option.type) {
                     case 'text':
                         return [key, parseTextQuery(query[key])]
@@ -50,14 +50,14 @@ export const parseQuery = <T extends SectionsModel>(
     } as never
 }
 
-export type ParsedSearchQuery<T extends SectionsModel> =
+export type ParsedSearchQuery<T extends ServerFormsModel> =
     | ParsedQuery<T>
     | {
           type: 'quick'
           keywords: string
       }
 
-export const parseSearchQuery = <T extends SectionsModel>(
+export const parseSearchQuery = <T extends ServerFormsModel>(
     query: Record<string, unknown>,
     searches: T,
 ): ParsedSearchQuery<T> => {
