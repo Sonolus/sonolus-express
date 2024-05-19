@@ -3,11 +3,13 @@ import { ServerOptionModel } from '../option/option'
 import { ParsedSelectOptionQuery, parseSelectQuery } from '../option/select'
 import { ParsedSliderOptionQuery, parseSliderQuery } from '../option/slider'
 import { ParsedTextOptionQuery, parseTextQuery } from '../option/text'
+import { ParsedTextAreaOptionQuery, parseTextAreaQuery } from '../option/text-area'
 import { ParsedToggleOptionQuery, parseToggleQuery } from '../option/toggle'
 import { ServerFormModel, ServerFormsModel } from './form'
 
 export type ParsedOptionQuery<T extends ServerOptionModel> = {
     text: ParsedTextOptionQuery
+    textArea: ParsedTextAreaOptionQuery
     slider: ParsedSliderOptionQuery
     toggle: ParsedToggleOptionQuery
     select: ParsedSelectOptionQuery
@@ -26,6 +28,8 @@ const parseQueryByForm = (query: Record<string, unknown>, form: ServerFormModel)
             switch (option.type) {
                 case 'text':
                     return [key, parseTextQuery(query[key])]
+                case 'textArea':
+                    return [key, parseTextAreaQuery(query[key])]
                 case 'slider':
                     return [key, parseSliderQuery(query[key], option)]
                 case 'toggle':
