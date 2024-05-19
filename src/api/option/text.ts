@@ -5,6 +5,7 @@ export type ServerTextOptionModel = {
     name: LocalizationText
     type: 'text'
     placeholder: LocalizationText
+    limit?: number
 }
 
 export type ParsedTextOptionQuery = string
@@ -24,4 +25,5 @@ export const toSearchTextOption = (
     name: localize(option.name),
     type: 'text',
     placeholder: localize(option.placeholder),
+    limit: option.limit,
 })
