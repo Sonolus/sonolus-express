@@ -1,6 +1,7 @@
 export * from './backgrounds'
 export * from './effects'
 export * from './engines'
+export { ItemCommunityHandler, defaultItemCommunityHandler } from './item-community'
 export { DefaultItemDetailsHandler, ItemDetailsHandler } from './item-details'
 export { DefaultItemInfoHandler, ItemInfoHandler } from './item-info'
 export {

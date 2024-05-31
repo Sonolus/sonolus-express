@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
+import { ServerFormsModel } from '../../api/form/form'
+import { parseSearchQuery } from '../../api/form/query'
 import { ToItem } from '../../api/item'
 import { ItemListModel, toItemList } from '../../api/item-list'
-import { parseSearchQuery } from '../../api/section/query'
-import { SectionsModel } from '../../api/section/section'
 import { Promisable } from '../../utils/types'
 import { SonolusBase, SonolusItemsConfig } from '../sonolus'
 
@@ -34,12 +34,16 @@ export const defaultItemListHandler = <T>(
 
 export const itemListRouteHandler = async <
     TSonolus extends SonolusBase,
-    TSearches extends SectionsModel,
+    TSearches extends ServerFormsModel,
+    TCommunityActions extends ServerFormsModel | undefined,
     TDatabaseItem,
     TItem,
 >(
     sonolus: TSonolus,
-    { searches, listHandler }: SonolusItemsConfig<TSonolus, TSearches, TDatabaseItem>,
+    {
+        searches,
+        listHandler,
+    }: SonolusItemsConfig<TSonolus, TSearches, TCommunityActions, TDatabaseItem>,
     toItem: ToItem<TDatabaseItem, TItem>,
     session: string | undefined,
     req: Request,

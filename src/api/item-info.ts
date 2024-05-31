@@ -1,9 +1,9 @@
 import { ItemInfo, SRL } from '@sonolus/core'
 import { SonolusBase } from '../core/sonolus'
+import { ServerFormsModel, toServerForms } from './form/form'
 import { ToItem } from './item'
 import { ItemSectionModel, toItemSections } from './item-section'
 import { Localize } from './localization'
-import { SectionsModel, toSections } from './section/section'
 
 export type ItemInfoModel<T> = {
     sections: ItemSectionModel<T>[]
@@ -15,9 +15,9 @@ export const toItemInfo = <T, U>(
     localize: Localize,
     toItem: ToItem<T, U>,
     info: ItemInfoModel<T>,
-    searches: SectionsModel,
+    searches: ServerFormsModel,
 ): ItemInfo<U> => ({
-    searches: toSections(localize, searches),
+    searches: toServerForms(localize, searches),
     sections: toItemSections(sonolus, localize, toItem, info.sections),
     banner: info.banner,
 })

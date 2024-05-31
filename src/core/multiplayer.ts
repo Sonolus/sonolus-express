@@ -1,8 +1,8 @@
 import { JoinRoomResponse, getSignaturePublicKey } from '@sonolus/core'
 import { webcrypto } from 'node:crypto'
 import { toCreateRoomResponse } from '../api/create-room-response'
-import { ParsedQuery, parseQuery } from '../api/section/query'
-import { SectionsModel } from '../api/section/section'
+import { ServerFormsModel } from '../api/form/form'
+import { ParsedQuery, parseQuery } from '../api/form/query'
 import { joinRoomRequestSchema } from '../schemas/join-room-request'
 import { safeJsonParse } from '../utils/safe-json-parse'
 import { Promisable } from '../utils/types'
@@ -38,7 +38,7 @@ export const createRoomRouteHandler: SonolusRouteHandler = async (sonolus, sessi
     )
 }
 
-export type JoinRoomHandler<TSonolus extends SonolusBase, TRoomCreates extends SectionsModel> = (
+export type JoinRoomHandler<TSonolus extends SonolusBase, TRoomCreates extends ServerFormsModel> = (
     sonolus: TSonolus,
     session: string | undefined,
     localization: string,

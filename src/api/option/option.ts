@@ -4,10 +4,12 @@ import { ServerMultiOptionModel, toSearchMultiOption } from './multi'
 import { ServerSelectOptionModel, toSearchSelectOption } from './select'
 import { ServerSliderOptionModel, toSearchSliderOption } from './slider'
 import { ServerTextOptionModel, toSearchTextOption } from './text'
+import { ServerTextAreaOptionModel, toSearchTextAreaOption } from './text-area'
 import { ServerToggleOptionModel, toSearchToggleOption } from './toggle'
 
 export type ServerOptionModel =
     | ServerTextOptionModel
+    | ServerTextAreaOptionModel
     | ServerSliderOptionModel
     | ServerToggleOptionModel
     | ServerSelectOptionModel
@@ -21,6 +23,8 @@ export const toServerOption = (
     switch (option.type) {
         case 'text':
             return toSearchTextOption(localize, query, option)
+        case 'textArea':
+            return toSearchTextAreaOption(localize, query, option)
         case 'slider':
             return toSearchSliderOption(localize, query, option)
         case 'toggle':

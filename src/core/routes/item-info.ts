@@ -1,8 +1,8 @@
 import { Text } from '@sonolus/core'
 import { Request, Response } from 'express'
+import { ServerFormsModel } from '../../api/form/form'
 import { ToItem } from '../../api/item'
 import { ItemInfoModel, toItemInfo } from '../../api/item-info'
-import { SectionsModel } from '../../api/section/section'
 import { Promisable } from '../../utils/types'
 import { SonolusBase, SonolusItemsConfig } from '../sonolus'
 
@@ -25,12 +25,16 @@ export const defaultItemInfoHandler = <T>(sonolus: SonolusBase, items: T[]): Ite
 
 export const itemInfoRouteHandler = async <
     TSonolus extends SonolusBase,
-    TSearches extends SectionsModel,
+    TSearches extends ServerFormsModel,
+    TCommunityActions extends ServerFormsModel | undefined,
     TDatabaseItem,
     TItem,
 >(
     sonolus: TSonolus,
-    { searches, infoHandler }: SonolusItemsConfig<TSonolus, TSearches, TDatabaseItem>,
+    {
+        searches,
+        infoHandler,
+    }: SonolusItemsConfig<TSonolus, TSearches, TCommunityActions, TDatabaseItem>,
     toItem: ToItem<TDatabaseItem, TItem>,
     session: string | undefined,
     req: Request,

@@ -1,8 +1,8 @@
 import { Icon, LocalizationText, Text } from '@sonolus/core'
 import { Request, Response } from 'express'
+import { ServerFormsModel } from '../../api/form/form'
 import { ToItem } from '../../api/item'
 import { ItemDetailsModel, toItemDetails } from '../../api/item-details'
-import { SectionsModel } from '../../api/section/section'
 import { Promisable } from '../../utils/types'
 import { SonolusBase, SonolusItemsConfig } from '../sonolus'
 
@@ -46,12 +46,16 @@ export const defaultItemDetailsHandler = <
 
 export const itemDetailsRouteHandler = async <
     TSonolus extends SonolusBase,
-    TSearches extends SectionsModel,
+    TSearches extends ServerFormsModel,
+    TCommunityActions extends ServerFormsModel | undefined,
     TDatabaseItem,
     TItem,
 >(
     sonolus: TSonolus,
-    { detailsHandler }: SonolusItemsConfig<TSonolus, TSearches, TDatabaseItem>,
+    {
+        communityActions,
+        detailsHandler,
+    }: SonolusItemsConfig<TSonolus, TSearches, TCommunityActions, TDatabaseItem>,
     toItem: ToItem<TDatabaseItem, TItem>,
     session: string | undefined,
     req: Request,
@@ -69,5 +73,5 @@ export const itemDetailsRouteHandler = async <
         return
     }
 
-    res.json(toItemDetails(sonolus, req.localize, toItem, details))
+    res.json(toItemDetails(sonolus, req.localize, toItem, !!communityActions, details))
 }
