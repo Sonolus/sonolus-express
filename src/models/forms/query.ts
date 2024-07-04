@@ -47,9 +47,9 @@ export const parseQuery = <T extends ServerFormsModel>(
             Object.entries(form.options).map(([key, option]) => {
                 switch (option.type) {
                     case 'text':
-                        return [key, parseTextOptionQuery(query[key])]
+                        return [key, parseTextOptionQuery(query[key], option)]
                     case 'textArea':
-                        return [key, parseTextAreaOptionQuery(query[key])]
+                        return [key, parseTextAreaOptionQuery(query[key], option)]
                     case 'slider':
                         return [key, parseSliderOptionQuery(query[key], option)]
                     case 'toggle':
@@ -59,7 +59,7 @@ export const parseQuery = <T extends ServerFormsModel>(
                     case 'multi':
                         return [key, parseMultiOptionQuery(query[key], option)]
                     case 'serverItem':
-                        return [key, parseServerItemOptionQuery(query[key])]
+                        return [key, parseServerItemOptionQuery(query[key], option)]
                     case 'collectionItem':
                         return [key, parseServerCollectionItemOptionQuery(query[key], option)]
                     case 'file':
@@ -86,7 +86,15 @@ export const parseSearchQuery = <T extends ServerFormsModel>(
     if (type === 'quick')
         return {
             type: 'quick',
-            keywords: parseTextOptionQuery(query.keywords),
+            keywords: parseTextOptionQuery(query.keywords, {
+                name: {},
+                required: false,
+                type: 'text',
+                placeholder: {},
+                def: '',
+                limit: 0,
+                shortcuts: [],
+            }),
         }
 
     return (

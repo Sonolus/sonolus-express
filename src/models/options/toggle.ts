@@ -4,7 +4,7 @@ import { Localize } from '../../utils/localization'
 export type ServerToggleOptionModel = {
     name: LocalizationText
     description?: LocalizationText
-    required?: boolean
+    required: boolean
     type: 'toggle'
     def: boolean
 }
@@ -30,5 +30,5 @@ export const toServerToggleOption = (
     description: option.description && localize(option.description),
     required: option.required,
     type: option.type,
-    def: option.def ? 1 : 0,
+    def: option.def,
 })

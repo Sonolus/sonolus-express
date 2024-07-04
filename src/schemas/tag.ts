@@ -1,7 +1,7 @@
 import { Type } from '@sinclair/typebox'
 import { Tag } from '@sonolus/core'
-import { Expect } from '../../utils/test'
-import { SchemaToMatch } from '../test'
+import { Expect } from '../utils/test'
+import { SchemaToMatch } from './test'
 
 export const tagSchema = Type.Object({
     title: Type.String(),

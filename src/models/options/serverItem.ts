@@ -1,20 +1,31 @@
-import { ItemType, LocalizationText, ServerServerItemOption } from '@sonolus/core'
+import { Type } from '@sinclair/typebox'
+import { ItemType, LocalizationText, ServerServerItemOption, Sil } from '@sonolus/core'
+import { silSchema } from '../../schemas/sil'
+import { parse } from '../../utils/json'
 import { Localize } from '../../utils/localization'
 
 export type ServerServerItemOptionModel = {
     name: LocalizationText
     description?: LocalizationText
-    required?: boolean
+    required: boolean
     type: 'serverItem'
     itemType: ItemType
+    def: Sil | null
+    allowOtherServers: boolean
 }
 
-export type ParsedServerItemOptionQuery = string | undefined
+export type ParsedServerItemOptionQuery = Sil | null
 
-export const parseServerItemOptionQuery = (value: unknown): ParsedServerItemOptionQuery => {
-    if (typeof value !== 'string') return
+export const parseServerItemOptionQuery = (
+    value: unknown,
+    option: ServerServerItemOptionModel,
+): ParsedServerItemOptionQuery => {
+    if (typeof value !== 'string') return option.def
 
-    return value
+    const parsed = parse(value, Type.Union([silSchema, Type.Null()]))
+    if (parsed === undefined) return option.def
+
+    return parsed
 }
 
 export const toServerServerItemOption = (
@@ -28,4 +39,6 @@ export const toServerServerItemOption = (
     required: option.required,
     type: option.type,
     itemType: option.itemType,
+    def: option.def,
+    allowOtherServers: option.allowOtherServers,
 })

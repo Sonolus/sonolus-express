@@ -1,4 +1,4 @@
-import { ItemLeaderboardRecord, LocalizationText } from '@sonolus/core'
+import { LocalizationText, ServerItemLeaderboardRecord } from '@sonolus/core'
 import { Localize } from '../../../../utils/localization'
 
 export type ItemLeaderboardRecordModel = {
@@ -11,7 +11,7 @@ export type ItemLeaderboardRecordModel = {
 export const toItemLeaderboardRecord = (
     localize: Localize,
     record: ItemLeaderboardRecordModel,
-): ItemLeaderboardRecord => ({
+): ServerItemLeaderboardRecord => ({
     name: record.name,
     rank: localize(record.rank),
     player: record.player,

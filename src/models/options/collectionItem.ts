@@ -29,7 +29,7 @@ import { Localize } from '../../utils/localization'
 export type ServerCollectionItemOptionModel = {
     name: LocalizationText
     description?: LocalizationText
-    required?: boolean
+    required: boolean
     type: 'collectionItem'
     itemType: ItemType
 }

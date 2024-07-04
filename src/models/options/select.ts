@@ -4,7 +4,7 @@ import { Localize } from '../../utils/localization'
 export type ServerSelectOptionModel = {
     name: LocalizationText
     description?: LocalizationText
-    required?: boolean
+    required: boolean
     type: 'select'
     def: number
     values: LocalizationText[]

@@ -1,8 +1,8 @@
-import { SubmitItemCommunityActionResponse } from '@sonolus/core'
+import { ServerSubmitItemActionResponse } from '@sonolus/core'
 import { ServerFormsModel } from '../../../models/forms/form'
 import { ParsedQuery, parseQuery } from '../../../models/forms/query'
 import { ItemModel } from '../../../models/items/item'
-import { submitItemCommunityActionRequestSchema } from '../../../schemas/server/submitItemCommunityActionRequest'
+import { serverSubmitItemCommunityActionRequestSchema } from '../../../schemas/server/items/community/submitItemCommunityActionRequest'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { parse } from '../../../utils/json'
 import { MaybePromise } from '../../../utils/promise'
@@ -12,7 +12,7 @@ export type ItemCommunitySubmitHandler<TCommunityActions extends ServerFormsMode
     session: string | undefined
     itemName: string
     query: ParsedQuery<TCommunityActions>
-}) => MaybePromise<SubmitItemCommunityActionResponse | undefined>
+}) => MaybePromise<ServerSubmitItemActionResponse | undefined>
 
 export const defaultItemCommunitySubmitHandler = (): undefined => undefined
 
@@ -38,7 +38,7 @@ export const createItemCommunitySubmitRouteHandler =
             return
         }
 
-        const request = parse(body, submitItemCommunityActionRequestSchema)
+        const request = parse(body, serverSubmitItemCommunityActionRequestSchema)
         if (!request) {
             res.status(400).end()
             return

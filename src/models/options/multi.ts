@@ -4,7 +4,7 @@ import { Localize } from '../../utils/localization'
 export type ServerMultiOptionModel = {
     name: LocalizationText
     description?: LocalizationText
-    required?: boolean
+    required: boolean
     type: 'multi'
     values: ServerMultiOptionValueModel[]
 }
@@ -41,6 +41,6 @@ export const toServerMultiOption = (
     description: option.description && localize(option.description),
     required: option.required,
     type: option.type,
-    defs: Object.values(option.values).map((value) => value.def),
+    def: Object.values(option.values).map((value) => value.def),
     values: Object.values(option.values).map((value) => localize(value.title)),
 })

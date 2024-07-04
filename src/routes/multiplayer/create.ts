@@ -1,6 +1,6 @@
-import { CreateRoomResponse } from '@sonolus/core'
+import { ServerCreateRoomResponse } from '@sonolus/core'
 import { ServerFormsModel } from '../../models/forms/form'
-import { createRoomRequestSchema } from '../../schemas/server/createRoomRequest'
+import { serverCreateRoomRequestSchema } from '../../schemas/server/multiplayer/createRoom'
 import { SonolusMultiplayer } from '../../sonolus/multiplayer'
 import { parse } from '../../utils/json'
 import { MaybePromise } from '../../utils/promise'
@@ -8,7 +8,7 @@ import { SonolusRouteHandler } from '../handler'
 
 export type MultiplayerCreateHandler = (ctx: {
     session: string | undefined
-}) => MaybePromise<CreateRoomResponse | undefined>
+}) => MaybePromise<ServerCreateRoomResponse | undefined>
 
 export const defaultMultiplayerCreateHandler = (): undefined => undefined
 
@@ -23,7 +23,7 @@ export const createMultiplayerCreateRouteHandler =
             return
         }
 
-        const request = parse(body, createRoomRequestSchema)
+        const request = parse(body, serverCreateRoomRequestSchema)
         if (!request) {
             res.status(400).end()
             return

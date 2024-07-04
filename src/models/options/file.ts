@@ -4,14 +4,14 @@ import { Localize } from '../../utils/localization'
 export type ServerFileOptionModel = {
     name: LocalizationText
     description?: LocalizationText
-    required?: boolean
+    required: boolean
     type: 'file'
 }
 
 export type ParsedFileOptionQuery = string | undefined
 
 export const parseFileOptionQuery = (value: unknown): ParsedFileOptionQuery => {
-    if (typeof value !== 'string') return undefined
+    if (typeof value !== 'string') return
 
     return value
 }

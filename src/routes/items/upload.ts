@@ -1,4 +1,4 @@
-import { UploadItemResponse } from '@sonolus/core'
+import { ServerUploadItemResponse } from '@sonolus/core'
 import { ServerFormsModel } from '../../models/forms/form'
 import { ItemModel } from '../../models/items/item'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
@@ -10,7 +10,7 @@ export type ItemUploadHandler = (ctx: {
     session: string | undefined
     key: string
     files: Express.Multer.File[]
-}) => MaybePromise<UploadItemResponse | undefined>
+}) => MaybePromise<ServerUploadItemResponse | undefined>
 
 export const defaultItemUploadHandler = (): undefined => undefined
 

@@ -1,10 +1,10 @@
 import { Type } from '@sinclair/typebox'
-import { UserProfile } from '@sonolus/core'
+import { ServiceUserId, ServiceUserProfile } from '@sonolus/core'
 import { Expect } from '../../utils/test'
 import { SchemaToMatch } from '../test'
 
-export const userProfileSchema = Type.Object({
-    id: Type.String(),
+export const serviceUserProfileSchema = Type.Object({
+    id: Type.Unsafe<ServiceUserId>(Type.String()),
     handle: Type.String(),
     name: Type.String(),
     avatarForegroundColor: Type.String(),
@@ -19,4 +19,4 @@ export const userProfileSchema = Type.Object({
     favorites: Type.Array(Type.String()),
 })
 
-type _Tests = Expect<[SchemaToMatch<typeof userProfileSchema, UserProfile>]>
+type _Tests = Expect<[SchemaToMatch<typeof serviceUserProfileSchema, ServiceUserProfile>]>

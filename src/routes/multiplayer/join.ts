@@ -1,8 +1,8 @@
-import { JoinRoomResponse, UserProfile, getSignaturePublicKey } from '@sonolus/core'
+import { ServerJoinRoomResponse, ServiceUserProfile, getSignaturePublicKey } from '@sonolus/core'
 import { webcrypto } from 'node:crypto'
 import { ServerFormsModel } from '../../models/forms/form'
 import { ParsedQuery, parseQuery } from '../../models/forms/query'
-import { joinRoomRequestSchema } from '../../schemas/server/joinRoomRequest'
+import { serverJoinRoomRequestSchema } from '../../schemas/server/multiplayer/joinRoom'
 import { SonolusBase } from '../../sonolus'
 import { SonolusMultiplayer } from '../../sonolus/multiplayer'
 import { parse } from '../../utils/json'
@@ -13,14 +13,14 @@ export type MultiplayerJoinHandler<TCreates extends ServerFormsModel | undefined
     session: string | undefined
     localization: string
     itemName: string
-    userProfile: UserProfile
+    userProfile: ServiceUserProfile
     authentication: Buffer
     signature: Buffer
     create?: {
         key: string
         values: ParsedQuery<NonNullable<TCreates>>
     }
-}) => MaybePromise<JoinRoomResponse | undefined>
+}) => MaybePromise<ServerJoinRoomResponse | undefined>
 
 export const defaultMultiplayerJoinHandler = (): undefined => undefined
 
@@ -42,7 +42,7 @@ export const createMultiplayerJoinRouteHandler =
             return
         }
 
-        const request = parse(body, joinRoomRequestSchema)
+        const request = parse(body, serverJoinRoomRequestSchema)
         if (!request) {
             res.status(400).end()
             return

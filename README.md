@@ -183,7 +183,7 @@ Load a pack created by [sonolus-pack](https://github.com/NonSpicyBurrito/sonolus
 
 #### `add(type, data, hash?)`
 
-Add a resource. Returns `SRL` which can be used to access the resource.
+Add a resource. Returns `Srl` which can be used to access the resource.
 
 -   `type`: resource type.
 -   `data`: data (`Buffer`) or file path (`string`) to the data.

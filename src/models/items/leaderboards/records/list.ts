@@ -1,4 +1,4 @@
-import { ItemLeaderboardRecordList } from '@sonolus/core'
+import { ServerItemLeaderboardRecordList } from '@sonolus/core'
 import { Localize } from '../../../../utils/localization'
 import { ItemLeaderboardRecordModel, toItemLeaderboardRecord } from './record'
 
@@ -10,7 +10,7 @@ export type ItemLeaderboardRecordListModel = {
 export const toItemLeaderboardRecordList = (
     localize: Localize,
     list: ItemLeaderboardRecordListModel,
-): ItemLeaderboardRecordList => ({
+): ServerItemLeaderboardRecordList => ({
     pageCount: list.pageCount,
     records: list.records.map((record) => toItemLeaderboardRecord(localize, record)),
 })

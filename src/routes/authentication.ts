@@ -1,6 +1,10 @@
-import { AuthenticateServerResponse, UserProfile, getSignaturePublicKey } from '@sonolus/core'
+import {
+    ServerAuthenticateResponse,
+    ServiceUserProfile,
+    getSignaturePublicKey,
+} from '@sonolus/core'
 import { webcrypto } from 'node:crypto'
-import { authenticateServerRequestSchema } from '../schemas/server/authenticateServerRequest'
+import { authenticateServerRequestSchema } from '../schemas/server/authenticate'
 import { SonolusBase } from '../sonolus/base'
 import { parse } from '../utils/json'
 import { MaybePromise } from '../utils/promise'
@@ -8,8 +12,8 @@ import { SonolusRouteHandler } from './handler'
 
 export type AuthenticateHandler = (ctx: {
     session: string | undefined
-    userProfile: UserProfile
-}) => MaybePromise<AuthenticateServerResponse | undefined>
+    userProfile: ServiceUserProfile
+}) => MaybePromise<ServerAuthenticateResponse | undefined>
 
 export const defaultAuthenticateHandler = (): undefined => undefined
 

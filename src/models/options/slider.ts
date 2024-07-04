@@ -4,7 +4,7 @@ import { Localize } from '../../utils/localization'
 export type ServerSliderOptionModel = {
     name: LocalizationText
     description?: LocalizationText
-    required?: boolean
+    required: boolean
     type: 'slider'
     def: number
     min: number

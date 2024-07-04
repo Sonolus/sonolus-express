@@ -1,4 +1,4 @@
-import { ItemInfo, SRL } from '@sonolus/core'
+import { ServerItemInfo, Srl } from '@sonolus/core'
 import { SonolusBase } from '../../sonolus/base'
 import { Localize } from '../../utils/localization'
 import { ServerFormsModel, toServerForms } from '../forms/form'
@@ -13,7 +13,7 @@ export type ItemInfoModel<
     creates?: (keyof NonNullable<TCreates> & string)[]
     searches?: (keyof TSearches & string)[]
     sections: ItemSectionModel<TItemModel>[]
-    banner?: SRL
+    banner?: Srl
 }
 
 export const toItemInfo = <
@@ -28,7 +28,7 @@ export const toItemInfo = <
     info: ItemInfoModel<TItemModel, TCreates, TSearches>,
     creates: TCreates,
     searches: TSearches,
-): ItemInfo<TItem> => ({
+): ServerItemInfo => ({
     creates: creates && info.creates && toServerForms(localize, info.creates, creates),
     searches: info.searches && toServerForms(localize, info.searches, searches),
     sections: toItemSections(sonolus, localize, toItem, info.sections),

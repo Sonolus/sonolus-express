@@ -1,4 +1,4 @@
-import { Icon, ItemSection, LocalizationText } from '@sonolus/core'
+import { Icon, LocalizationText, ServerItemSection } from '@sonolus/core'
 import { SonolusBase } from '../../sonolus/base'
 import { Localize } from '../../utils/localization'
 import { ToItem, toItems } from './item'
@@ -14,10 +14,11 @@ export const toItemSection = <TItemModel, TItem>(
     localize: Localize,
     toItem: ToItem<TItemModel, TItem>,
     section: ItemSectionModel<TItemModel>,
-): ItemSection<TItem> => ({
+): ServerItemSection => ({
     title: localize(section.title),
     icon: section.icon,
-    items: toItems(sonolus, localize, toItem, section.items),
+    itemType: '' as never,
+    items: toItems(sonolus, localize, toItem, section.items) as never,
 })
 
 export const toItemSections = <TItemModel, TItem>(
@@ -25,5 +26,5 @@ export const toItemSections = <TItemModel, TItem>(
     localize: Localize,
     toItem: ToItem<TItemModel, TItem>,
     sections: ItemSectionModel<TItemModel>[],
-): ItemSection<TItem>[] =>
+): ServerItemSection[] =>
     sections.map((section) => toItemSection(sonolus, localize, toItem, section))

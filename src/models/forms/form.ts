@@ -7,6 +7,8 @@ export type ServerFormsModel = Record<string, ServerFormModel>
 export type ServerFormModel = {
     title: LocalizationText
     icon?: Icon
+    description?: LocalizationText
+    requireConfirmation: boolean
     options: Record<string, ServerOptionModel>
 }
 
@@ -21,6 +23,8 @@ export const toServerForm = (
     type,
     title: localize(form.title),
     icon: form.icon,
+    description: form.description && localize(form.description),
+    requireConfirmation: form.requireConfirmation,
     options: Object.entries(form.options).map(([query, option]) =>
         toServerOption(localize, query, option),
     ),

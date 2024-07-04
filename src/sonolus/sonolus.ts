@@ -1,4 +1,4 @@
-import { LocalizationText, SRL, localize, hash as sonolusHash, version } from '@sonolus/core'
+import { LocalizationText, Srl, localize, hash as sonolusHash, version } from '@sonolus/core'
 import express, { NextFunction, Request, Response, Router } from 'express'
 import multer from 'multer'
 import { readFileSync } from 'node:fs'
@@ -100,7 +100,7 @@ export class Sonolus<
 
     title: LocalizationText
     description?: LocalizationText
-    banner?: SRL
+    banner?: Srl
 
     sessionHandler: SessionHandler
     authenticateHandler: AuthenticateHandler
@@ -262,7 +262,7 @@ export class Sonolus<
         this.router.use('/sonolus/repository', express.static(repositoryPath))
     }
 
-    add(data: Buffer | string, hash?: string): SRL {
+    add(data: Buffer | string, hash?: string): Srl {
         hash ??= sonolusHash(typeof data === 'string' ? readFileSync(data) : data)
 
         const url = `/sonolus/repository/${hash}`

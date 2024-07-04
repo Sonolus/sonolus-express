@@ -4,16 +4,21 @@ import { Localize } from '../../utils/localization'
 export type ServerTextOptionModel = {
     name: LocalizationText
     description?: LocalizationText
-    required?: boolean
+    required: boolean
     type: 'text'
     placeholder: LocalizationText
-    limit?: number
+    def: string
+    limit: number
+    shortcuts: string[]
 }
 
 export type ParsedTextOptionQuery = string
 
-export const parseTextOptionQuery = (value: unknown): ParsedTextOptionQuery => {
-    if (typeof value !== 'string') return ''
+export const parseTextOptionQuery = (
+    value: unknown,
+    option: ServerTextOptionModel,
+): ParsedTextOptionQuery => {
+    if (typeof value !== 'string') return option.def
 
     return value
 }
@@ -29,5 +34,7 @@ export const toServerTextOption = (
     required: option.required,
     type: option.type,
     placeholder: localize(option.placeholder),
+    def: option.def,
     limit: option.limit,
+    shortcuts: option.shortcuts,
 })

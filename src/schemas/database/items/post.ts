@@ -13,7 +13,7 @@ export const databasePostItemSchema = Type.Object({
     time: Type.Number(),
     author: localizationTextSchema,
     tags: Type.Array(databaseTagSchema),
-    description: localizationTextSchema,
+    description: Type.Optional(localizationTextSchema),
     thumbnail: Type.Optional(srlSchema),
     meta: Type.Optional(Type.Unknown()),
 })

@@ -1,8 +1,8 @@
-import { CreateItemResponse } from '@sonolus/core'
+import { ServerCreateItemResponse } from '@sonolus/core'
 import { ServerFormsModel } from '../../models/forms/form'
 import { ParsedQuery, parseQuery } from '../../models/forms/query'
 import { ItemModel } from '../../models/items/item'
-import { createItemRequestSchema } from '../../schemas/server/createItemRequest'
+import { serverCreateItemRequestSchema } from '../../schemas/server/items/create'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { parse } from '../../utils/json'
 import { MaybePromise } from '../../utils/promise'
@@ -11,7 +11,7 @@ import { SonolusRouteHandler } from '../handler'
 export type ItemCreateHandler<TCreates extends ServerFormsModel | undefined> = (ctx: {
     session: string | undefined
     values: ParsedQuery<NonNullable<TCreates>>
-}) => MaybePromise<CreateItemResponse | undefined>
+}) => MaybePromise<ServerCreateItemResponse | undefined>
 
 export const defaultItemCreateHandler = (): undefined => undefined
 
@@ -36,7 +36,7 @@ export const createItemCreateRouteHandler =
             return
         }
 
-        const request = parse(body, createItemRequestSchema)
+        const request = parse(body, serverCreateItemRequestSchema)
         if (!request) {
             res.status(400).end()
             return

@@ -1,4 +1,4 @@
-import { ItemCommunityCommentList } from '@sonolus/core'
+import { ServerItemCommunityCommentList } from '@sonolus/core'
 import { Localize } from '../../../../utils/localization'
 import { ServerFormsModel } from '../../../forms/form'
 import { ItemCommunityCommentModel, toItemCommunityComment } from './comment'
@@ -12,7 +12,7 @@ export const toItemCommunityCommentList = <T extends ServerFormsModel>(
     localize: Localize,
     list: ItemCommunityCommentListModel<T>,
     actions: T,
-): ItemCommunityCommentList => ({
+): ServerItemCommunityCommentList => ({
     pageCount: list.pageCount,
     comments: list.comments.map((comment) => toItemCommunityComment(localize, comment, actions)),
 })
