@@ -35,7 +35,8 @@ export const createDefaultItemDetailsHandler =
                 {
                     title: { en: Text.Recommended },
                     icon: Icon.Star,
-                    items: group.items.slice(index + 1, index + 6),
+                    itemType: group.type,
+                    items: group.items.slice(index + 1, index + 6) as never,
                 },
             ],
         }

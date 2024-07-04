@@ -1,19 +1,16 @@
 import { Text } from '@sonolus/core'
 import { ServerFormsModel, formTypes } from '../../models/forms/form'
 import { ItemInfoModel, toItemInfo } from '../../models/items/info'
-import { ItemModel, ToItem } from '../../models/items/item'
+import { ItemModel } from '../../models/items/item'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { MaybePromise } from '../../utils/promise'
 import { SonolusRouteHandler } from '../handler'
 
 export type ItemInfoHandler<
-    TItemModel,
     TCreates extends ServerFormsModel | undefined,
     TSearches extends ServerFormsModel,
-> = (ctx: {
-    session: string | undefined
-}) => MaybePromise<ItemInfoModel<TItemModel, TCreates, TSearches>>
+> = (ctx: { session: string | undefined }) => MaybePromise<ItemInfoModel<TCreates, TSearches>>
 
 export const createDefaultItemInfoHandler =
     <
@@ -24,14 +21,15 @@ export const createDefaultItemInfoHandler =
     >(
         sonolus: SonolusBase,
         group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): ItemInfoHandler<TItemModel, TCreates, TSearches> =>
+    ): ItemInfoHandler<TCreates, TSearches> =>
     () => ({
         creates: group.creates && formTypes(group.creates),
         searches: formTypes(group.searches),
         sections: [
             {
                 title: { en: Text.Newest },
-                items: group.items.slice(0, 5),
+                itemType: group.type,
+                items: group.items.slice(0, 5) as never,
             },
         ],
         banner: sonolus.banner,
@@ -46,14 +44,12 @@ export const createItemInfoRouteHandler =
     >(
         sonolus: SonolusBase,
         group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-        toItem: ToItem<TItemModel, unknown>,
     ): SonolusRouteHandler =>
     async ({ res, localize, session }) => {
         res.json(
             toItemInfo(
                 sonolus,
                 localize,
-                toItem,
                 await group.infoHandler({ session }),
                 group.creates,
                 group.searches,

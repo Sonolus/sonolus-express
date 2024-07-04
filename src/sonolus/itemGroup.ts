@@ -1,3 +1,4 @@
+import { ItemType } from '@sonolus/core'
 import { ServerFormsModel } from '../models/forms/form'
 import { ItemModel, ToItem } from '../models/items/item'
 import { SonolusRouteHandler } from '../routes/handler'
@@ -87,12 +88,13 @@ export class SonolusItemGroup<
     TSearches extends ServerFormsModel,
     TCommunityActions extends ServerFormsModel,
 > {
+    readonly type: ItemType
     items: TItemModel[]
 
     creates: TCreates
     searches: TSearches
 
-    infoHandler: ItemInfoHandler<TItemModel, TCreates, TSearches>
+    infoHandler: ItemInfoHandler<TCreates, TSearches>
     listHandler: ItemListHandler<TItemModel, TSearches>
     createHandler: ItemCreateHandler<TCreates>
     preUploadHandler: ItemPreUploadHandler
@@ -136,10 +138,12 @@ export class SonolusItemGroup<
 
     constructor(
         sonolus: SonolusBase,
+        type: ItemType,
         options: SonolusItemGroupOptions<TCreates, TSearches, TCommunityActions> = {},
         toItem: ToItem<TItemModel, unknown>,
         filter: FilterItems<TItemModel>,
     ) {
+        this.type = type
         this.items = []
 
         this.creates = options.creates as never
@@ -173,7 +177,7 @@ export class SonolusItemGroup<
             },
         }
 
-        this._infoRouteHandler = createItemInfoRouteHandler(sonolus, this, toItem)
+        this._infoRouteHandler = createItemInfoRouteHandler(sonolus, this)
         this._listRouteHandler = createItemListRouteHandler(sonolus, this, toItem)
         this._detailsRouteHandler = createItemDetailsRouteHandler(sonolus, this, toItem)
         this._createRouteHandler = createItemCreateRouteHandler(this)

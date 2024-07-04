@@ -10,7 +10,7 @@ export type ItemDetailsModel<T> = {
     description?: LocalizationText
     hasCommunity: boolean
     leaderboards: ItemLeaderboardModel[]
-    sections: ItemSectionModel<T>[]
+    sections: ItemSectionModel[]
 }
 
 export const toItemDetails = <TItemModel, TItem>(
@@ -26,5 +26,5 @@ export const toItemDetails = <TItemModel, TItem>(
     leaderboards: details.leaderboards.map((leaderboard) =>
         toItemLeaderboard(localize, leaderboard),
     ),
-    sections: toItemSections(sonolus, localize, toItem, details.sections),
+    sections: toItemSections(sonolus, localize, details.sections),
 })

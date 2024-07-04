@@ -229,6 +229,7 @@ export class Sonolus<
         for (const [type, , toItem, filter] of itemTypes) {
             this[type] = new SonolusItemGroup(
                 this,
+                type,
                 options[type as never],
                 toItem as never,
                 filter as never,
