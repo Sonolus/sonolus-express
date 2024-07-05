@@ -20,6 +20,7 @@ export const createDefaultItemInfoHandler =
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
@@ -28,6 +29,7 @@ export const createDefaultItemInfoHandler =
             TItemModel,
             TCreates,
             TSearches,
+            TActions,
             TCommunityActions
         >,
     ): ItemInfoHandler<TConfigurationOptions, TCreates, TSearches> =>
@@ -50,6 +52,7 @@ export const createItemInfoRouteHandler =
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
@@ -58,6 +61,7 @@ export const createItemInfoRouteHandler =
             TItemModel,
             TCreates,
             TSearches,
+            TActions,
             TCommunityActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>

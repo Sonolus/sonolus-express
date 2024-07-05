@@ -21,6 +21,7 @@ export const createItemCommunityPreUploadRouteHandler =
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
         group: SonolusItemGroup<
@@ -28,6 +29,7 @@ export const createItemCommunityPreUploadRouteHandler =
             TItemModel,
             TCreates,
             TSearches,
+            TActions,
             TCommunityActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>

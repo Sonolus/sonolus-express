@@ -85,6 +85,16 @@ export class Sonolus<
     TEngineSearches extends ServerFormsModel = {},
     TReplaySearches extends ServerFormsModel = {},
     TRoomSearches extends ServerFormsModel = {},
+    TPostActions extends ServerFormsModel = {},
+    TPlaylistActions extends ServerFormsModel = {},
+    TLevelActions extends ServerFormsModel = {},
+    TSkinActions extends ServerFormsModel = {},
+    TBackgroundActions extends ServerFormsModel = {},
+    TEffectActions extends ServerFormsModel = {},
+    TParticleActions extends ServerFormsModel = {},
+    TEngineActions extends ServerFormsModel = {},
+    TReplayActions extends ServerFormsModel = {},
+    TRoomActions extends ServerFormsModel = {},
     TPostCommunityActions extends ServerFormsModel = {},
     TPlaylistCommunityActions extends ServerFormsModel = {},
     TLevelCommunityActions extends ServerFormsModel = {},
@@ -120,6 +130,7 @@ export class Sonolus<
         PostItemModel,
         TPostCreates,
         TPostSearches,
+        TPostActions,
         TPostCommunityActions
     >
     readonly playlist!: SonolusItemGroup<
@@ -127,6 +138,7 @@ export class Sonolus<
         PlaylistItemModel,
         TPlaylistCreates,
         TPlaylistSearches,
+        TPlaylistActions,
         TPlaylistCommunityActions
     >
     readonly level!: SonolusItemGroup<
@@ -134,6 +146,7 @@ export class Sonolus<
         LevelItemModel,
         TLevelCreates,
         TLevelSearches,
+        TLevelActions,
         TLevelCommunityActions
     >
     readonly skin!: SonolusItemGroup<
@@ -141,6 +154,7 @@ export class Sonolus<
         SkinItemModel,
         TSkinCreates,
         TSkinSearches,
+        TSkinActions,
         TSkinCommunityActions
     >
     readonly background!: SonolusItemGroup<
@@ -148,6 +162,7 @@ export class Sonolus<
         BackgroundItemModel,
         TBackgroundCreates,
         TBackgroundSearches,
+        TBackgroundActions,
         TBackgroundCommunityActions
     >
     readonly effect!: SonolusItemGroup<
@@ -155,6 +170,7 @@ export class Sonolus<
         EffectItemModel,
         TEffectCreates,
         TEffectSearches,
+        TEffectActions,
         TEffectCommunityActions
     >
     readonly particle!: SonolusItemGroup<
@@ -162,6 +178,7 @@ export class Sonolus<
         ParticleItemModel,
         TParticleCreates,
         TParticleSearches,
+        TParticleActions,
         TParticleCommunityActions
     >
     readonly engine!: SonolusItemGroup<
@@ -169,6 +186,7 @@ export class Sonolus<
         EngineItemModel,
         TEngineCreates,
         TEngineSearches,
+        TEngineActions,
         TEngineCommunityActions
     >
     readonly replay!: SonolusItemGroup<
@@ -176,6 +194,7 @@ export class Sonolus<
         ReplayItemModel,
         TReplayCreates,
         TReplaySearches,
+        TReplayActions,
         TReplayCommunityActions
     >
     readonly room!: SonolusItemGroup<
@@ -183,6 +202,7 @@ export class Sonolus<
         RoomItemModel,
         TRoomCreates,
         TRoomSearches,
+        TRoomActions,
         TRoomCommunityActions
     >
 
@@ -195,40 +215,66 @@ export class Sonolus<
             }
             upload?: UploadOptions
 
-            post?: SonolusItemGroupOptions<TPostCreates, TPostSearches, TPostCommunityActions>
+            post?: SonolusItemGroupOptions<
+                TPostCreates,
+                TPostSearches,
+                TPostActions,
+                TPostCommunityActions
+            >
             playlist?: SonolusItemGroupOptions<
                 TPlaylistCreates,
                 TPlaylistSearches,
+                TPlaylistActions,
                 TPlaylistCommunityActions
             >
-            level?: SonolusItemGroupOptions<TLevelCreates, TLevelSearches, TLevelCommunityActions>
-            skin?: SonolusItemGroupOptions<TSkinCreates, TSkinSearches, TSkinCommunityActions>
+            level?: SonolusItemGroupOptions<
+                TLevelCreates,
+                TLevelSearches,
+                TLevelActions,
+                TLevelCommunityActions
+            >
+            skin?: SonolusItemGroupOptions<
+                TSkinCreates,
+                TSkinSearches,
+                TSkinActions,
+                TSkinCommunityActions
+            >
             background?: SonolusItemGroupOptions<
                 TBackgroundCreates,
                 TBackgroundSearches,
+                TBackgroundActions,
                 TBackgroundCommunityActions
             >
             effect?: SonolusItemGroupOptions<
                 TEffectCreates,
                 TEffectSearches,
+                TEffectActions,
                 TEffectCommunityActions
             >
             particle?: SonolusItemGroupOptions<
                 TParticleCreates,
                 TParticleSearches,
+                TParticleActions,
                 TParticleCommunityActions
             >
             engine?: SonolusItemGroupOptions<
                 TEngineCreates,
                 TEngineSearches,
+                TEngineActions,
                 TEngineCommunityActions
             >
             replay?: SonolusItemGroupOptions<
                 TReplayCreates,
                 TReplaySearches,
+                TReplayActions,
                 TReplayCommunityActions
             >
-            room?: SonolusItemGroupOptions<TRoomCreates, TRoomSearches, TRoomCommunityActions>
+            room?: SonolusItemGroupOptions<
+                TRoomCreates,
+                TRoomSearches,
+                TRoomActions,
+                TRoomCommunityActions
+            >
         } = {},
     ) {
         this.address = options.address
@@ -333,6 +379,14 @@ export class Sonolus<
             )
 
             this._get(`/${path}/:itemName`, this[type]['_detailsRouteHandler'])
+
+            this._post(`/${path}/:itemName/submit`, this[type]['_submitActionRouteHandler'])
+            this._upload(
+                `/${path}/:itemName/upload`,
+                this[type]['_preUploadActionRouteHandler'],
+                uploader,
+                this[type]['_uploadActionRouteHandler'],
+            )
 
             this._get(`/${path}/:itemName/community/info`, this[type]['_communityInfoRouteHandler'])
 

@@ -24,6 +24,7 @@ export const createItemCommunityCommentUploadRouteHandler =
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
         group: SonolusItemGroup<
@@ -31,6 +32,7 @@ export const createItemCommunityCommentUploadRouteHandler =
             TItemModel,
             TCreates,
             TSearches,
+            TActions,
             TCommunityActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>

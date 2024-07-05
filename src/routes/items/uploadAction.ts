@@ -1,3 +1,4 @@
+import { ServerUploadItemActionResponse } from '@sonolus/core'
 import { ServerFormsModel } from '../../models/forms/form'
 import { ItemModel } from '../../models/items/item'
 import { ServerOptionsModel } from '../../models/options/option'
@@ -6,15 +7,17 @@ import { extractString } from '../../utils/extract'
 import { MaybePromise } from '../../utils/promise'
 import { SonolusCtx, SonolusRouteHandler } from '../handler'
 
-export type ItemPreUploadHandler<TConfigurationOptions extends ServerOptionsModel> = (
+export type ItemUploadActionHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
         key: string
+        files: Express.Multer.File[]
     },
-) => MaybePromise<boolean>
+) => MaybePromise<ServerUploadItemActionResponse | undefined>
 
-export const defaultItemPreUploadHandler = (): boolean => false
+export const defaultItemUploadActionHandler = (): undefined => undefined
 
-export const createItemPreUploadRouteHandler =
+export const createItemUploadActionRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -32,18 +35,30 @@ export const createItemPreUploadRouteHandler =
             TCommunityActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ req, res, next, ctx }) => {
+    async ({ req, res, ctx }) => {
+        const itemName = req.params.itemName
+        if (!itemName) {
+            res.status(404).end()
+            return
+        }
+
         const key = extractString(req.headers['sonolus-upload-key'])
         if (key === undefined) {
             res.status(400).end()
             return
         }
 
-        const response = await group.preUploadHandler({ ...ctx, key })
+        const files = req.files
+        if (!Array.isArray(files)) {
+            res.status(400).end()
+            return
+        }
+
+        const response = await group.uploadActionHandler({ ...ctx, itemName, key, files })
         if (!response) {
             res.status(400).end()
             return
         }
 
-        next()
+        res.json(response)
     }

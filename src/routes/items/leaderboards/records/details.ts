@@ -28,6 +28,7 @@ export const createItemLeaderboardRecordDetailsRouteHandler =
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
@@ -36,6 +37,7 @@ export const createItemLeaderboardRecordDetailsRouteHandler =
             TItemModel,
             TCreates,
             TSearches,
+            TActions,
             TCommunityActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>

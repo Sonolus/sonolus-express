@@ -1,5 +1,5 @@
 import { Icon, Text } from '@sonolus/core'
-import { ServerFormsModel } from '../../models/forms/form'
+import { formTypes, ServerFormsModel } from '../../models/forms/form'
 import { ItemDetailsModel, toItemDetails } from '../../models/items/details'
 import { ItemModel, ToItem } from '../../models/items/item'
 import { ServerOptionsModel } from '../../models/options/option'
@@ -8,11 +8,15 @@ import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { MaybePromise } from '../../utils/promise'
 import { SonolusCtx, SonolusRouteHandler } from '../handler'
 
-export type ItemDetailsHandler<TConfigurationOptions extends ServerOptionsModel, TItemModel> = (
+export type ItemDetailsHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+    TActions extends ServerFormsModel,
+    TItemModel,
+> = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
     },
-) => MaybePromise<ItemDetailsModel<TItemModel> | undefined>
+) => MaybePromise<ItemDetailsModel<TItemModel, TActions> | undefined>
 
 export const createDefaultItemDetailsHandler =
     <
@@ -20,6 +24,7 @@ export const createDefaultItemDetailsHandler =
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
         group: SonolusItemGroup<
@@ -27,9 +32,10 @@ export const createDefaultItemDetailsHandler =
             TItemModel,
             TCreates,
             TSearches,
+            TActions,
             TCommunityActions
         >,
-    ): ItemDetailsHandler<TConfigurationOptions, TItemModel> =>
+    ): ItemDetailsHandler<TConfigurationOptions, TActions, TItemModel> =>
     ({ itemName }) => {
         const item = group.items.find(({ name }) => name === itemName)
         if (!item) return undefined
@@ -38,6 +44,7 @@ export const createDefaultItemDetailsHandler =
         return {
             item,
             description: item.description,
+            actions: formTypes(group.actions),
             hasCommunity: false,
             leaderboards: [],
             sections: [
@@ -57,6 +64,7 @@ export const createItemDetailsRouteHandler =
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
@@ -65,6 +73,7 @@ export const createItemDetailsRouteHandler =
             TItemModel,
             TCreates,
             TSearches,
+            TActions,
             TCommunityActions
         >,
         toItem: ToItem<TItemModel, unknown>,
@@ -82,5 +91,5 @@ export const createItemDetailsRouteHandler =
             return
         }
 
-        res.json(toItemDetails(sonolus, localize, toItem, details))
+        res.json(toItemDetails(sonolus, localize, toItem, details, group.actions))
     }

@@ -85,19 +85,36 @@ import {
     defaultItemPreUploadHandler,
 } from '../routes/items/preUpload'
 import {
+    ItemPreUploadActionHandler,
+    createItemPreUploadActionRouteHandler,
+    defaultItemPreUploadActionHandler,
+} from '../routes/items/preUploadAction'
+import {
+    ItemSubmitActionHandler,
+    createItemSubmitActionRouteHandler,
+    defaultItemSubmitActionHandler,
+} from '../routes/items/submitAction'
+import {
     ItemUploadHandler,
     createItemUploadRouteHandler,
     defaultItemUploadHandler,
 } from '../routes/items/upload'
+import {
+    ItemUploadActionHandler,
+    createItemUploadActionRouteHandler,
+    defaultItemUploadActionHandler,
+} from '../routes/items/uploadAction'
 import { SonolusBase } from './base'
 
 export type SonolusItemGroupOptions<
     TCreates extends ServerFormsModel | undefined,
     TSearches extends ServerFormsModel,
+    TActions extends ServerFormsModel,
     TCommunityActions extends ServerFormsModel,
 > = {
     creates?: TCreates
     searches?: TSearches
+    actions?: TActions
     community?: {
         actions?: TCommunityActions
     }
@@ -108,6 +125,7 @@ export class SonolusItemGroup<
     TItemModel extends ItemModel,
     TCreates extends ServerFormsModel | undefined,
     TSearches extends ServerFormsModel,
+    TActions extends ServerFormsModel,
     TCommunityActions extends ServerFormsModel,
 > {
     readonly type: ItemType
@@ -115,6 +133,7 @@ export class SonolusItemGroup<
 
     creates: TCreates
     searches: TSearches
+    actions: TActions
 
     infoHandler: ItemInfoHandler<TConfigurationOptions, TCreates, TSearches>
 
@@ -124,7 +143,11 @@ export class SonolusItemGroup<
     preUploadHandler: ItemPreUploadHandler<TConfigurationOptions>
     uploadHandler: ItemUploadHandler<TConfigurationOptions>
 
-    detailsHandler: ItemDetailsHandler<TConfigurationOptions, TItemModel>
+    detailsHandler: ItemDetailsHandler<TConfigurationOptions, TActions, TItemModel>
+
+    submitActionHandler: ItemSubmitActionHandler<TConfigurationOptions, TActions>
+    preUploadActionHandler: ItemPreUploadActionHandler<TConfigurationOptions>
+    uploadActionHandler: ItemUploadActionHandler<TConfigurationOptions>
 
     community: {
         actions: TCommunityActions
@@ -167,6 +190,10 @@ export class SonolusItemGroup<
 
     private readonly _detailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
+    private readonly _submitActionRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _preUploadActionRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _uploadActionRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _communityInfoRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
     private readonly _communitySubmitRouteHandler: SonolusRouteHandler<TConfigurationOptions>
@@ -188,7 +215,7 @@ export class SonolusItemGroup<
     constructor(
         sonolus: SonolusBase,
         type: ItemType,
-        options: SonolusItemGroupOptions<TCreates, TSearches, TCommunityActions> = {},
+        options: SonolusItemGroupOptions<TCreates, TSearches, TActions, TCommunityActions> = {},
         toItem: ToItem<TItemModel, unknown>,
         filter: FilterItems<TItemModel>,
     ) {
@@ -197,6 +224,7 @@ export class SonolusItemGroup<
 
         this.creates = options.creates as never
         this.searches = options.searches ?? ({} as never)
+        this.actions = options.actions ?? ({} as never)
 
         this.infoHandler = createDefaultItemInfoHandler(sonolus, this)
 
@@ -207,6 +235,10 @@ export class SonolusItemGroup<
         this.uploadHandler = defaultItemUploadHandler
 
         this.detailsHandler = createDefaultItemDetailsHandler(this)
+
+        this.submitActionHandler = defaultItemSubmitActionHandler
+        this.preUploadActionHandler = defaultItemPreUploadActionHandler
+        this.uploadActionHandler = defaultItemUploadActionHandler
 
         this.community = {
             actions: options.community?.actions ?? ({} as never),
@@ -240,11 +272,15 @@ export class SonolusItemGroup<
 
         this._listRouteHandler = createItemListRouteHandler(sonolus, this, toItem)
 
-        this._detailsRouteHandler = createItemDetailsRouteHandler(sonolus, this, toItem)
-
         this._createRouteHandler = createItemCreateRouteHandler(this)
         this._preUploadRouteHandler = createItemPreUploadRouteHandler(this)
         this._uploadRouteHandler = createItemUploadRouteHandler(this)
+
+        this._detailsRouteHandler = createItemDetailsRouteHandler(sonolus, this, toItem)
+
+        this._submitActionRouteHandler = createItemSubmitActionRouteHandler(this)
+        this._preUploadActionRouteHandler = createItemPreUploadActionRouteHandler(this)
+        this._uploadActionRouteHandler = createItemUploadActionRouteHandler(this)
 
         this._communityInfoRouteHandler = createItemCommunityInfoRouteHandler(this)
 
