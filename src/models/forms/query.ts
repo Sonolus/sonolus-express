@@ -8,6 +8,7 @@ import { ParsedMultiOptionQuery, parseMultiOptionQuery } from '../options/multi'
 import { ServerOptionModel, ServerOptionsModel } from '../options/option'
 import { ParsedSelectOptionQuery, parseSelectOptionQuery } from '../options/select'
 import { ParsedServerItemOptionQuery, parseServerItemOptionQuery } from '../options/serverItem'
+import { ParsedServerItemsOptionQuery, parseServerItemsOptionQuery } from '../options/serverItems'
 import { ParsedSliderOptionQuery, parseSliderOptionQuery } from '../options/slider'
 import { ParsedTextOptionQuery, parseTextOptionQuery } from '../options/text'
 import { ParsedTextAreaOptionQuery, parseTextAreaOptionQuery } from '../options/textArea'
@@ -22,6 +23,7 @@ export type ParsedOptionQuery<T extends ServerOptionModel> = {
     select: ParsedSelectOptionQuery
     multi: ParsedMultiOptionQuery
     serverItem: ParsedServerItemOptionQuery
+    serverItems: ParsedServerItemsOptionQuery
     collectionItem: ParsedCollectionItemOptionQuery<T & ServerCollectionItemOptionModel>
     file: ParsedFileOptionQuery
 }[T['type']]
@@ -29,28 +31,19 @@ export type ParsedOptionQuery<T extends ServerOptionModel> = {
 export const parseOptionQuery = <T extends ServerOptionModel>(
     value: unknown,
     option: T,
-): ParsedOptionQuery<T> => {
-    switch (option.type) {
-        case 'text':
-            return parseTextOptionQuery(value, option) as never
-        case 'textArea':
-            return parseTextAreaOptionQuery(value, option) as never
-        case 'slider':
-            return parseSliderOptionQuery(value, option) as never
-        case 'toggle':
-            return parseToggleOptionQuery(value, option) as never
-        case 'select':
-            return parseSelectOptionQuery(value, option) as never
-        case 'multi':
-            return parseMultiOptionQuery(value, option) as never
-        case 'serverItem':
-            return parseServerItemOptionQuery(value, option) as never
-        case 'collectionItem':
-            return parseServerCollectionItemOptionQuery(value, option) as never
-        case 'file':
-            return parseFileOptionQuery(value) as never
-    }
-}
+): ParsedOptionQuery<T> =>
+    ({
+        text: parseTextOptionQuery,
+        textArea: parseTextAreaOptionQuery,
+        slider: parseSliderOptionQuery,
+        toggle: parseToggleOptionQuery,
+        select: parseSelectOptionQuery,
+        multi: parseMultiOptionQuery,
+        serverItem: parseServerItemOptionQuery,
+        serverItems: parseServerItemsOptionQuery,
+        collectionItem: parseServerCollectionItemOptionQuery,
+        file: parseFileOptionQuery,
+    })[option.type](value, option as never) as never
 
 export type ParsedOptionsQuery<T extends ServerOptionsModel> = {
     [K in keyof T]: ParsedOptionQuery<T[K]>

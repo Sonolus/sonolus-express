@@ -14,6 +14,7 @@ export {
 } from './option'
 export { ParsedSelectOptionQuery, ServerSelectOptionModel } from './select'
 export { ParsedServerItemOptionQuery, ServerServerItemOptionModel } from './serverItem'
+export { ParsedServerItemsOptionQuery, ServerServerItemsOptionModel } from './serverItems'
 export { ParsedSliderOptionQuery, ServerSliderOptionModel } from './slider'
 export { ParsedTextOptionQuery, ServerTextOptionModel } from './text'
 export { ParsedTextAreaOptionQuery, ServerTextAreaOptionModel } from './textArea'
