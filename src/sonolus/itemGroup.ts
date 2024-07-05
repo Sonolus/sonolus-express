@@ -19,10 +19,20 @@ import {
     defaultItemCommunityInfoHandler,
 } from '../routes/items/community/info'
 import {
+    ItemCommunityPreUploadHandler,
+    createItemCommunityPreUploadRouteHandler,
+    defaultItemCommunityPreUploadHandler,
+} from '../routes/items/community/preUpload'
+import {
     ItemCommunitySubmitHandler,
     createItemCommunitySubmitRouteHandler,
     defaultItemCommunitySubmitHandler,
 } from '../routes/items/community/submit'
+import {
+    ItemCommunityUploadHandler,
+    createItemCommunityUploadRouteHandler,
+    defaultItemCommunityUploadHandler,
+} from '../routes/items/community/upload'
 import {
     ItemCreateHandler,
     createItemCreateRouteHandler,
@@ -97,20 +107,27 @@ export class SonolusItemGroup<
     searches: TSearches
 
     infoHandler: ItemInfoHandler<TConfigurationOptions, TCreates, TSearches>
+
     listHandler: ItemListHandler<TConfigurationOptions, TItemModel, TSearches>
+
     createHandler: ItemCreateHandler<TConfigurationOptions, TCreates>
     preUploadHandler: ItemPreUploadHandler<TConfigurationOptions>
     uploadHandler: ItemUploadHandler<TConfigurationOptions>
+
     detailsHandler: ItemDetailsHandler<TConfigurationOptions, TItemModel>
 
     community: {
         actions: TCommunityActions
 
         infoHandler: ItemCommunityInfoHandler<TConfigurationOptions, TCommunityActions>
+
         submitHandler: ItemCommunitySubmitHandler<TConfigurationOptions, TCommunityActions>
+        preUploadHandler: ItemCommunityPreUploadHandler<TConfigurationOptions>
+        uploadHandler: ItemCommunityUploadHandler<TConfigurationOptions>
 
         comment: {
             listHandler: ItemCommunityCommentListHandler<TConfigurationOptions, TCommunityActions>
+
             submitHandler: ItemCommunityCommentSubmitHandler<
                 TConfigurationOptions,
                 TCommunityActions
@@ -123,22 +140,35 @@ export class SonolusItemGroup<
 
         record: {
             listHandler: ItemLeaderboardRecordListHandler<TConfigurationOptions>
+
             detailsHandler: ItemLeaderboardRecordDetailsHandler<TConfigurationOptions>
         }
     }
 
     private readonly _infoRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _listRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _createRouteHandler: SonolusRouteHandler<TConfigurationOptions>
     private readonly _preUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
     private readonly _uploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _detailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _communityInfoRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _communitySubmitRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityPreUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _communityCommentListRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _communityCommentSubmitRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _leaderboardDetailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _leaderboardRecordListRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
     private readonly _leaderboardRecordDetailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
     constructor(
@@ -155,20 +185,27 @@ export class SonolusItemGroup<
         this.searches = options.searches ?? ({} as never)
 
         this.infoHandler = createDefaultItemInfoHandler(sonolus, this)
+
         this.listHandler = createDefaultItemListHandler(this, filter)
+
         this.createHandler = defaultItemCreateHandler
         this.preUploadHandler = defaultItemPreUploadHandler
         this.uploadHandler = defaultItemUploadHandler
+
         this.detailsHandler = createDefaultItemDetailsHandler(this)
 
         this.community = {
             actions: options.community?.actions ?? ({} as never),
 
             infoHandler: defaultItemCommunityInfoHandler,
+
             submitHandler: defaultItemCommunitySubmitHandler,
+            preUploadHandler: defaultItemCommunityPreUploadHandler,
+            uploadHandler: defaultItemCommunityUploadHandler,
 
             comment: {
                 listHandler: defaultItemCommunityCommentListHandler,
+
                 submitHandler: defaultItemCommunityCommentSubmitHandler,
             },
         }
@@ -178,23 +215,36 @@ export class SonolusItemGroup<
 
             record: {
                 listHandler: defaultItemLeaderboardRecordListHandler,
+
                 detailsHandler: defaultItemLeaderboardRecordDetailsHandler,
             },
         }
 
         this._infoRouteHandler = createItemInfoRouteHandler(sonolus, this)
+
         this._listRouteHandler = createItemListRouteHandler(sonolus, this, toItem)
+
         this._detailsRouteHandler = createItemDetailsRouteHandler(sonolus, this, toItem)
+
         this._createRouteHandler = createItemCreateRouteHandler(this)
         this._preUploadRouteHandler = createItemPreUploadRouteHandler(this)
         this._uploadRouteHandler = createItemUploadRouteHandler(this)
+
         this._communityInfoRouteHandler = createItemCommunityInfoRouteHandler(this)
+
         this._communitySubmitRouteHandler = createItemCommunitySubmitRouteHandler(this)
+        this._communityPreUploadRouteHandler = createItemCommunityPreUploadRouteHandler(this)
+        this._communityUploadRouteHandler = createItemCommunityUploadRouteHandler(this)
+
         this._communityCommentListRouteHandler = createItemCommunityCommentListRouteHandler(this)
+
         this._communityCommentSubmitRouteHandler =
             createItemCommunityCommentSubmitRouteHandler(this)
+
         this._leaderboardDetailsRouteHandler = createItemLeaderboardDetailsRouteHandler(this)
+
         this._leaderboardRecordListRouteHandler = createItemLeaderboardRecordListRouteHandler(this)
+
         this._leaderboardRecordDetailsRouteHandler = createItemLeaderboardRecordDetailsRouteHandler(
             sonolus,
             this,

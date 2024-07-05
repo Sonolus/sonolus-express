@@ -1,5 +1,5 @@
 import { LocalizationText, Srl, localize, hash as sonolusHash, version } from '@sonolus/core'
-import express, { NextFunction, Request, Response, Router } from 'express'
+import express, { NextFunction, Request, RequestHandler, Response, Router } from 'express'
 import multer from 'multer'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
@@ -316,40 +316,57 @@ export class Sonolus<
         this._get('/info', createServerInfoRouteHandler(this))
 
         this._post('/rooms/create', this.multiplayer['_createRouteHandler'])
+
         this._post('/rooms/:itemName', this.multiplayer['_joinRouteHandler'])
 
         for (const [type, path] of itemTypes) {
             this._get(`/${path}/info`, this[type]['_infoRouteHandler'])
+
             this._get(`/${path}/list`, this[type]['_listRouteHandler'])
+
             this._post(`/${path}/create`, this[type]['_createRouteHandler'])
-            this.router.post(
-                `/sonolus/${path}/upload`,
-                this._toMiddleware(this[type]['_preUploadRouteHandler']),
+            this._upload(
+                `/${path}/upload`,
+                this[type]['_preUploadRouteHandler'],
                 uploader,
-                this._toMiddleware(this[type]['_uploadRouteHandler']),
+                this[type]['_uploadRouteHandler'],
             )
+
             this._get(`/${path}/:itemName`, this[type]['_detailsRouteHandler'])
+
             this._get(`/${path}/:itemName/community/info`, this[type]['_communityInfoRouteHandler'])
+
             this._post(
                 `/${path}/:itemName/community/submit`,
                 this[type]['_communitySubmitRouteHandler'],
             )
+            this._upload(
+                `/${path}/:itemName/community/upload`,
+                this[type]['_communityPreUploadRouteHandler'],
+                uploader,
+                this[type]['_communityUploadRouteHandler'],
+            )
+
             this._get(
                 `/${path}/:itemName/community/comments/list`,
                 this[type]['_communityCommentListRouteHandler'],
             )
+
             this._post(
                 `/${path}/:itemName/community/comments/:commentName/submit`,
                 this[type]['_communityCommentSubmitRouteHandler'],
             )
+
             this._get(
                 `/${path}/:itemName/leaderboards/:leaderboardName`,
                 this[type]['_leaderboardDetailsRouteHandler'],
             )
+
             this._get(
                 `/${path}/:itemName/leaderboards/:leaderboardName/records/list`,
                 this[type]['_leaderboardRecordListRouteHandler'],
             )
+
             this._get(
                 `/${path}/:itemName/leaderboards/:leaderboardName/records/:recordName`,
                 this[type]['_leaderboardRecordDetailsRouteHandler'],
@@ -365,6 +382,20 @@ export class Sonolus<
         this.router.post(
             `/sonolus${path}`,
             express.raw({ type: 'application/json' }),
+            this._toMiddleware(handler),
+        )
+    }
+
+    private _upload(
+        path: string,
+        preHandler: SonolusRouteHandler<TConfigurationOptions>,
+        uploader: RequestHandler,
+        handler: SonolusRouteHandler<TConfigurationOptions>,
+    ) {
+        this.router.post(
+            `/sonolus${path}`,
+            this._toMiddleware(preHandler),
+            uploader,
             this._toMiddleware(handler),
         )
     }
