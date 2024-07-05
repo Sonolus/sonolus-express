@@ -1,29 +1,38 @@
 import { ServerUploadItemResponse } from '@sonolus/core'
 import { ServerFormsModel } from '../../models/forms/form'
 import { ItemModel } from '../../models/items/item'
+import { ServerOptionsModel } from '../../models/options/option'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { extractString } from '../../utils/extract'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusRouteHandler } from '../handler'
+import { SonolusCtx, SonolusRouteHandler } from '../handler'
 
-export type ItemUploadHandler = (ctx: {
-    session: string | undefined
-    key: string
-    files: Express.Multer.File[]
-}) => MaybePromise<ServerUploadItemResponse | undefined>
+export type ItemUploadHandler<TConfigurationOptions extends ServerOptionsModel> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        key: string
+        files: Express.Multer.File[]
+    },
+) => MaybePromise<ServerUploadItemResponse | undefined>
 
 export const defaultItemUploadHandler = (): undefined => undefined
 
 export const createItemUploadRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, session }) => {
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TCommunityActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, ctx }) => {
         const key = extractString(req.headers['sonolus-upload-key'])
         if (key === undefined) {
             res.status(400).end()
@@ -36,7 +45,7 @@ export const createItemUploadRouteHandler =
             return
         }
 
-        const response = await group.uploadHandler({ session, key, files })
+        const response = await group.uploadHandler({ ...ctx, key, files })
         if (!response) {
             res.status(400).end()
             return

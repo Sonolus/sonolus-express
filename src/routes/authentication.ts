@@ -4,22 +4,27 @@ import {
     getSignaturePublicKey,
 } from '@sonolus/core'
 import { webcrypto } from 'node:crypto'
+import { ServerOptionsModel } from '../models/options/option'
 import { authenticateServerRequestSchema } from '../schemas/server/authenticate'
 import { SonolusBase } from '../sonolus/base'
+import { Sonolus } from '../sonolus/sonolus'
 import { parse } from '../utils/json'
 import { MaybePromise } from '../utils/promise'
-import { SonolusRouteHandler } from './handler'
+import { SonolusCtx, SonolusRouteHandler } from './handler'
 
-export type AuthenticateHandler = (ctx: {
-    session: string | undefined
-    userProfile: ServiceUserProfile
-}) => MaybePromise<ServerAuthenticateResponse | undefined>
+export type AuthenticateHandler<TConfigurationOptions extends ServerOptionsModel> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        userProfile: ServiceUserProfile
+    },
+) => MaybePromise<ServerAuthenticateResponse | undefined>
 
 export const defaultAuthenticateHandler = (): undefined => undefined
 
 export const createAuthenticateRouteHandler =
-    (sonolus: SonolusBase): SonolusRouteHandler =>
-    async ({ req, res, session }) => {
+    <TConfigurationOptions extends ServerOptionsModel>(
+        sonolus: SonolusBase & Pick<Sonolus<TConfigurationOptions>, 'authenticateHandler'>,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, ctx }) => {
         const body: unknown = req.body
         if (!(body instanceof Buffer)) {
             res.status(400).end()
@@ -62,7 +67,7 @@ export const createAuthenticateRouteHandler =
         }
 
         const response = await sonolus.authenticateHandler({
-            session,
+            ...ctx,
             userProfile: request.userProfile,
         })
         if (!response) {

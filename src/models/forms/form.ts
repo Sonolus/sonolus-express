@@ -1,6 +1,6 @@
 import { Icon, LocalizationText, ServerForm } from '@sonolus/core'
 import { Localize } from '../../utils/localization'
-import { ServerOptionModel, toServerOption } from '../options/option'
+import { ServerOptionsModel, toServerOption } from '../options/option'
 
 export type ServerFormsModel = Record<string, ServerFormModel>
 
@@ -9,7 +9,7 @@ export type ServerFormModel = {
     icon?: Icon
     description?: LocalizationText
     requireConfirmation: boolean
-    options: Record<string, ServerOptionModel>
+    options: ServerOptionsModel
 }
 
 export const formTypes = <T extends ServerFormsModel>(forms: T): (keyof T & string)[] =>

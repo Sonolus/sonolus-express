@@ -1,6 +1,7 @@
 import { ItemType } from '@sonolus/core'
 import { ServerFormsModel } from '../models/forms/form'
 import { ItemModel, ToItem } from '../models/items/item'
+import { ServerOptionsModel } from '../models/options/option'
 import { SonolusRouteHandler } from '../routes/handler'
 import {
     ItemCommunityCommentListHandler,
@@ -83,6 +84,7 @@ export type SonolusItemGroupOptions<
 }
 
 export class SonolusItemGroup<
+    TConfigurationOptions extends ServerOptionsModel,
     TItemModel extends ItemModel,
     TCreates extends ServerFormsModel | undefined,
     TSearches extends ServerFormsModel,
@@ -94,47 +96,50 @@ export class SonolusItemGroup<
     creates: TCreates
     searches: TSearches
 
-    infoHandler: ItemInfoHandler<TCreates, TSearches>
-    listHandler: ItemListHandler<TItemModel, TSearches>
-    createHandler: ItemCreateHandler<TCreates>
-    preUploadHandler: ItemPreUploadHandler
-    uploadHandler: ItemUploadHandler
-    detailsHandler: ItemDetailsHandler<TItemModel>
+    infoHandler: ItemInfoHandler<TConfigurationOptions, TCreates, TSearches>
+    listHandler: ItemListHandler<TConfigurationOptions, TItemModel, TSearches>
+    createHandler: ItemCreateHandler<TConfigurationOptions, TCreates>
+    preUploadHandler: ItemPreUploadHandler<TConfigurationOptions>
+    uploadHandler: ItemUploadHandler<TConfigurationOptions>
+    detailsHandler: ItemDetailsHandler<TConfigurationOptions, TItemModel>
 
     community: {
         actions: TCommunityActions
 
-        infoHandler: ItemCommunityInfoHandler<TCommunityActions>
-        submitHandler: ItemCommunitySubmitHandler<TCommunityActions>
+        infoHandler: ItemCommunityInfoHandler<TConfigurationOptions, TCommunityActions>
+        submitHandler: ItemCommunitySubmitHandler<TConfigurationOptions, TCommunityActions>
 
         comment: {
-            listHandler: ItemCommunityCommentListHandler<TCommunityActions>
-            submitHandler: ItemCommunityCommentSubmitHandler<TCommunityActions>
+            listHandler: ItemCommunityCommentListHandler<TConfigurationOptions, TCommunityActions>
+            submitHandler: ItemCommunityCommentSubmitHandler<
+                TConfigurationOptions,
+                TCommunityActions
+            >
         }
     }
 
     leaderboard: {
-        detailsHandler: ItemLeaderboardDetailsHandler
+        detailsHandler: ItemLeaderboardDetailsHandler<TConfigurationOptions>
 
         record: {
-            listHandler: ItemLeaderboardRecordListHandler
-            detailsHandler: ItemLeaderboardRecordDetailsHandler
+            listHandler: ItemLeaderboardRecordListHandler<TConfigurationOptions>
+            detailsHandler: ItemLeaderboardRecordDetailsHandler<TConfigurationOptions>
         }
     }
 
-    private readonly _infoRouteHandler: SonolusRouteHandler
-    private readonly _listRouteHandler: SonolusRouteHandler
-    private readonly _createRouteHandler: SonolusRouteHandler
-    private readonly _preUploadRouteHandler: SonolusRouteHandler
-    private readonly _uploadRouteHandler: SonolusRouteHandler
-    private readonly _detailsRouteHandler: SonolusRouteHandler
-    private readonly _communityInfoRouteHandler: SonolusRouteHandler
-    private readonly _communitySubmitRouteHandler: SonolusRouteHandler
-    private readonly _communityCommentListRouteHandler: SonolusRouteHandler
-    private readonly _communityCommentSubmitRouteHandler: SonolusRouteHandler
-    private readonly _leaderboardDetailsRouteHandler: SonolusRouteHandler
-    private readonly _leaderboardRecordListRouteHandler: SonolusRouteHandler
-    private readonly _leaderboardRecordDetailsRouteHandler: SonolusRouteHandler
+    private readonly _infoRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _listRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _createRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _preUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _uploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _detailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityInfoRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communitySubmitRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityCommentListRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityCommentSubmitRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _leaderboardDetailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _leaderboardRecordListRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _leaderboardRecordDetailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
     constructor(
         sonolus: SonolusBase,

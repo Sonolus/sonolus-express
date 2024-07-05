@@ -5,14 +5,14 @@ import {
 } from '../options/collectionItem'
 import { ParsedFileOptionQuery, parseFileOptionQuery } from '../options/file'
 import { ParsedMultiOptionQuery, parseMultiOptionQuery } from '../options/multi'
-import { ServerOptionModel } from '../options/option'
+import { ServerOptionModel, ServerOptionsModel } from '../options/option'
 import { ParsedSelectOptionQuery, parseSelectOptionQuery } from '../options/select'
 import { ParsedServerItemOptionQuery, parseServerItemOptionQuery } from '../options/serverItem'
 import { ParsedSliderOptionQuery, parseSliderOptionQuery } from '../options/slider'
 import { ParsedTextOptionQuery, parseTextOptionQuery } from '../options/text'
 import { ParsedTextAreaOptionQuery, parseTextAreaOptionQuery } from '../options/textArea'
 import { ParsedToggleOptionQuery, parseToggleOptionQuery } from '../options/toggle'
-import { ServerFormsModel } from './form'
+import { ServerFormModel, ServerFormsModel } from './form'
 
 export type ParsedOptionQuery<T extends ServerOptionModel> = {
     text: ParsedTextOptionQuery
@@ -26,61 +26,85 @@ export type ParsedOptionQuery<T extends ServerOptionModel> = {
     file: ParsedFileOptionQuery
 }[T['type']]
 
-export type ParsedQuery<T extends ServerFormsModel> = {
-    [K in keyof T]: { type: K } & {
-        [P in keyof T[K]['options']]: ParsedOptionQuery<T[K]['options'][P]>
+export const parseOptionQuery = <T extends ServerOptionModel>(
+    value: unknown,
+    option: T,
+): ParsedOptionQuery<T> => {
+    switch (option.type) {
+        case 'text':
+            return parseTextOptionQuery(value, option) as never
+        case 'textArea':
+            return parseTextAreaOptionQuery(value, option) as never
+        case 'slider':
+            return parseSliderOptionQuery(value, option) as never
+        case 'toggle':
+            return parseToggleOptionQuery(value, option) as never
+        case 'select':
+            return parseSelectOptionQuery(value, option) as never
+        case 'multi':
+            return parseMultiOptionQuery(value, option) as never
+        case 'serverItem':
+            return parseServerItemOptionQuery(value, option) as never
+        case 'collectionItem':
+            return parseServerCollectionItemOptionQuery(value, option) as never
+        case 'file':
+            return parseFileOptionQuery(value) as never
     }
+}
+
+export type ParsedOptionsQuery<T extends ServerOptionsModel> = {
+    [K in keyof T]: ParsedOptionQuery<T[K]>
+}
+
+export const parseOptionsQuery = <T extends ServerOptionsModel>(
+    query: Record<string, unknown>,
+    options: T,
+): ParsedOptionsQuery<T> =>
+    Object.fromEntries(
+        Object.entries(options).map(([key, option]) => [key, parseOptionQuery(query[key], option)]),
+    ) as never
+
+export type ParsedFormQuery<K, T extends ServerFormModel> = { type: K } & ParsedOptionsQuery<
+    T['options']
+>
+
+export const parseFormQuery = <K, T extends ServerFormModel>(
+    query: Record<string, unknown>,
+    type: K,
+    form: T,
+): ParsedFormQuery<K, T> =>
+    ({
+        type,
+        ...parseOptionsQuery(query, form.options),
+    }) as never
+
+export type ParsedFormsQuery<T extends ServerFormsModel> = {
+    [K in keyof T]: ParsedFormQuery<K, T[K]>
 }[keyof T]
 
-export const parseQuery = <T extends ServerFormsModel>(
+export const parseFormsQuery = <T extends ServerFormsModel>(
     query: Record<string, unknown>,
     forms: T,
-): ParsedQuery<T> | undefined => {
+): ParsedFormsQuery<T> | undefined => {
     const type = `${query.type}`
 
     const form = forms[type]
     if (!form) return
 
-    return {
-        type,
-        ...Object.fromEntries(
-            Object.entries(form.options).map(([key, option]) => {
-                switch (option.type) {
-                    case 'text':
-                        return [key, parseTextOptionQuery(query[key], option)]
-                    case 'textArea':
-                        return [key, parseTextAreaOptionQuery(query[key], option)]
-                    case 'slider':
-                        return [key, parseSliderOptionQuery(query[key], option)]
-                    case 'toggle':
-                        return [key, parseToggleOptionQuery(query[key], option)]
-                    case 'select':
-                        return [key, parseSelectOptionQuery(query[key], option)]
-                    case 'multi':
-                        return [key, parseMultiOptionQuery(query[key], option)]
-                    case 'serverItem':
-                        return [key, parseServerItemOptionQuery(query[key], option)]
-                    case 'collectionItem':
-                        return [key, parseServerCollectionItemOptionQuery(query[key], option)]
-                    case 'file':
-                        return [key, parseFileOptionQuery(query[key])]
-                }
-            }),
-        ),
-    } as never
+    return parseFormQuery(query, type, form)
 }
 
-export type ParsedSearchQuery<T extends ServerFormsModel> =
-    | ParsedQuery<T>
+export type ParsedSearchesQuery<T extends ServerFormsModel> =
+    | ParsedFormsQuery<T>
     | {
           type: 'quick'
           keywords: string
       }
 
-export const parseSearchQuery = <T extends ServerFormsModel>(
+export const parseSearchesQuery = <T extends ServerFormsModel>(
     query: Record<string, unknown>,
     searches: T,
-): ParsedSearchQuery<T> => {
+): ParsedSearchesQuery<T> => {
     const type = `${query.type}`
 
     if (type === 'quick')
@@ -98,7 +122,7 @@ export const parseSearchQuery = <T extends ServerFormsModel>(
         }
 
     return (
-        parseQuery(query, searches) ?? {
+        parseFormsQuery(query, searches) ?? {
             type: 'quick',
             keywords: '',
         }

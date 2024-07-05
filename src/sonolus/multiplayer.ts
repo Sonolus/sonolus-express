@@ -1,4 +1,5 @@
 import { ServerFormsModel } from '../models/forms/form'
+import { ServerOptionsModel } from '../models/options/option'
 import { SonolusRouteHandler } from '../routes/handler'
 import {
     MultiplayerCreateHandler,
@@ -12,14 +13,17 @@ import {
 } from '../routes/multiplayer/join'
 import { SonolusBase } from './base'
 
-export class SonolusMultiplayer<TCreates extends ServerFormsModel | undefined> {
+export class SonolusMultiplayer<
+    TConfigurationOptions extends ServerOptionsModel,
+    TCreates extends ServerFormsModel | undefined,
+> {
     private readonly _getCreates: () => TCreates
 
-    createHandler: MultiplayerCreateHandler
-    joinHandler: MultiplayerJoinHandler<TCreates>
+    createHandler: MultiplayerCreateHandler<TConfigurationOptions>
+    joinHandler: MultiplayerJoinHandler<TConfigurationOptions, TCreates>
 
-    private readonly _createRouteHandler: SonolusRouteHandler
-    private readonly _joinRouteHandler: SonolusRouteHandler
+    private readonly _createRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _joinRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
     constructor(sonolus: SonolusBase, getCreates: () => TCreates) {
         this._getCreates = getCreates

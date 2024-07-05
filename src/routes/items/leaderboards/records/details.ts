@@ -4,31 +4,42 @@ import {
     ItemLeaderboardRecordDetailsModel,
     toItemLeaderboardRecordDetails,
 } from '../../../../models/items/leaderboards/records/details'
+import { ServerOptionsModel } from '../../../../models/options/option'
 import { SonolusBase } from '../../../../sonolus/base'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../../utils/promise'
-import { SonolusRouteHandler } from '../../../handler'
+import { SonolusCtx, SonolusRouteHandler } from '../../../handler'
 
-export type ItemLeaderboardRecordDetailsHandler = (ctx: {
-    session: string | undefined
-    itemName: string
-    leaderboardName: string
-    recordName: string
-}) => MaybePromise<ItemLeaderboardRecordDetailsModel | undefined>
+export type ItemLeaderboardRecordDetailsHandler<TConfigurationOptions extends ServerOptionsModel> =
+    (
+        ctx: SonolusCtx<TConfigurationOptions> & {
+            session: string | undefined
+            itemName: string
+            leaderboardName: string
+            recordName: string
+        },
+    ) => MaybePromise<ItemLeaderboardRecordDetailsModel | undefined>
 
 export const defaultItemLeaderboardRecordDetailsHandler = (): undefined => undefined
 
 export const createItemLeaderboardRecordDetailsRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, localize, session }) => {
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TCommunityActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, localize, ctx }) => {
         const itemName = req.params.itemName
         if (!itemName) {
             res.status(404).end()
@@ -48,7 +59,7 @@ export const createItemLeaderboardRecordDetailsRouteHandler =
         }
 
         const details = await group.leaderboard.record.detailsHandler({
-            session,
+            ...ctx,
             itemName,
             leaderboardName,
             recordName,

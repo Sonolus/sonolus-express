@@ -10,6 +10,8 @@ import { ServerTextOptionModel, toServerTextOption } from './text'
 import { ServerTextAreaOptionModel, toServerTextAreaOption } from './textArea'
 import { ServerToggleOptionModel, toServerToggleOption } from './toggle'
 
+export type ServerOptionsModel = Record<string, ServerOptionModel>
+
 export type ServerOptionModel =
     | ServerTextOptionModel
     | ServerTextAreaOptionModel
@@ -20,6 +22,9 @@ export type ServerOptionModel =
     | ServerServerItemOptionModel
     | ServerCollectionItemOptionModel
     | ServerFileOptionModel
+
+export const optionsTypes = <T extends ServerOptionsModel>(options: T): (keyof T & string)[] =>
+    Object.keys(options)
 
 export const toServerOption = (
     localize: Localize,
@@ -47,3 +52,11 @@ export const toServerOption = (
             return toServerFileOption(localize, query, option)
     }
 }
+
+export const toServerOptions = <T extends ServerOptionsModel>(
+    localize: Localize,
+    types: (keyof T & string)[],
+    options: T,
+): ServerOption[] =>
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    types.map((type) => toServerOption(localize, type, options[type]!))

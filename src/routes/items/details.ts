@@ -2,25 +2,34 @@ import { Icon, Text } from '@sonolus/core'
 import { ServerFormsModel } from '../../models/forms/form'
 import { ItemDetailsModel, toItemDetails } from '../../models/items/details'
 import { ItemModel, ToItem } from '../../models/items/item'
+import { ServerOptionsModel } from '../../models/options/option'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusRouteHandler } from '../handler'
+import { SonolusCtx, SonolusRouteHandler } from '../handler'
 
-export type ItemDetailsHandler<TItemModel> = (ctx: {
-    session: string | undefined
-    itemName: string
-}) => MaybePromise<ItemDetailsModel<TItemModel> | undefined>
+export type ItemDetailsHandler<TConfigurationOptions extends ServerOptionsModel, TItemModel> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
+    },
+) => MaybePromise<ItemDetailsModel<TItemModel> | undefined>
 
 export const createDefaultItemDetailsHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): ItemDetailsHandler<TItemModel> =>
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TCommunityActions
+        >,
+    ): ItemDetailsHandler<TConfigurationOptions, TItemModel> =>
     ({ itemName }) => {
         const item = group.items.find(({ name }) => name === itemName)
         if (!item) return undefined
@@ -44,23 +53,30 @@ export const createDefaultItemDetailsHandler =
 
 export const createItemDetailsRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TCommunityActions
+        >,
         toItem: ToItem<TItemModel, unknown>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, localize, session }) => {
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, localize, ctx }) => {
         const itemName = req.params.itemName
         if (!itemName) {
             res.status(404).end()
             return
         }
 
-        const details = await group.detailsHandler({ session, itemName })
+        const details = await group.detailsHandler({ ...ctx, itemName })
         if (!details) {
             res.status(404).end()
             return

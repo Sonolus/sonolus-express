@@ -4,6 +4,7 @@ import multer from 'multer'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { ServerFormsModel } from '../models/forms/form'
+import { parseOptionsQuery } from '../models/forms/query'
 import { BackgroundItemModel, toBackgroundItem } from '../models/items/background'
 import { EffectItemModel, toEffectItem } from '../models/items/effect'
 import { EngineItemModel, toEngineItem } from '../models/items/engine'
@@ -14,6 +15,7 @@ import { PostItemModel, toPostItem } from '../models/items/post'
 import { ReplayItemModel, toReplayItem } from '../models/items/replay'
 import { RoomItemModel, toRoomItem } from '../models/items/room'
 import { SkinItemModel, toSkinItem } from '../models/items/skin'
+import { ServerOptionsModel } from '../models/options/option'
 import {
     AuthenticateHandler,
     createAuthenticateRouteHandler,
@@ -62,6 +64,7 @@ export type UploadOptions = {
 }
 
 export class Sonolus<
+    TConfigurationOptions extends ServerOptionsModel = {},
     TPostCreates extends ServerFormsModel | undefined = undefined,
     TPlaylistCreates extends ServerFormsModel | undefined = undefined,
     TLevelCreates extends ServerFormsModel | undefined = undefined,
@@ -95,6 +98,9 @@ export class Sonolus<
 > {
     readonly address?: string
     readonly fallbackLocale: string
+    readonly configuration: {
+        options: TConfigurationOptions
+    }
 
     readonly router: Router
 
@@ -102,68 +108,78 @@ export class Sonolus<
     description?: LocalizationText
     banner?: Srl
 
-    sessionHandler: SessionHandler
-    authenticateHandler: AuthenticateHandler
+    sessionHandler: SessionHandler<TConfigurationOptions>
+    authenticateHandler: AuthenticateHandler<TConfigurationOptions>
 
-    serverInfoHandler: ServerInfoHandler
+    serverInfoHandler: ServerInfoHandler<TConfigurationOptions>
 
-    readonly multiplayer: SonolusMultiplayer<TRoomCreates>
+    readonly multiplayer: SonolusMultiplayer<TConfigurationOptions, TRoomCreates>
 
     readonly post!: SonolusItemGroup<
+        TConfigurationOptions,
         PostItemModel,
         TPostCreates,
         TPostSearches,
         TPostCommunityActions
     >
     readonly playlist!: SonolusItemGroup<
+        TConfigurationOptions,
         PlaylistItemModel,
         TPlaylistCreates,
         TPlaylistSearches,
         TPlaylistCommunityActions
     >
     readonly level!: SonolusItemGroup<
+        TConfigurationOptions,
         LevelItemModel,
         TLevelCreates,
         TLevelSearches,
         TLevelCommunityActions
     >
     readonly skin!: SonolusItemGroup<
+        TConfigurationOptions,
         SkinItemModel,
         TSkinCreates,
         TSkinSearches,
         TSkinCommunityActions
     >
     readonly background!: SonolusItemGroup<
+        TConfigurationOptions,
         BackgroundItemModel,
         TBackgroundCreates,
         TBackgroundSearches,
         TBackgroundCommunityActions
     >
     readonly effect!: SonolusItemGroup<
+        TConfigurationOptions,
         EffectItemModel,
         TEffectCreates,
         TEffectSearches,
         TEffectCommunityActions
     >
     readonly particle!: SonolusItemGroup<
+        TConfigurationOptions,
         ParticleItemModel,
         TParticleCreates,
         TParticleSearches,
         TParticleCommunityActions
     >
     readonly engine!: SonolusItemGroup<
+        TConfigurationOptions,
         EngineItemModel,
         TEngineCreates,
         TEngineSearches,
         TEngineCommunityActions
     >
     readonly replay!: SonolusItemGroup<
+        TConfigurationOptions,
         ReplayItemModel,
         TReplayCreates,
         TReplaySearches,
         TReplayCommunityActions
     >
     readonly room!: SonolusItemGroup<
+        TConfigurationOptions,
         RoomItemModel,
         TRoomCreates,
         TRoomSearches,
@@ -174,6 +190,9 @@ export class Sonolus<
         options: {
             address?: string
             fallbackLocale?: string
+            configuration?: {
+                options: TConfigurationOptions
+            }
             upload?: UploadOptions
 
             post?: SonolusItemGroupOptions<TPostCreates, TPostSearches, TPostCommunityActions>
@@ -214,6 +233,9 @@ export class Sonolus<
     ) {
         this.address = options.address
         this.fallbackLocale = options.fallbackLocale ?? 'en'
+        this.configuration = {
+            options: options.configuration?.options ?? ({} as never),
+        }
 
         this.router = express.Router()
 
@@ -335,11 +357,11 @@ export class Sonolus<
         }
     }
 
-    private _get(path: string, handler: SonolusRouteHandler) {
+    private _get(path: string, handler: SonolusRouteHandler<TConfigurationOptions>) {
         this.router.get(`/sonolus${path}`, this._toMiddleware(handler))
     }
 
-    private _post(path: string, handler: SonolusRouteHandler) {
+    private _post(path: string, handler: SonolusRouteHandler<TConfigurationOptions>) {
         this.router.post(
             `/sonolus${path}`,
             express.raw({ type: 'application/json' }),
@@ -347,7 +369,7 @@ export class Sonolus<
         )
     }
 
-    private _toMiddleware(handler: SonolusRouteHandler) {
+    private _toMiddleware(handler: SonolusRouteHandler<TConfigurationOptions>) {
         return async (req: Request, res: Response, next: NextFunction) => {
             try {
                 res.set('Sonolus-Version', version.sonolus)
@@ -355,13 +377,15 @@ export class Sonolus<
                 const localization = extractString(req.query.localization) ?? ''
                 const localize: Localize = (text) => this.localize(text, localization)
 
+                const options = parseOptionsQuery(req.query, this.configuration.options)
+
                 const session = extractString(req.headers['sonolus-session'])
-                if (!(await this.sessionHandler({ session }))) {
+                if (!(await this.sessionHandler({ session, localization, options }))) {
                     res.status(401).end()
                     return
                 }
 
-                await handler({ req, res, next, localization, localize, session })
+                await handler({ req, res, next, localize, ctx: { session, localization, options } })
             } catch (error) {
                 console.error(error)
                 res.status(500).end()

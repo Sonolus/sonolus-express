@@ -1,31 +1,43 @@
 import { ServerSubmitItemActionResponse } from '@sonolus/core'
 import { ServerFormsModel } from '../../../models/forms/form'
-import { ParsedQuery, parseQuery } from '../../../models/forms/query'
+import { ParsedFormsQuery, parseFormsQuery } from '../../../models/forms/query'
 import { ItemModel } from '../../../models/items/item'
+import { ServerOptionsModel } from '../../../models/options/option'
 import { serverSubmitItemCommunityActionRequestSchema } from '../../../schemas/server/items/community/submitItemCommunityActionRequest'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { parse } from '../../../utils/json'
 import { MaybePromise } from '../../../utils/promise'
-import { SonolusRouteHandler } from '../../handler'
+import { SonolusCtx, SonolusRouteHandler } from '../../handler'
 
-export type ItemCommunitySubmitHandler<TCommunityActions extends ServerFormsModel> = (ctx: {
-    session: string | undefined
-    itemName: string
-    query: ParsedQuery<TCommunityActions>
-}) => MaybePromise<ServerSubmitItemActionResponse | undefined>
+export type ItemCommunitySubmitHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+    TCommunityActions extends ServerFormsModel,
+> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
+        query: ParsedFormsQuery<TCommunityActions>
+    },
+) => MaybePromise<ServerSubmitItemActionResponse | undefined>
 
 export const defaultItemCommunitySubmitHandler = (): undefined => undefined
 
 export const createItemCommunitySubmitRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, session }) => {
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TCommunityActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, ctx }) => {
         const itemName = req.params.itemName
         if (!itemName) {
             res.status(404).end()
@@ -44,7 +56,7 @@ export const createItemCommunitySubmitRouteHandler =
             return
         }
 
-        const query = parseQuery(
+        const query = parseFormsQuery(
             Object.fromEntries(new URLSearchParams(request.values)),
             group.community.actions,
         )
@@ -53,7 +65,7 @@ export const createItemCommunitySubmitRouteHandler =
             return
         }
 
-        const response = await group.community.submitHandler({ session, itemName, query })
+        const response = await group.community.submitHandler({ ...ctx, itemName, query })
         if (!response) {
             res.status(404).end()
             return

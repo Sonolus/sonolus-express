@@ -5,7 +5,13 @@ export {
     ServerMultiOptionModel,
     ServerMultiOptionValueModel,
 } from './multi'
-export { ServerOptionModel } from './option'
+export {
+    ServerOptionModel,
+    ServerOptionsModel,
+    optionsTypes,
+    toServerOption,
+    toServerOptions,
+} from './option'
 export { ParsedSelectOptionQuery, ServerSelectOptionModel } from './select'
 export { ParsedServerItemOptionQuery, ServerServerItemOptionModel } from './serverItem'
 export { ParsedSliderOptionQuery, ServerSliderOptionModel } from './slider'

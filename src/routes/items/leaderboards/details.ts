@@ -4,28 +4,37 @@ import {
     ItemLeaderboardDetailsModel,
     toItemLeaderboardDetails,
 } from '../../../models/items/leaderboards/details'
+import { ServerOptionsModel } from '../../../models/options/option'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../utils/promise'
-import { SonolusRouteHandler } from '../../handler'
+import { SonolusCtx, SonolusRouteHandler } from '../../handler'
 
-export type ItemLeaderboardDetailsHandler = (ctx: {
-    session: string | undefined
-    itemName: string
-    leaderboardName: string
-}) => MaybePromise<ItemLeaderboardDetailsModel | undefined>
+export type ItemLeaderboardDetailsHandler<TConfigurationOptions extends ServerOptionsModel> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
+        leaderboardName: string
+    },
+) => MaybePromise<ItemLeaderboardDetailsModel | undefined>
 
 export const defaultItemLeaderboardDetailsHandler = (): undefined => undefined
 
 export const createItemLeaderboardDetailsRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, localize, session }) => {
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TCommunityActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, localize, ctx }) => {
         const itemName = req.params.itemName
         if (!itemName) {
             res.status(404).end()
@@ -39,7 +48,7 @@ export const createItemLeaderboardDetailsRouteHandler =
         }
 
         const details = await group.leaderboard.detailsHandler({
-            session,
+            ...ctx,
             itemName,
             leaderboardName,
         })

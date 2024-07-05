@@ -4,29 +4,38 @@ import {
     ItemLeaderboardRecordListModel,
     toItemLeaderboardRecordList,
 } from '../../../../models/items/leaderboards/records/list'
+import { ServerOptionsModel } from '../../../../models/options/option'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../../utils/promise'
-import { SonolusRouteHandler } from '../../../handler'
+import { SonolusCtx, SonolusRouteHandler } from '../../../handler'
 
-export type ItemLeaderboardRecordListHandler = (ctx: {
-    session: string | undefined
-    itemName: string
-    leaderboardName: string
-    page: number
-}) => MaybePromise<ItemLeaderboardRecordListModel | undefined>
+export type ItemLeaderboardRecordListHandler<TConfigurationOptions extends ServerOptionsModel> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
+        leaderboardName: string
+        page: number
+    },
+) => MaybePromise<ItemLeaderboardRecordListModel | undefined>
 
 export const defaultItemLeaderboardRecordListHandler = (): undefined => undefined
 
 export const createItemLeaderboardRecordListRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
         TCreates extends ServerFormsModel | undefined,
         TSearches extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, localize, session }) => {
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TCommunityActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, localize, ctx }) => {
         const itemName = req.params.itemName
         if (!itemName) {
             res.status(404).end()
@@ -40,7 +49,7 @@ export const createItemLeaderboardRecordListRouteHandler =
         }
 
         const list = await group.leaderboard.record.listHandler({
-            session,
+            ...ctx,
             itemName,
             leaderboardName,
             page: +(req.query.page ?? '') || 0,
