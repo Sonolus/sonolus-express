@@ -23,6 +23,11 @@ export const parseTextAreaOptionQuery = (
     return value
 }
 
+export const serializeTextAreaOptionQuery = (
+    value: ParsedTextAreaOptionQuery,
+    option: ServerTextAreaOptionModel,
+): string | undefined => (value !== option.def ? value : undefined)
+
 export const toServerTextAreaOption = (
     localize: Localize,
     query: string,

@@ -2,17 +2,54 @@ import {
     ParsedCollectionItemOptionQuery,
     ServerCollectionItemOptionModel,
     parseServerCollectionItemOptionQuery,
+    serializeCollectionItemOptionQuery,
 } from '../options/collectionItem'
-import { ParsedFileOptionQuery, parseFileOptionQuery } from '../options/file'
-import { ParsedMultiOptionQuery, parseMultiOptionQuery } from '../options/multi'
+import {
+    ParsedFileOptionQuery,
+    parseFileOptionQuery,
+    serializeFileOptionQuery,
+} from '../options/file'
+import {
+    ParsedMultiOptionQuery,
+    parseMultiOptionQuery,
+    serializeMultiOptionQuery,
+} from '../options/multi'
 import { ServerOptionModel, ServerOptionsModel } from '../options/option'
-import { ParsedSelectOptionQuery, parseSelectOptionQuery } from '../options/select'
-import { ParsedServerItemOptionQuery, parseServerItemOptionQuery } from '../options/serverItem'
-import { ParsedServerItemsOptionQuery, parseServerItemsOptionQuery } from '../options/serverItems'
-import { ParsedSliderOptionQuery, parseSliderOptionQuery } from '../options/slider'
-import { ParsedTextOptionQuery, parseTextOptionQuery } from '../options/text'
-import { ParsedTextAreaOptionQuery, parseTextAreaOptionQuery } from '../options/textArea'
-import { ParsedToggleOptionQuery, parseToggleOptionQuery } from '../options/toggle'
+import {
+    ParsedSelectOptionQuery,
+    parseSelectOptionQuery,
+    serializeSelectOptionQuery,
+} from '../options/select'
+import {
+    ParsedServerItemOptionQuery,
+    parseServerItemOptionQuery,
+    serializeServerItemOptionQuery,
+} from '../options/serverItem'
+import {
+    ParsedServerItemsOptionQuery,
+    parseServerItemsOptionQuery,
+    serializeServerItemsOptionQuery,
+} from '../options/serverItems'
+import {
+    ParsedSliderOptionQuery,
+    parseSliderOptionQuery,
+    serializeSliderOptionQuery,
+} from '../options/slider'
+import {
+    ParsedTextOptionQuery,
+    parseTextOptionQuery,
+    serializeTextOptionQuery,
+} from '../options/text'
+import {
+    ParsedTextAreaOptionQuery,
+    parseTextAreaOptionQuery,
+    serializeTextAreaOptionQuery,
+} from '../options/textArea'
+import {
+    ParsedToggleOptionQuery,
+    parseToggleOptionQuery,
+    serializeToggleOptionQuery,
+} from '../options/toggle'
 import { ServerFormModel, ServerFormsModel } from './form'
 
 export type ParsedOptionQuery<T extends ServerOptionModel> = {
@@ -45,6 +82,23 @@ export const parseOptionQuery = <T extends ServerOptionModel>(
         file: parseFileOptionQuery,
     })[option.type](value, option as never) as never
 
+export const serializeOptionQuery = <T extends ServerOptionModel>(
+    value: ParsedOptionQuery<T>,
+    option: T,
+): string | undefined =>
+    ({
+        text: serializeTextOptionQuery,
+        textArea: serializeTextAreaOptionQuery,
+        slider: serializeSliderOptionQuery,
+        toggle: serializeToggleOptionQuery,
+        select: serializeSelectOptionQuery,
+        multi: serializeMultiOptionQuery,
+        serverItem: serializeServerItemOptionQuery,
+        serverItems: serializeServerItemsOptionQuery,
+        collectionItem: serializeCollectionItemOptionQuery,
+        file: serializeFileOptionQuery,
+    })[option.type](value as never, option as never)
+
 export type ParsedOptionsQuery<T extends ServerOptionsModel> = {
     [K in keyof T]: ParsedOptionQuery<T[K]>
 }
@@ -57,11 +111,11 @@ export const parseOptionsQuery = <T extends ServerOptionsModel>(
         Object.entries(options).map(([key, option]) => [key, parseOptionQuery(query[key], option)]),
     ) as never
 
-export type ParsedFormQuery<K, T extends ServerFormModel> = { type: K } & ParsedOptionsQuery<
-    T['options']
->
+export type ParsedFormQuery<K extends string, T extends ServerFormModel> = {
+    type: K
+} & ParsedOptionsQuery<T['options']>
 
-export const parseFormQuery = <K, T extends ServerFormModel>(
+export const parseFormQuery = <K extends string, T extends ServerFormModel>(
     query: Record<string, unknown>,
     type: K,
     form: T,
@@ -71,8 +125,25 @@ export const parseFormQuery = <K, T extends ServerFormModel>(
         ...parseOptionsQuery(query, form.options),
     }) as never
 
+export const serializeFormQuery = <K extends string, T extends ServerFormModel>(
+    query: ParsedFormQuery<K, T>,
+    type: K,
+    form: T,
+): string =>
+    new URLSearchParams([
+        ['type', type],
+        ...Object.entries(form.options)
+            .map(([key, option]): [string, string] | undefined => {
+                const value = serializeOptionQuery(query[key], option)
+                if (value === undefined) return
+
+                return [key, value]
+            })
+            .filter((kvp) => kvp !== undefined),
+    ]).toString()
+
 export type ParsedFormsQuery<T extends ServerFormsModel> = {
-    [K in keyof T]: ParsedFormQuery<K, T[K]>
+    [K in keyof T]: ParsedFormQuery<K & string, T[K]>
 }[keyof T]
 
 export const parseFormsQuery = <T extends ServerFormsModel>(

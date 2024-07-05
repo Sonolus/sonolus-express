@@ -28,6 +28,18 @@ export const parseServerItemOptionQuery = (
     return parsed
 }
 
+export const serializeServerItemOptionQuery = (
+    value: ParsedServerItemOptionQuery,
+    option: ServerServerItemOptionModel,
+): string | undefined =>
+    value
+        ? value.address !== option.def?.address || value.name !== option.def.name
+            ? JSON.stringify(value)
+            : undefined
+        : option.def
+          ? 'null'
+          : undefined
+
 export const toServerServerItemOption = (
     localize: Localize,
     query: string,

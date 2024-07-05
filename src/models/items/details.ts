@@ -6,20 +6,30 @@ import { ToItem } from './item'
 import { ItemLeaderboardModel, toItemLeaderboard } from './leaderboards/leaderboard'
 import { ItemSectionModel, toItemSections } from './section'
 
-export type ItemDetailsModel<TItemModel, TActions extends ServerFormsModel> = {
+export type ItemDetailsModel<
+    TItemModel,
+    TSearches extends ServerFormsModel,
+    TActions extends ServerFormsModel,
+> = {
     item: TItemModel
     description?: LocalizationText
     actions: (keyof TActions & string)[]
     hasCommunity: boolean
     leaderboards: ItemLeaderboardModel[]
-    sections: ItemSectionModel[]
+    sections: ItemSectionModel<TSearches>[]
 }
 
-export const toItemDetails = <TItemModel, TActions extends ServerFormsModel, TItem>(
+export const toItemDetails = <
+    TItemModel,
+    TSearches extends ServerFormsModel,
+    TActions extends ServerFormsModel,
+    TItem,
+>(
     sonolus: SonolusBase,
     localize: Localize,
     toItem: ToItem<TItemModel, TItem>,
-    details: ItemDetailsModel<TItemModel, TActions>,
+    details: ItemDetailsModel<TItemModel, TSearches, TActions>,
+    searches: TSearches,
     actions: TActions,
 ): ServerItemDetails<TItem> => ({
     item: toItem(sonolus, localize, details.item),
@@ -29,5 +39,5 @@ export const toItemDetails = <TItemModel, TActions extends ServerFormsModel, TIt
     leaderboards: details.leaderboards.map((leaderboard) =>
         toItemLeaderboard(localize, leaderboard),
     ),
-    sections: toItemSections(sonolus, localize, details.sections),
+    sections: toItemSections(sonolus, localize, details.sections, searches),
 })

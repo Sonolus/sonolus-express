@@ -31,6 +31,15 @@ export const parseMultiOptionQuery = (
     return values
 }
 
+export const serializeMultiOptionQuery = (
+    value: ParsedMultiOptionQuery,
+    option: ServerMultiOptionModel,
+): string | undefined =>
+    value.length === option.values.length &&
+    value.some((value, index) => value !== option.values[index]?.def)
+        ? value.map((value) => `${+value}`).join('')
+        : undefined
+
 export const toServerMultiOption = (
     localize: Localize,
     query: string,

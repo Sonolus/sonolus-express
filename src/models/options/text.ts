@@ -23,6 +23,11 @@ export const parseTextOptionQuery = (
     return value
 }
 
+export const serializeTextOptionQuery = (
+    value: ParsedTextOptionQuery,
+    option: ServerTextOptionModel,
+): string | undefined => (value !== option.def ? value : undefined)
+
 export const toServerTextOption = (
     localize: Localize,
     query: string,

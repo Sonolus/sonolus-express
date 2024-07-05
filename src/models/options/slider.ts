@@ -29,6 +29,11 @@ export const parseSliderOptionQuery = (
     return parsed
 }
 
+export const serializeSliderOptionQuery = (
+    value: ParsedSliderOptionQuery,
+    option: ServerSliderOptionModel,
+): string | undefined => (value !== option.def ? `${value}` : undefined)
+
 export const toServerSliderOption = (
     localize: Localize,
     query: string,

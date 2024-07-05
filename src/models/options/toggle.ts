@@ -20,6 +20,11 @@ export const parseToggleOptionQuery = (
     return value !== '0'
 }
 
+export const serializeToggleOptionQuery = (
+    value: ParsedToggleOptionQuery,
+    option: ServerToggleOptionModel,
+): string | undefined => (value !== option.def ? `${+value}` : undefined)
+
 export const toServerToggleOption = (
     localize: Localize,
     query: string,

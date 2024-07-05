@@ -10,13 +10,14 @@ import { SonolusCtx, SonolusRouteHandler } from '../handler'
 
 export type ItemDetailsHandler<
     TConfigurationOptions extends ServerOptionsModel,
+    TSearches extends ServerFormsModel,
     TActions extends ServerFormsModel,
     TItemModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
     },
-) => MaybePromise<ItemDetailsModel<TItemModel, TActions> | undefined>
+) => MaybePromise<ItemDetailsModel<TItemModel, TSearches, TActions> | undefined>
 
 export const createDefaultItemDetailsHandler =
     <
@@ -35,7 +36,7 @@ export const createDefaultItemDetailsHandler =
             TActions,
             TCommunityActions
         >,
-    ): ItemDetailsHandler<TConfigurationOptions, TActions, TItemModel> =>
+    ): ItemDetailsHandler<TConfigurationOptions, TSearches, TActions, TItemModel> =>
     ({ itemName }) => {
         const item = group.items.find(({ name }) => name === itemName)
         if (!item) return undefined
@@ -91,5 +92,5 @@ export const createItemDetailsRouteHandler =
             return
         }
 
-        res.json(toItemDetails(sonolus, localize, toItem, details, group.actions))
+        res.json(toItemDetails(sonolus, localize, toItem, details, group.searches, group.actions))
     }

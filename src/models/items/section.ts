@@ -1,6 +1,8 @@
 import { Icon, LocalizationText, ServerItemSection } from '@sonolus/core'
 import { SonolusBase } from '../../sonolus/base'
 import { Localize } from '../../utils/localization'
+import { ParsedFormsQuery, ServerFormsModel, toServerForm } from '../forms'
+import { serializeFormQuery } from '../forms/query'
 import { BackgroundItemModel, toBackgroundItem } from './background'
 import { EffectItemModel, toEffectItem } from './effect'
 import { EngineItemModel, toEngineItem } from './engine'
@@ -13,7 +15,7 @@ import { ReplayItemModel, toReplayItem } from './replay'
 import { RoomItemModel, toRoomItem } from './room'
 import { SkinItemModel, toSkinItem } from './skin'
 
-export type ItemSectionModel =
+export type ItemSectionModel<T extends ServerFormsModel> = (
     | ItemSectionModelTyped<'post', PostItemModel>
     | ItemSectionModelTyped<'playlist', PlaylistItemModel>
     | ItemSectionModelTyped<'level', LevelItemModel>
@@ -24,6 +26,9 @@ export type ItemSectionModel =
     | ItemSectionModelTyped<'engine', EngineItemModel>
     | ItemSectionModelTyped<'replay', ReplayItemModel>
     | ItemSectionModelTyped<'room', RoomItemModel>
+) & {
+    searchQuery?: ParsedFormsQuery<T>
+}
 
 type ItemSectionModelTyped<TItemType, TItem> = {
     title: LocalizationText
@@ -45,10 +50,11 @@ const toItemByType = {
     room: toRoomItem,
 }
 
-export const toItemSection = (
+export const toItemSection = <T extends ServerFormsModel>(
     sonolus: SonolusBase,
     localize: Localize,
-    section: ItemSectionModel,
+    section: ItemSectionModel<T>,
+    searches: T,
 ): ServerItemSection => ({
     title: localize(section.title),
     icon: section.icon,
@@ -59,10 +65,24 @@ export const toItemSection = (
         toItemByType[section.itemType] as never,
         section.items as never,
     ) as never,
+    search:
+        section.searchQuery &&
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        toServerForm(localize, section.searchQuery.type, searches[section.searchQuery.type]!),
+    searchValues:
+        section.searchQuery &&
+        serializeFormQuery(
+            section.searchQuery,
+            section.searchQuery.type,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            searches[section.searchQuery.type]!,
+        ),
 })
 
-export const toItemSections = (
+export const toItemSections = <T extends ServerFormsModel>(
     sonolus: SonolusBase,
     localize: Localize,
-    sections: ItemSectionModel[],
-): ServerItemSection[] => sections.map((section) => toItemSection(sonolus, localize, section))
+    sections: ItemSectionModel<T>[],
+    searches: T,
+): ServerItemSection[] =>
+    sections.map((section) => toItemSection(sonolus, localize, section, searches))

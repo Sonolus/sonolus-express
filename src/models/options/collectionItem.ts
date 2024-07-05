@@ -71,6 +71,10 @@ export const parseServerCollectionItemOptionQuery = <T extends ServerCollectionI
     return parse(value, schemas[option.itemType]) as never
 }
 
+export const serializeCollectionItemOptionQuery = (
+    value: ParsedCollectionItemOptionQuery<ServerCollectionItemOptionModel>,
+): string | undefined => value && JSON.stringify(value)
+
 export const toServerCollectionItemOption = (
     localize: Localize,
     query: string,

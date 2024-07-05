@@ -25,6 +25,11 @@ export const parseSelectOptionQuery = (
     return parsed
 }
 
+export const serializeSelectOptionQuery = (
+    value: ParsedSelectOptionQuery,
+    option: ServerSelectOptionModel,
+): string | undefined => (value !== option.def ? `${value}` : undefined)
+
 export const toServerSelectOption = (
     localize: Localize,
     query: string,

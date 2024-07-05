@@ -16,6 +16,8 @@ export const parseFileOptionQuery = (value: unknown): ParsedFileOptionQuery => {
     return value
 }
 
+export const serializeFileOptionQuery = (value: ParsedFileOptionQuery): string | undefined => value
+
 export const toServerFileOption = (
     localize: Localize,
     query: string,

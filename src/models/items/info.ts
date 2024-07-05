@@ -10,7 +10,7 @@ export type ItemInfoModel<
 > = {
     creates?: (keyof NonNullable<TCreates> & string)[]
     searches?: (keyof TSearches & string)[]
-    sections: ItemSectionModel[]
+    sections: ItemSectionModel<TSearches>[]
     banner?: Srl
 }
 
@@ -26,6 +26,6 @@ export const toItemInfo = <
 ): ServerItemInfo => ({
     creates: creates && info.creates && toServerForms(localize, info.creates, creates),
     searches: info.searches && toServerForms(localize, info.searches, searches),
-    sections: toItemSections(sonolus, localize, info.sections),
+    sections: toItemSections(sonolus, localize, info.sections, searches),
     banner: info.banner,
 })

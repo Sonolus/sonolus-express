@@ -143,7 +143,7 @@ export class SonolusItemGroup<
     preUploadHandler: ItemPreUploadHandler<TConfigurationOptions>
     uploadHandler: ItemUploadHandler<TConfigurationOptions>
 
-    detailsHandler: ItemDetailsHandler<TConfigurationOptions, TActions, TItemModel>
+    detailsHandler: ItemDetailsHandler<TConfigurationOptions, TSearches, TActions, TItemModel>
 
     submitActionHandler: ItemSubmitActionHandler<TConfigurationOptions, TActions>
     preUploadActionHandler: ItemPreUploadActionHandler<TConfigurationOptions>
