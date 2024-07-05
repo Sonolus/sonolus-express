@@ -9,10 +9,20 @@ import {
     defaultItemCommunityCommentListHandler,
 } from '../routes/items/community/comments/list'
 import {
+    ItemCommunityCommentPreUploadHandler,
+    createItemCommunityCommentPreUploadRouteHandler,
+    defaultItemCommunityCommentPreUploadHandler,
+} from '../routes/items/community/comments/preUpload'
+import {
     ItemCommunityCommentSubmitHandler,
     createItemCommunityCommentSubmitRouteHandler,
     defaultItemCommunityCommentSubmitHandler,
 } from '../routes/items/community/comments/submit'
+import {
+    ItemCommunityCommentUploadHandler,
+    createItemCommunityCommentUploadRouteHandler,
+    defaultItemCommunityCommentUploadHandler,
+} from '../routes/items/community/comments/upload'
 import {
     ItemCommunityInfoHandler,
     createItemCommunityInfoRouteHandler,
@@ -132,6 +142,8 @@ export class SonolusItemGroup<
                 TConfigurationOptions,
                 TCommunityActions
             >
+            preUploadHandler: ItemCommunityCommentPreUploadHandler<TConfigurationOptions>
+            uploadHandler: ItemCommunityCommentUploadHandler<TConfigurationOptions>
         }
     }
 
@@ -164,6 +176,8 @@ export class SonolusItemGroup<
     private readonly _communityCommentListRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
     private readonly _communityCommentSubmitRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityCommentPreUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityCommentUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
     private readonly _leaderboardDetailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
@@ -207,6 +221,8 @@ export class SonolusItemGroup<
                 listHandler: defaultItemCommunityCommentListHandler,
 
                 submitHandler: defaultItemCommunityCommentSubmitHandler,
+                preUploadHandler: defaultItemCommunityCommentPreUploadHandler,
+                uploadHandler: defaultItemCommunityCommentUploadHandler,
             },
         }
 
@@ -240,6 +256,10 @@ export class SonolusItemGroup<
 
         this._communityCommentSubmitRouteHandler =
             createItemCommunityCommentSubmitRouteHandler(this)
+        this._communityCommentPreUploadRouteHandler =
+            createItemCommunityCommentPreUploadRouteHandler(this)
+        this._communityCommentUploadRouteHandler =
+            createItemCommunityCommentUploadRouteHandler(this)
 
         this._leaderboardDetailsRouteHandler = createItemLeaderboardDetailsRouteHandler(this)
 

@@ -356,6 +356,12 @@ export class Sonolus<
                 `/${path}/:itemName/community/comments/:commentName/submit`,
                 this[type]['_communityCommentSubmitRouteHandler'],
             )
+            this._upload(
+                `/${path}/:itemName/community/comments/:commentName/upload`,
+                this[type]['_communityCommentPreUploadRouteHandler'],
+                uploader,
+                this[type]['_communityCommentUploadRouteHandler'],
+            )
 
             this._get(
                 `/${path}/:itemName/leaderboards/:leaderboardName`,
