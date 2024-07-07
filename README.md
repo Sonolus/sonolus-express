@@ -144,6 +144,18 @@ Handler for uploading item.
 
 Handler for requesting item details.
 
+#### `[type].submitActionHandler`
+
+Handler for submitting item action.
+
+#### `[type].preUploadActionHandler`
+
+Pre handler for uploading item action.
+
+#### `[type].uploadActionHandler`
+
+Handler for uploading item action.
+
 #### `[type].community.actions`
 
 Community actions.
@@ -156,6 +168,18 @@ Handler for requesting item community info.
 
 Handler for submitting item community action.
 
+#### `[type].community.preUploadHandler`
+
+Pre handler for uploading item community action.
+
+#### `[type].community.uploadHandler`
+
+Handler for uploading item community action.
+
+#### `[type].community.comment.actions`
+
+Community comment actions.
+
 #### `[type].community.comment.listHandler`
 
 Handler for requesting item community comment list.
@@ -163,6 +187,14 @@ Handler for requesting item community comment list.
 #### `[type].community.comment.submitHandler`
 
 Handler for submitting item community comment action.
+
+#### `[type].community.comment.preUploadHandler`
+
+Pre handler for uploading item community comment action.
+
+#### `[type].community.comment.uploadHandler`
+
+Handler for uploading item community comment action.
 
 #### `[type].leaderboard.detailsHandler`
 
@@ -220,34 +252,6 @@ Create a Sonolus redirect share server.
 #### `router`
 
 Configured Express.js router.
-
-### `formTypes(forms)`
-
-Get types of forms.
-
--   `forms`: forms model.
-
-### `toServerForms(localize, types, forms)`
-
-Convert forms model to forms.
-
--   `localize`: localize function.
--   `types`: types to be converted.
--   `forms`: forms model.
-
-### `parseQuery(query, forms)`
-
-Parse query based on forms model.
-
--   `query`: query.
--   `forms`: forms model.
-
-### `parseSearchQuery(query, searches)`
-
-Parse search query based on searches.
-
--   `query`: query.
--   `searches`: searches.
 
 ### `filter*(items, keywords)`
 
