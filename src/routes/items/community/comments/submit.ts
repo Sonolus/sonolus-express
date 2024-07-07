@@ -1,28 +1,29 @@
-import { ServerSubmitItemCommunityActionResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../../../models/forms/form'
-import { ParsedFormsQuery, parseFormsQuery } from '../../../../models/forms/query'
+import { ServerSubmitItemCommunityCommentActionResponse } from '@sonolus/core'
 import { ItemModel } from '../../../../models/items/item'
-import { ServerOptionsModel } from '../../../../models/options/option'
+import { ServerFormsModel } from '../../../../models/server/forms/form'
+import { ServerFormsValue, parseServerFormsValue } from '../../../../models/server/forms/value'
+import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { serverSubmitItemCommunityActionRequestSchema } from '../../../../schemas/server/items/community/submitItemCommunityActionRequest'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { parse } from '../../../../utils/json'
 import { MaybePromise } from '../../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../../handler'
+import { SonolusCtx } from '../../../ctx'
+import { SonolusRouteHandler } from '../../../handler'
 
-export type ItemCommunityCommentSubmitHandler<
+export type ServerSubmitItemCommunityCommentActionHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TCommunityActions extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
         commentName: string
-        query: ParsedFormsQuery<TCommunityActions>
+        value: ServerFormsValue<TCommunityActions>
     },
-) => MaybePromise<ServerSubmitItemCommunityActionResponse | undefined>
+) => MaybePromise<ServerSubmitItemCommunityCommentActionResponse | undefined>
 
-export const defaultItemCommunityCommentSubmitHandler = (): undefined => undefined
+export const defaultServerSubmitItemCommunityCommentActionHandler = (): undefined => undefined
 
-export const createItemCommunityCommentSubmitRouteHandler =
+export const createServerSubmitItemCommunityCommentActionRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -65,11 +66,11 @@ export const createItemCommunityCommentSubmitRouteHandler =
             return
         }
 
-        const query = parseFormsQuery(
+        const value = parseServerFormsValue(
             Object.fromEntries(new URLSearchParams(request.values)),
             group.community.actions,
         )
-        if (!query) {
+        if (!value) {
             res.status(400).end()
             return
         }
@@ -78,7 +79,7 @@ export const createItemCommunityCommentSubmitRouteHandler =
             ...ctx,
             itemName,
             commentName,
-            query,
+            value,
         })
         if (!response) {
             res.status(404).end()

@@ -1,20 +1,23 @@
 import { Text } from '@sonolus/core'
-import { ServerFormsModel, formTypes } from '../../models/forms/form'
-import { ItemInfoModel, toItemInfo } from '../../models/items/info'
 import { ItemModel } from '../../models/items/item'
-import { ServerOptionsModel } from '../../models/options/option'
+import { ServerFormsModel, formTypes } from '../../models/server/forms/form'
+import { ServerItemInfoModel, toServerItemInfo } from '../../models/server/items/info'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../handler'
+import { SonolusCtx } from '../ctx'
+import { SonolusRouteHandler } from '../handler'
 
-export type ItemInfoHandler<
+export type ServerItemInfoHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TCreates extends ServerFormsModel | undefined,
     TSearches extends ServerFormsModel,
-> = (ctx: SonolusCtx<TConfigurationOptions>) => MaybePromise<ItemInfoModel<TCreates, TSearches>>
+> = (
+    ctx: SonolusCtx<TConfigurationOptions>,
+) => MaybePromise<ServerItemInfoModel<TCreates, TSearches>>
 
-export const createDefaultItemInfoHandler =
+export const createDefaultServerItemInfoHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -32,7 +35,7 @@ export const createDefaultItemInfoHandler =
             TActions,
             TCommunityActions
         >,
-    ): ItemInfoHandler<TConfigurationOptions, TCreates, TSearches> =>
+    ): ServerItemInfoHandler<TConfigurationOptions, TCreates, TSearches> =>
     () => ({
         creates: group.creates && formTypes(group.creates),
         searches: formTypes(group.searches),
@@ -46,7 +49,7 @@ export const createDefaultItemInfoHandler =
         banner: sonolus.banner,
     })
 
-export const createItemInfoRouteHandler =
+export const createServerItemInfoRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -67,7 +70,7 @@ export const createItemInfoRouteHandler =
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ res, localize, ctx }) => {
         res.json(
-            toItemInfo(
+            toServerItemInfo(
                 sonolus,
                 localize,
                 await group.infoHandler(ctx),

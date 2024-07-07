@@ -1,7 +1,7 @@
 import { DatabaseReplayItem, ReplayItem } from '@sonolus/core'
+import { toTags } from '../tag'
 import { Model, ToItem, getItem } from './item'
 import { LevelItemModel, toLevelItem } from './level'
-import { toTags } from './tag'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
 export interface ReplayItemModel

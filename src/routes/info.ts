@@ -1,9 +1,10 @@
-import { ServerInfoModel, toServerInfo } from '../models/info'
-import { optionsTypes, ServerOptionsModel } from '../models/options/option'
+import { ServerInfoModel, toServerInfo } from '../models/server/info'
+import { optionTypes, ServerOptionsModel } from '../models/server/options/option'
 import { SonolusBase } from '../sonolus/base'
 import { Sonolus } from '../sonolus/sonolus'
 import { MaybePromise } from '../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from './handler'
+import { SonolusCtx } from './ctx'
+import { SonolusRouteHandler } from './handler'
 
 export type ServerInfoHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions>,
@@ -29,7 +30,7 @@ export const createDefaultServerInfoHandler =
             { type: 'configuration' },
         ],
         configuration: {
-            options: optionsTypes(sonolus.configuration.options),
+            options: optionTypes(sonolus.configuration.options),
         },
         banner: sonolus.banner,
     })

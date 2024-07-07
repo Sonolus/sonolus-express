@@ -1,24 +1,27 @@
-import { ServerUploadItemCommunityActionResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../../../models/forms/form'
+import { ServerUploadItemCommunityCommentActionResponse } from '@sonolus/core'
 import { ItemModel } from '../../../../models/items/item'
-import { ServerOptionsModel } from '../../../../models/options/option'
+import { ServerFormsModel } from '../../../../models/server/forms/form'
+import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { extractString } from '../../../../utils/extract'
 import { MaybePromise } from '../../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../../handler'
+import { SonolusCtx } from '../../../ctx'
+import { SonolusRouteHandler } from '../../../handler'
 
-export type ItemCommunityCommentUploadHandler<TConfigurationOptions extends ServerOptionsModel> = (
+export type ServerUploadItemCommunityCommentActionHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+> = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
         commentName: string
         key: string
         files: Express.Multer.File[]
     },
-) => MaybePromise<ServerUploadItemCommunityActionResponse | undefined>
+) => MaybePromise<ServerUploadItemCommunityCommentActionResponse | undefined>
 
-export const defaultItemCommunityCommentUploadHandler = (): undefined => undefined
+export const defaultServerUploadItemCommunityCommentActionHandler = (): undefined => undefined
 
-export const createItemCommunityCommentUploadRouteHandler =
+export const createServerUploadItemCommunityCommentActionRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,

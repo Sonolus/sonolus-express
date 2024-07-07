@@ -1,21 +1,24 @@
-import { ServerFormsModel } from '../../../models/forms/form'
 import { ItemModel } from '../../../models/items/item'
-import { ServerOptionsModel } from '../../../models/options/option'
+import { ServerFormsModel } from '../../../models/server/forms/form'
+import { ServerOptionsModel } from '../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { extractString } from '../../../utils/extract'
 import { MaybePromise } from '../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../handler'
+import { SonolusCtx } from '../../ctx'
+import { SonolusRouteHandler } from '../../handler'
 
-export type ItemCommunityPreUploadHandler<TConfigurationOptions extends ServerOptionsModel> = (
+export type ServerPreUploadItemCommunityActionHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+> = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
         key: string
     },
 ) => MaybePromise<boolean>
 
-export const defaultItemCommunityPreUploadHandler = (): boolean => false
+export const defaultServerPreUploadItemCommunityActionHandler = (): boolean => false
 
-export const createItemCommunityPreUploadRouteHandler =
+export const createServerPreUploadItemCommunityActionRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,

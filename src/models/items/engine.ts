@@ -1,10 +1,10 @@
 import { DatabaseEngineItem, EngineItem } from '@sonolus/core'
+import { toTags } from '../tag'
 import { BackgroundItemModel, toBackgroundItem } from './background'
 import { EffectItemModel, toEffectItem } from './effect'
 import { Model, ToItem, getItem } from './item'
 import { ParticleItemModel, toParticleItem } from './particle'
 import { SkinItemModel, toSkinItem } from './skin'
-import { toTags } from './tag'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
 export interface EngineItemModel

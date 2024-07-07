@@ -1,2 +1,2 @@
-export { MultiplayerCreateHandler } from './create'
-export { MultiplayerJoinHandler } from './join'
+export { ServerCreateRoomHandler } from './create'
+export { ServerJoinRoomHandler } from './join'

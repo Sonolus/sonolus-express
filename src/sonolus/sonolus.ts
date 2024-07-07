@@ -3,8 +3,6 @@ import express, { NextFunction, Request, RequestHandler, Response, Router } from
 import multer from 'multer'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { ServerFormsModel } from '../models/forms/form'
-import { parseOptionsQuery } from '../models/forms/query'
 import { BackgroundItemModel, toBackgroundItem } from '../models/items/background'
 import { EffectItemModel, toEffectItem } from '../models/items/effect'
 import { EngineItemModel, toEngineItem } from '../models/items/engine'
@@ -15,12 +13,14 @@ import { PostItemModel, toPostItem } from '../models/items/post'
 import { ReplayItemModel, toReplayItem } from '../models/items/replay'
 import { RoomItemModel, toRoomItem } from '../models/items/room'
 import { SkinItemModel, toSkinItem } from '../models/items/skin'
-import { ServerOptionsModel } from '../models/options/option'
+import { ServerFormsModel } from '../models/server/forms/form'
+import { ServerOptionsModel } from '../models/server/options/option'
+import { parseServerOptionsValue } from '../models/server/options/value'
 import {
-    AuthenticateHandler,
-    createAuthenticateRouteHandler,
-    defaultAuthenticateHandler,
-} from '../routes/authentication'
+    ServerAuthenticateHandler,
+    createServerAuthenticateRouteHandler,
+    defaultServerAuthenticateHandler,
+} from '../routes/authenticate'
 import { SonolusRouteHandler } from '../routes/handler'
 import {
     ServerInfoHandler,
@@ -119,7 +119,7 @@ export class Sonolus<
     banner?: Srl
 
     sessionHandler: SessionHandler<TConfigurationOptions>
-    authenticateHandler: AuthenticateHandler<TConfigurationOptions>
+    authenticateHandler: ServerAuthenticateHandler<TConfigurationOptions>
 
     serverInfoHandler: ServerInfoHandler<TConfigurationOptions>
 
@@ -288,7 +288,7 @@ export class Sonolus<
         this.title = {}
 
         this.sessionHandler = defaultSessionHandler
-        this.authenticateHandler = defaultAuthenticateHandler
+        this.authenticateHandler = defaultServerAuthenticateHandler
 
         this.serverInfoHandler = createDefaultServerInfoHandler(this)
 
@@ -357,7 +357,7 @@ export class Sonolus<
     private _installRoutes(upload: UploadOptions) {
         const uploader = multer(upload.options).array('files', upload.maxCount)
 
-        this._post('/authenticate', createAuthenticateRouteHandler(this))
+        this._post('/authenticate', createServerAuthenticateRouteHandler(this))
 
         this._get('/info', createServerInfoRouteHandler(this))
 
@@ -468,7 +468,7 @@ export class Sonolus<
                 const localization = extractString(req.query.localization) ?? ''
                 const localize: Localize = (text) => this.localize(text, localization)
 
-                const options = parseOptionsQuery(req.query, this.configuration.options)
+                const options = parseServerOptionsValue(req.query, this.configuration.options)
 
                 const session = extractString(req.headers['sonolus-session'])
                 if (!(await this.sessionHandler({ session, localization, options }))) {

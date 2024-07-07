@@ -1,22 +1,23 @@
 import { ServerUploadItemResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../models/forms/form'
 import { ItemModel } from '../../models/items/item'
-import { ServerOptionsModel } from '../../models/options/option'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { extractString } from '../../utils/extract'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../handler'
+import { SonolusCtx } from '../ctx'
+import { SonolusRouteHandler } from '../handler'
 
-export type ItemUploadHandler<TConfigurationOptions extends ServerOptionsModel> = (
+export type ServerUploadItemHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         key: string
         files: Express.Multer.File[]
     },
 ) => MaybePromise<ServerUploadItemResponse | undefined>
 
-export const defaultItemUploadHandler = (): undefined => undefined
+export const defaultServerUploadServerHandler = (): undefined => undefined
 
-export const createItemUploadRouteHandler =
+export const createServerUploadItemRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,

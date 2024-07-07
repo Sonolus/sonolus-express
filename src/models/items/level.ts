@@ -1,13 +1,13 @@
 import { DatabaseLevelItem, LevelItem, UseItem } from '@sonolus/core'
 import { SonolusBase } from '../../sonolus/base'
 import { Localize } from '../../utils/localization'
+import { toTags } from '../tag'
 import { BackgroundItemModel, toBackgroundItem } from './background'
 import { EffectItemModel, toEffectItem } from './effect'
 import { EngineItemModel, toEngineItem } from './engine'
 import { ItemModel, Model, ToItem, getItem } from './item'
 import { ParticleItemModel, toParticleItem } from './particle'
 import { SkinItemModel, toSkinItem } from './skin'
-import { toTags } from './tag'
 
 export type UseItemModel<T> =
     | {

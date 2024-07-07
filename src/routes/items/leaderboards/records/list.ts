@@ -1,25 +1,28 @@
-import { ServerFormsModel } from '../../../../models/forms/form'
 import { ItemModel } from '../../../../models/items/item'
+import { ServerFormsModel } from '../../../../models/server/forms/form'
 import {
-    ItemLeaderboardRecordListModel,
-    toItemLeaderboardRecordList,
-} from '../../../../models/items/leaderboards/records/list'
-import { ServerOptionsModel } from '../../../../models/options/option'
+    ServerItemLeaderboardRecordListModel,
+    toServerItemLeaderboardRecordList,
+} from '../../../../models/server/items/leaderboards/records/list'
+import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../../handler'
+import { SonolusCtx } from '../../../ctx'
+import { SonolusRouteHandler } from '../../../handler'
 
-export type ItemLeaderboardRecordListHandler<TConfigurationOptions extends ServerOptionsModel> = (
+export type ServerItemLeaderboardRecordListHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+> = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
         leaderboardName: string
         page: number
     },
-) => MaybePromise<ItemLeaderboardRecordListModel | undefined>
+) => MaybePromise<ServerItemLeaderboardRecordListModel | undefined>
 
-export const defaultItemLeaderboardRecordListHandler = (): undefined => undefined
+export const defaultServerItemLeaderboardRecordListHandler = (): undefined => undefined
 
-export const createItemLeaderboardRecordListRouteHandler =
+export const createServerItemLeaderboardRecordListRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -61,5 +64,5 @@ export const createItemLeaderboardRecordListRouteHandler =
             return
         }
 
-        res.json(toItemLeaderboardRecordList(localize, list))
+        res.json(toServerItemLeaderboardRecordList(localize, list))
     }

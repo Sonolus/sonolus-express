@@ -1,28 +1,30 @@
-import { ServerFormsModel } from '../../../../models/forms/form'
 import { ItemModel } from '../../../../models/items/item'
+import { ServerFormsModel } from '../../../../models/server/forms/form'
 import {
-    ItemLeaderboardRecordDetailsModel,
-    toItemLeaderboardRecordDetails,
-} from '../../../../models/items/leaderboards/records/details'
-import { ServerOptionsModel } from '../../../../models/options/option'
+    ServerItemLeaderboardRecordDetailsModel,
+    toServerItemLeaderboardRecordDetails,
+} from '../../../../models/server/items/leaderboards/records/details'
+import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusBase } from '../../../../sonolus/base'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../../handler'
+import { SonolusCtx } from '../../../ctx'
+import { SonolusRouteHandler } from '../../../handler'
 
-export type ItemLeaderboardRecordDetailsHandler<TConfigurationOptions extends ServerOptionsModel> =
-    (
-        ctx: SonolusCtx<TConfigurationOptions> & {
-            session: string | undefined
-            itemName: string
-            leaderboardName: string
-            recordName: string
-        },
-    ) => MaybePromise<ItemLeaderboardRecordDetailsModel | undefined>
+export type ServerItemLeaderboardRecordDetailsHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        session: string | undefined
+        itemName: string
+        leaderboardName: string
+        recordName: string
+    },
+) => MaybePromise<ServerItemLeaderboardRecordDetailsModel | undefined>
 
-export const defaultItemLeaderboardRecordDetailsHandler = (): undefined => undefined
+export const defaultServerItemLeaderboardRecordDetailsHandler = (): undefined => undefined
 
-export const createItemLeaderboardRecordDetailsRouteHandler =
+export const createServerItemLeaderboardRecordDetailsRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -71,5 +73,5 @@ export const createItemLeaderboardRecordDetailsRouteHandler =
             return
         }
 
-        res.json(toItemLeaderboardRecordDetails(sonolus, localize, details))
+        res.json(toServerItemLeaderboardRecordDetails(sonolus, localize, details))
     }

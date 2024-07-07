@@ -1,5 +1,5 @@
-import { ServerOptionsModel } from '../models/options/option'
-import { SonolusCtx } from '../routes/handler'
+import { ServerOptionsModel } from '../models/server/options/option'
+import { SonolusCtx } from '../routes/ctx'
 import { MaybePromise } from '../utils/promise'
 
 export type SessionHandler<TConfigurationOptions extends ServerOptionsModel> = (

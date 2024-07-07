@@ -1,24 +1,26 @@
-import { ServerFormsModel } from '../../../models/forms/form'
 import { ItemModel } from '../../../models/items/item'
+import { ServerFormsModel } from '../../../models/server/forms/form'
 import {
-    ItemLeaderboardDetailsModel,
-    toItemLeaderboardDetails,
-} from '../../../models/items/leaderboards/details'
-import { ServerOptionsModel } from '../../../models/options/option'
+    ServerItemLeaderboardDetailsModel,
+    toServerItemLeaderboardDetails,
+} from '../../../models/server/items/leaderboards/details'
+import { ServerOptionsModel } from '../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../handler'
+import { SonolusCtx } from '../../ctx'
+import { SonolusRouteHandler } from '../../handler'
 
-export type ItemLeaderboardDetailsHandler<TConfigurationOptions extends ServerOptionsModel> = (
-    ctx: SonolusCtx<TConfigurationOptions> & {
-        itemName: string
-        leaderboardName: string
-    },
-) => MaybePromise<ItemLeaderboardDetailsModel | undefined>
+export type ServerItemLeaderboardDetailsHandler<TConfigurationOptions extends ServerOptionsModel> =
+    (
+        ctx: SonolusCtx<TConfigurationOptions> & {
+            itemName: string
+            leaderboardName: string
+        },
+    ) => MaybePromise<ServerItemLeaderboardDetailsModel | undefined>
 
-export const defaultItemLeaderboardDetailsHandler = (): undefined => undefined
+export const defaultServerItemLeaderboardDetailsHandler = (): undefined => undefined
 
-export const createItemLeaderboardDetailsRouteHandler =
+export const createServerItemLeaderboardDetailsRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -59,5 +61,5 @@ export const createItemLeaderboardDetailsRouteHandler =
             return
         }
 
-        res.json(toItemLeaderboardDetails(localize, details))
+        res.json(toServerItemLeaderboardDetails(localize, details))
     }

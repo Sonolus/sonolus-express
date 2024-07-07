@@ -1,27 +1,28 @@
-import { ServerSubmitItemActionResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../../models/forms/form'
-import { ParsedFormsQuery, parseFormsQuery } from '../../../models/forms/query'
+import { ServerSubmitItemCommunityActionResponse } from '@sonolus/core'
 import { ItemModel } from '../../../models/items/item'
-import { ServerOptionsModel } from '../../../models/options/option'
+import { ServerFormsModel } from '../../../models/server/forms/form'
+import { ServerFormsValue, parseServerFormsValue } from '../../../models/server/forms/value'
+import { ServerOptionsModel } from '../../../models/server/options/option'
 import { serverSubmitItemCommunityActionRequestSchema } from '../../../schemas/server/items/community/submitItemCommunityActionRequest'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { parse } from '../../../utils/json'
 import { MaybePromise } from '../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../handler'
+import { SonolusCtx } from '../../ctx'
+import { SonolusRouteHandler } from '../../handler'
 
-export type ItemCommunitySubmitHandler<
+export type ServerSubmitItemCommunityActionHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TCommunityActions extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
-        query: ParsedFormsQuery<TCommunityActions>
+        value: ServerFormsValue<TCommunityActions>
     },
-) => MaybePromise<ServerSubmitItemActionResponse | undefined>
+) => MaybePromise<ServerSubmitItemCommunityActionResponse | undefined>
 
-export const defaultItemCommunitySubmitHandler = (): undefined => undefined
+export const defaultServerSubmitItemCommunityActionHandler = (): undefined => undefined
 
-export const createItemCommunitySubmitRouteHandler =
+export const createServerSubmitItemCommunityActionRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -58,16 +59,16 @@ export const createItemCommunitySubmitRouteHandler =
             return
         }
 
-        const query = parseFormsQuery(
+        const value = parseServerFormsValue(
             Object.fromEntries(new URLSearchParams(request.values)),
             group.community.actions,
         )
-        if (!query) {
+        if (!value) {
             res.status(400).end()
             return
         }
 
-        const response = await group.community.submitHandler({ ...ctx, itemName, query })
+        const response = await group.community.submitHandler({ ...ctx, itemName, value })
         if (!response) {
             res.status(404).end()
             return

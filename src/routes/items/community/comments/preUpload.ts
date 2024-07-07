@@ -1,23 +1,25 @@
-import { ServerFormsModel } from '../../../../models/forms/form'
 import { ItemModel } from '../../../../models/items/item'
-import { ServerOptionsModel } from '../../../../models/options/option'
+import { ServerFormsModel } from '../../../../models/server/forms/form'
+import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { extractString } from '../../../../utils/extract'
 import { MaybePromise } from '../../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../../handler'
+import { SonolusCtx } from '../../../ctx'
+import { SonolusRouteHandler } from '../../../handler'
 
-export type ItemCommunityCommentPreUploadHandler<TConfigurationOptions extends ServerOptionsModel> =
-    (
-        ctx: SonolusCtx<TConfigurationOptions> & {
-            itemName: string
-            commentName: string
-            key: string
-        },
-    ) => MaybePromise<boolean>
+export type ServerPreUploadItemCommunityCommentActionHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
+        commentName: string
+        key: string
+    },
+) => MaybePromise<boolean>
 
-export const defaultItemCommunityCommentPreUploadHandler = (): boolean => false
+export const defaultServerPreUploadItemCommunityCommentActionHandler = (): boolean => false
 
-export const createItemCommunityCommentPreUploadRouteHandler =
+export const createServerPreUploadItemCommunityCommentActionRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,

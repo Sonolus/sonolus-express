@@ -1,23 +1,27 @@
-import { ServerFormsModel } from '../../../models/forms/form'
-import { ItemCommunityInfoModel, toItemCommunityInfo } from '../../../models/items/community/info'
 import { ItemModel } from '../../../models/items/item'
-import { ServerOptionsModel } from '../../../models/options/option'
+import { ServerFormsModel } from '../../../models/server/forms/form'
+import {
+    ServerItemCommunityInfoModel,
+    toServerItemCommunityInfo,
+} from '../../../models/server/items/community/info'
+import { ServerOptionsModel } from '../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../handler'
+import { SonolusCtx } from '../../ctx'
+import { SonolusRouteHandler } from '../../handler'
 
-export type ItemCommunityInfoHandler<
+export type ServerItemCommunityInfoHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TCommunityActions extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
     },
-) => MaybePromise<ItemCommunityInfoModel<TCommunityActions> | undefined>
+) => MaybePromise<ServerItemCommunityInfoModel<TCommunityActions> | undefined>
 
-export const defaultItemCommunityInfoHandler = (): undefined => undefined
+export const defaultServerItemCommunityInfoHandler = (): undefined => undefined
 
-export const createItemCommunityInfoRouteHandler =
+export const createServerItemCommunityInfoRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -48,5 +52,5 @@ export const createItemCommunityInfoRouteHandler =
             return
         }
 
-        res.json(toItemCommunityInfo(localize, info, group.community.actions))
+        res.json(toServerItemCommunityInfo(localize, info, group.community.actions))
     }

@@ -1,14 +1,15 @@
 import { Icon, Text } from '@sonolus/core'
-import { formTypes, ServerFormsModel } from '../../models/forms/form'
-import { ItemDetailsModel, toItemDetails } from '../../models/items/details'
 import { ItemModel, ToItem } from '../../models/items/item'
-import { ServerOptionsModel } from '../../models/options/option'
+import { formTypes, ServerFormsModel } from '../../models/server/forms/form'
+import { ServerItemDetailsModel, toServerItemDetails } from '../../models/server/items/details'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../handler'
+import { SonolusCtx } from '../ctx'
+import { SonolusRouteHandler } from '../handler'
 
-export type ItemDetailsHandler<
+export type ServerItemDetailsHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TSearches extends ServerFormsModel,
     TActions extends ServerFormsModel,
@@ -17,9 +18,9 @@ export type ItemDetailsHandler<
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
     },
-) => MaybePromise<ItemDetailsModel<TItemModel, TSearches, TActions> | undefined>
+) => MaybePromise<ServerItemDetailsModel<TItemModel, TSearches, TActions> | undefined>
 
-export const createDefaultItemDetailsHandler =
+export const createDefaultServerItemDetailsHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -36,7 +37,7 @@ export const createDefaultItemDetailsHandler =
             TActions,
             TCommunityActions
         >,
-    ): ItemDetailsHandler<TConfigurationOptions, TSearches, TActions, TItemModel> =>
+    ): ServerItemDetailsHandler<TConfigurationOptions, TSearches, TActions, TItemModel> =>
     ({ itemName }) => {
         const item = group.items.find(({ name }) => name === itemName)
         if (!item) return undefined
@@ -59,7 +60,7 @@ export const createDefaultItemDetailsHandler =
         }
     }
 
-export const createItemDetailsRouteHandler =
+export const createServerItemDetailsRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -92,5 +93,7 @@ export const createItemDetailsRouteHandler =
             return
         }
 
-        res.json(toItemDetails(sonolus, localize, toItem, details, group.searches, group.actions))
+        res.json(
+            toServerItemDetails(sonolus, localize, toItem, details, group.searches, group.actions),
+        )
     }

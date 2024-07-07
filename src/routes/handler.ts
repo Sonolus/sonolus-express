@@ -1,14 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
-import { ParsedOptionsQuery } from '../models/forms/query'
-import { ServerOptionsModel } from '../models/options/option'
+import { ServerOptionsModel } from '../models/server/options/option'
 import { Localize } from '../utils/localization'
 import { MaybePromise } from '../utils/promise'
-
-export type SonolusCtx<TConfigurationOptions extends ServerOptionsModel> = {
-    session: string | undefined
-    localization: string
-    options: ParsedOptionsQuery<TConfigurationOptions>
-}
+import { SonolusCtx } from './ctx'
 
 export type SonolusRouteHandler<TConfigurationOptions extends ServerOptionsModel> = (ctx: {
     req: Request

@@ -1,2 +1,2 @@
-export { ItemLeaderboardRecordDetailsHandler } from './details'
-export { ItemLeaderboardRecordListHandler } from './list'
+export { ServerItemLeaderboardRecordDetailsHandler } from './details'
+export { ServerItemLeaderboardRecordListHandler } from './list'

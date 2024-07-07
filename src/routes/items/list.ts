@@ -1,25 +1,26 @@
-import { ServerFormsModel, formTypes } from '../../models/forms/form'
-import { ParsedSearchesQuery, parseSearchesQuery } from '../../models/forms/query'
 import { ItemModel, ToItem } from '../../models/items/item'
-import { ItemListModel, toItemList } from '../../models/items/list'
-import { ServerOptionsModel } from '../../models/options/option'
+import { ServerFormsModel, formTypes } from '../../models/server/forms/form'
+import { ServerSearchesValue, parseServerSearchesValue } from '../../models/server/forms/value'
+import { ServerItemListModel, toServerItemList } from '../../models/server/items/list'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../handler'
+import { SonolusCtx } from '../ctx'
+import { SonolusRouteHandler } from '../handler'
 
-export type ItemListHandler<
+export type ServerItemListHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TItemModel,
     TSearches extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
-        query: ParsedSearchesQuery<TSearches>
+        search: ServerSearchesValue<TSearches>
         page: number
     },
-) => MaybePromise<ItemListModel<TItemModel, TSearches>>
+) => MaybePromise<ServerItemListModel<TItemModel, TSearches>>
 
-export const createDefaultItemListHandler =
+export const createDefaultServerItemListHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -37,10 +38,9 @@ export const createDefaultItemListHandler =
             TCommunityActions
         >,
         filter: (items: TItemModel[], keywords: string) => TItemModel[],
-    ): ItemListHandler<TConfigurationOptions, TItemModel, TSearches> =>
-    ({ query, page }) => {
-        const parsedQuery = parseSearchesQuery(query, {})
-        const items = filter(group.items, parsedQuery.keywords)
+    ): ServerItemListHandler<TConfigurationOptions, TItemModel, TSearches> =>
+    ({ search, page }) => {
+        const items = filter(group.items, (search as { keywords?: string }).keywords ?? '')
 
         return {
             searches: formTypes(group.searches),
@@ -48,7 +48,7 @@ export const createDefaultItemListHandler =
         }
     }
 
-export const createItemListRouteHandler =
+export const createServerItemListRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -70,13 +70,13 @@ export const createItemListRouteHandler =
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, localize, ctx }) => {
         res.json(
-            toItemList(
+            toServerItemList(
                 sonolus,
                 localize,
                 toItem,
                 await group.listHandler({
                     ...ctx,
-                    query: parseSearchesQuery(req.query, group.searches),
+                    search: parseServerSearchesValue(req.query, group.searches),
                     page: +(req.query.page ?? '') || 0,
                 }),
                 group.searches,

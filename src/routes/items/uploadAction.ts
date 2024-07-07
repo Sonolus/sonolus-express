@@ -1,13 +1,14 @@
 import { ServerUploadItemActionResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../models/forms/form'
 import { ItemModel } from '../../models/items/item'
-import { ServerOptionsModel } from '../../models/options/option'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { extractString } from '../../utils/extract'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../handler'
+import { SonolusCtx } from '../ctx'
+import { SonolusRouteHandler } from '../handler'
 
-export type ItemUploadActionHandler<TConfigurationOptions extends ServerOptionsModel> = (
+export type ServerUploadItemActionHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
         key: string
@@ -15,9 +16,9 @@ export type ItemUploadActionHandler<TConfigurationOptions extends ServerOptionsM
     },
 ) => MaybePromise<ServerUploadItemActionResponse | undefined>
 
-export const defaultItemUploadActionHandler = (): undefined => undefined
+export const defaultServerUploadItemActionHandler = (): undefined => undefined
 
-export const createItemUploadActionRouteHandler =
+export const createServerUploadItemActionRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,

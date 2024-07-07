@@ -1,16 +1,17 @@
 import { ServerJoinRoomResponse, ServiceUserProfile, getSignaturePublicKey } from '@sonolus/core'
 import { webcrypto } from 'node:crypto'
-import { ServerFormsModel } from '../../models/forms/form'
-import { ParsedFormsQuery, parseFormsQuery } from '../../models/forms/query'
-import { ServerOptionsModel } from '../../models/options/option'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerFormsValue, parseServerFormsValue } from '../../models/server/forms/value'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { serverJoinRoomRequestSchema } from '../../schemas/server/multiplayer/joinRoom'
 import { SonolusBase } from '../../sonolus'
 import { SonolusMultiplayer } from '../../sonolus/multiplayer'
 import { parse } from '../../utils/json'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../handler'
+import { SonolusCtx } from '../ctx'
+import { SonolusRouteHandler } from '../handler'
 
-export type MultiplayerJoinHandler<
+export type ServerJoinRoomHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TCreates extends ServerFormsModel | undefined,
 > = (
@@ -21,14 +22,14 @@ export type MultiplayerJoinHandler<
         signature: Buffer
         create?: {
             key: string
-            values: ParsedFormsQuery<NonNullable<TCreates>>
+            value: ServerFormsValue<NonNullable<TCreates>>
         }
     },
 ) => MaybePromise<ServerJoinRoomResponse | undefined>
 
-export const defaultMultiplayerJoinHandler = (): undefined => undefined
+export const defaultServerJoinRoomHandler = (): undefined => undefined
 
-export const createMultiplayerJoinRouteHandler =
+export const createServerJoinRoomRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TCreates extends ServerFormsModel | undefined,
@@ -91,7 +92,7 @@ export const createMultiplayerJoinRouteHandler =
         }
 
         const key = req.headers['sonolus-room-key']
-        const values = multiplayer.creates && parseFormsQuery(req.query, multiplayer.creates)
+        const value = multiplayer.creates && parseServerFormsValue(req.query, multiplayer.creates)
 
         const response = await multiplayer.joinHandler({
             ...ctx,
@@ -99,7 +100,7 @@ export const createMultiplayerJoinRouteHandler =
             userProfile: request.userProfile,
             authentication: body,
             signature: signatureBuffer,
-            create: typeof key === 'string' && values ? { key, values } : undefined,
+            create: typeof key === 'string' && value ? { key, value } : undefined,
         })
         if (!response) {
             res.status(404).end()

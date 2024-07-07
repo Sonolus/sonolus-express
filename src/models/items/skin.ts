@@ -1,6 +1,6 @@
 import { DatabaseSkinItem, SkinItem } from '@sonolus/core'
+import { toTags } from '../tag'
 import { Model, ToItem } from './item'
-import { toTags } from './tag'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
 export interface SkinItemModel extends Model<DatabaseSkinItem, {}> {}

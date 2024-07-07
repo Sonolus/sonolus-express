@@ -1,27 +1,28 @@
 import { ServerSubmitItemActionResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../models/forms/form'
-import { ParsedFormsQuery, parseFormsQuery } from '../../models/forms/query'
 import { ItemModel } from '../../models/items/item'
-import { ServerOptionsModel } from '../../models/options/option'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerFormsValue, parseServerFormsValue } from '../../models/server/forms/value'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { serverSubmitItemActionRequestSchema } from '../../schemas/server/items/submit'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { parse } from '../../utils/json'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../handler'
+import { SonolusCtx } from '../ctx'
+import { SonolusRouteHandler } from '../handler'
 
-export type ItemSubmitActionHandler<
+export type ServerSubmitItemActionHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TActions extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
-        values: ParsedFormsQuery<TActions>
+        value: ServerFormsValue<TActions>
     },
 ) => MaybePromise<ServerSubmitItemActionResponse | undefined>
 
-export const defaultItemSubmitActionHandler = (): undefined => undefined
+export const defaultServerSubmitItemActionHandler = (): undefined => undefined
 
-export const createItemSubmitActionRouteHandler =
+export const createServerSubmitItemActionRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -58,16 +59,16 @@ export const createItemSubmitActionRouteHandler =
             return
         }
 
-        const values = parseFormsQuery(
+        const value = parseServerFormsValue(
             Object.fromEntries(new URLSearchParams(request.values)),
             group.actions,
         )
-        if (!values) {
+        if (!value) {
             res.status(400).end()
             return
         }
 
-        const response = await group.submitActionHandler({ ...ctx, itemName, values })
+        const response = await group.submitActionHandler({ ...ctx, itemName, value })
         if (!response) {
             res.status(404).end()
             return

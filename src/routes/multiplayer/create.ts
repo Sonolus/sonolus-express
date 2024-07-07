@@ -1,19 +1,20 @@
 import { ServerCreateRoomResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../models/forms/form'
-import { ServerOptionsModel } from '../../models/options/option'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { serverCreateRoomRequestSchema } from '../../schemas/server/multiplayer/createRoom'
 import { SonolusMultiplayer } from '../../sonolus/multiplayer'
 import { parse } from '../../utils/json'
 import { MaybePromise } from '../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../handler'
+import { SonolusCtx } from '../ctx'
+import { SonolusRouteHandler } from '../handler'
 
-export type MultiplayerCreateHandler<TConfigurationOptions extends ServerOptionsModel> = (
+export type ServerCreateRoomHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions>,
 ) => MaybePromise<ServerCreateRoomResponse | undefined>
 
-export const defaultMultiplayerCreateHandler = (): undefined => undefined
+export const defaultServerCreateRoomHandler = (): undefined => undefined
 
-export const createMultiplayerCreateRouteHandler =
+export const createServerCreateRoomRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TCreates extends ServerFormsModel | undefined,

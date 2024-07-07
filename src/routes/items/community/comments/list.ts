@@ -1,15 +1,16 @@
-import { ServerFormsModel } from '../../../../models/forms/form'
-import {
-    ItemCommunityCommentListModel,
-    toItemCommunityCommentList,
-} from '../../../../models/items/community/comments/list'
 import { ItemModel } from '../../../../models/items/item'
-import { ServerOptionsModel } from '../../../../models/options/option'
+import { ServerFormsModel } from '../../../../models/server/forms/form'
+import {
+    ServerItemCommunityCommentListModel,
+    toServerItemCommunityCommentList,
+} from '../../../../models/server/items/community/comments/list'
+import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../../utils/promise'
-import { SonolusCtx, SonolusRouteHandler } from '../../../handler'
+import { SonolusCtx } from '../../../ctx'
+import { SonolusRouteHandler } from '../../../handler'
 
-export type ItemCommunityCommentListHandler<
+export type ServerItemCommunityCommentListHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TCommunityActions extends ServerFormsModel,
 > = (
@@ -17,11 +18,11 @@ export type ItemCommunityCommentListHandler<
         itemName: string
         page: number
     },
-) => MaybePromise<ItemCommunityCommentListModel<TCommunityActions> | undefined>
+) => MaybePromise<ServerItemCommunityCommentListModel<TCommunityActions> | undefined>
 
-export const defaultItemCommunityCommentListHandler = (): undefined => undefined
+export const defaultServerItemCommunityCommentListHandler = (): undefined => undefined
 
-export const createItemCommunityCommentListRouteHandler =
+export const createServerItemCommunityCommentListRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
@@ -56,5 +57,5 @@ export const createItemCommunityCommentListRouteHandler =
             return
         }
 
-        res.json(toItemCommunityCommentList(localize, list, group.community.actions))
+        res.json(toServerItemCommunityCommentList(localize, list, group.community.actions))
     }
