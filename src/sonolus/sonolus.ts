@@ -19,7 +19,6 @@ import { parseServerOptionsValue } from '../models/server/options/value'
 import {
     ServerAuthenticateHandler,
     createServerAuthenticateRouteHandler,
-    defaultServerAuthenticateHandler,
 } from '../routes/authenticate'
 import { SonolusRouteHandler } from '../routes/handler'
 import {
@@ -43,7 +42,7 @@ import { parse } from '../utils/json'
 import { Localize } from '../utils/localization'
 import { SonolusItemGroup, SonolusItemGroupOptions } from './itemGroup'
 import { SonolusMultiplayer } from './multiplayer'
-import { SessionHandler, defaultSessionHandler } from './session'
+import { SessionHandler } from './session'
 
 const itemTypes = [
     ['post', 'posts', toPostItem, filterPosts],
@@ -118,8 +117,8 @@ export class Sonolus<
     description?: LocalizationText
     banner?: Srl
 
-    sessionHandler: SessionHandler<TConfigurationOptions>
-    authenticateHandler: ServerAuthenticateHandler<TConfigurationOptions>
+    sessionHandler?: SessionHandler<TConfigurationOptions>
+    authenticateHandler?: ServerAuthenticateHandler<TConfigurationOptions>
 
     serverInfoHandler: ServerInfoHandler<TConfigurationOptions>
 
@@ -286,9 +285,6 @@ export class Sonolus<
         this.router = express.Router()
 
         this.title = {}
-
-        this.sessionHandler = defaultSessionHandler
-        this.authenticateHandler = defaultServerAuthenticateHandler
 
         this.serverInfoHandler = createDefaultServerInfoHandler(this)
 
@@ -471,9 +467,12 @@ export class Sonolus<
                 const options = parseServerOptionsValue(req.query, this.configuration.options)
 
                 const session = extractString(req.headers['sonolus-session'])
-                if (!(await this.sessionHandler({ session, localization, options }))) {
-                    res.status(401).end()
-                    return
+                if (this.sessionHandler) {
+                    const result = await this.sessionHandler({ session, localization, options })
+                    if (typeof result === 'number') {
+                        res.status(result).end()
+                        return
+                    }
                 }
 
                 await handler({ req, res, next, localize, ctx: { session, localization, options } })

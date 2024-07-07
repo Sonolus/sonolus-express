@@ -25,9 +25,7 @@ export type ServerJoinRoomHandler<
             value: ServerFormsValue<NonNullable<TCreates>>
         }
     },
-) => MaybePromise<ServerJoinRoomResponse | undefined>
-
-export const defaultServerJoinRoomHandler = (): undefined => undefined
+) => MaybePromise<ServerJoinRoomResponse | 400 | 401 | 404>
 
 export const createServerJoinRoomRouteHandler =
     <
@@ -38,6 +36,11 @@ export const createServerJoinRoomRouteHandler =
         multiplayer: SonolusMultiplayer<TConfigurationOptions, TCreates>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
+        if (!multiplayer.joinHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
             res.status(400).end()
@@ -102,8 +105,8 @@ export const createServerJoinRoomRouteHandler =
             signature: signatureBuffer,
             create: typeof key === 'string' && value ? { key, value } : undefined,
         })
-        if (!response) {
-            res.status(404).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

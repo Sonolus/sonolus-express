@@ -18,9 +18,7 @@ export type ServerSubmitItemCommunityActionHandler<
         itemName: string
         value: ServerFormsValue<TCommunityActions>
     },
-) => MaybePromise<ServerSubmitItemCommunityActionResponse | undefined>
-
-export const defaultServerSubmitItemCommunityActionHandler = (): undefined => undefined
+) => MaybePromise<ServerSubmitItemCommunityActionResponse | 400 | 401 | 404>
 
 export const createServerSubmitItemCommunityActionRouteHandler =
     <
@@ -41,9 +39,14 @@ export const createServerSubmitItemCommunityActionRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
+        if (!group.community.submitHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
@@ -69,8 +72,8 @@ export const createServerSubmitItemCommunityActionRouteHandler =
         }
 
         const response = await group.community.submitHandler({ ...ctx, itemName, value })
-        if (!response) {
-            res.status(404).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

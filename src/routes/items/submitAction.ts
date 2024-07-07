@@ -18,9 +18,7 @@ export type ServerSubmitItemActionHandler<
         itemName: string
         value: ServerFormsValue<TActions>
     },
-) => MaybePromise<ServerSubmitItemActionResponse | undefined>
-
-export const defaultServerSubmitItemActionHandler = (): undefined => undefined
+) => MaybePromise<ServerSubmitItemActionResponse | 400 | 401 | 404>
 
 export const createServerSubmitItemActionRouteHandler =
     <
@@ -41,9 +39,14 @@ export const createServerSubmitItemActionRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
+        if (!group.submitActionHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
@@ -69,8 +72,8 @@ export const createServerSubmitItemActionRouteHandler =
         }
 
         const response = await group.submitActionHandler({ ...ctx, itemName, value })
-        if (!response) {
-            res.status(404).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

@@ -17,9 +17,7 @@ export type ServerItemCommunityInfoHandler<
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
     },
-) => MaybePromise<ServerItemCommunityInfoModel<TCommunityActions> | undefined>
-
-export const defaultServerItemCommunityInfoHandler = (): undefined => undefined
+) => MaybePromise<ServerItemCommunityInfoModel<TCommunityActions> | 401 | 404>
 
 export const createServerItemCommunityInfoRouteHandler =
     <
@@ -40,17 +38,22 @@ export const createServerItemCommunityInfoRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, localize, ctx }) => {
+        if (!group.community.infoHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
-        const info = await group.community.infoHandler({ ...ctx, itemName })
-        if (!info) {
-            res.status(404).end()
+        const response = await group.community.infoHandler({ ...ctx, itemName })
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 
-        res.json(toServerItemCommunityInfo(localize, info, group.community.actions))
+        res.json(toServerItemCommunityInfo(localize, response, group.community.actions))
     }

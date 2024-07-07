@@ -15,7 +15,7 @@ export type ServerItemInfoHandler<
     TSearches extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions>,
-) => MaybePromise<ServerItemInfoModel<TCreates, TSearches>>
+) => MaybePromise<ServerItemInfoModel<TCreates, TSearches> | 401>
 
 export const createDefaultServerItemInfoHandler =
     <
@@ -69,13 +69,11 @@ export const createServerItemInfoRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ res, localize, ctx }) => {
-        res.json(
-            toServerItemInfo(
-                sonolus,
-                localize,
-                await group.infoHandler(ctx),
-                group.creates,
-                group.searches,
-            ),
-        )
+        const response = await group.infoHandler(ctx)
+        if (typeof response === 'number') {
+            res.status(response).end()
+            return
+        }
+
+        res.json(toServerItemInfo(sonolus, localize, response, group.creates, group.searches))
     }

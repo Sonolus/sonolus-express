@@ -11,9 +11,7 @@ export type ServerPreUploadItemHandler<TConfigurationOptions extends ServerOptio
     ctx: SonolusCtx<TConfigurationOptions> & {
         key: string
     },
-) => MaybePromise<boolean>
-
-export const defaultServerPreUploadItemHandler = (): boolean => false
+) => MaybePromise<true | 400 | 401>
 
 export const createServerPreUploadItemRouteHandler =
     <
@@ -34,6 +32,11 @@ export const createServerPreUploadItemRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, next, ctx }) => {
+        if (!group.preUploadHandler) {
+            res.status(404).end()
+            return
+        }
+
         const key = extractString(req.headers['sonolus-upload-key'])
         if (key === undefined) {
             res.status(400).end()
@@ -41,8 +44,8 @@ export const createServerPreUploadItemRouteHandler =
         }
 
         const response = await group.preUploadHandler({ ...ctx, key })
-        if (!response) {
-            res.status(400).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

@@ -10,9 +10,7 @@ import { SonolusRouteHandler } from '../handler'
 
 export type ServerCreateRoomHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions>,
-) => MaybePromise<ServerCreateRoomResponse | undefined>
-
-export const defaultServerCreateRoomHandler = (): undefined => undefined
+) => MaybePromise<ServerCreateRoomResponse | 401>
 
 export const createServerCreateRoomRouteHandler =
     <
@@ -22,6 +20,11 @@ export const createServerCreateRoomRouteHandler =
         multiplayer: SonolusMultiplayer<TConfigurationOptions, TCreates>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
+        if (!multiplayer.createHandler) {
+            res.status(404).end()
+            return
+        }
+
         const body: unknown = req.body
         if (!(body instanceof Buffer)) {
             res.status(400).end()
@@ -35,8 +38,8 @@ export const createServerCreateRoomRouteHandler =
         }
 
         const response = await multiplayer.createHandler(ctx)
-        if (!response) {
-            res.status(404).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

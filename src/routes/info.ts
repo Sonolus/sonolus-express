@@ -8,7 +8,7 @@ import { SonolusRouteHandler } from './handler'
 
 export type ServerInfoHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions>,
-) => MaybePromise<ServerInfoModel<TConfigurationOptions>>
+) => MaybePromise<ServerInfoModel<TConfigurationOptions> | 401>
 
 export const createDefaultServerInfoHandler =
     <TConfigurationOptions extends ServerOptionsModel>(
@@ -41,11 +41,11 @@ export const createServerInfoRouteHandler =
             Pick<Sonolus<TConfigurationOptions>, 'configuration' | 'serverInfoHandler'>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ res, localize, ctx }) => {
-        res.json(
-            toServerInfo(
-                localize,
-                await sonolus.serverInfoHandler(ctx),
-                sonolus.configuration.options,
-            ),
-        )
+        const response = await sonolus.serverInfoHandler(ctx)
+        if (typeof response === 'number') {
+            res.status(response).end()
+            return
+        }
+
+        res.json(toServerInfo(localize, response, sonolus.configuration.options))
     }

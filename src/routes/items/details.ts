@@ -18,7 +18,7 @@ export type ServerItemDetailsHandler<
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
     },
-) => MaybePromise<ServerItemDetailsModel<TItemModel, TSearches, TActions> | undefined>
+) => MaybePromise<ServerItemDetailsModel<TItemModel, TSearches, TActions> | 401 | 404>
 
 export const createDefaultServerItemDetailsHandler =
     <
@@ -40,7 +40,7 @@ export const createDefaultServerItemDetailsHandler =
     ): ServerItemDetailsHandler<TConfigurationOptions, TSearches, TActions, TItemModel> =>
     ({ itemName }) => {
         const item = group.items.find(({ name }) => name === itemName)
-        if (!item) return undefined
+        if (!item) return 404
 
         const index = group.items.indexOf(item)
         return {
@@ -83,17 +83,17 @@ export const createServerItemDetailsRouteHandler =
     async ({ req, res, localize, ctx }) => {
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
-        const details = await group.detailsHandler({ ...ctx, itemName })
-        if (!details) {
-            res.status(404).end()
+        const response = await group.detailsHandler({ ...ctx, itemName })
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 
         res.json(
-            toServerItemDetails(sonolus, localize, toItem, details, group.searches, group.actions),
+            toServerItemDetails(sonolus, localize, toItem, response, group.searches, group.actions),
         )
     }

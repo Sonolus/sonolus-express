@@ -17,15 +17,18 @@ export type ServerAuthenticateHandler<TConfigurationOptions extends ServerOption
     ctx: SonolusCtx<TConfigurationOptions> & {
         userProfile: ServiceUserProfile
     },
-) => MaybePromise<ServerAuthenticateResponse | undefined>
-
-export const defaultServerAuthenticateHandler = (): undefined => undefined
+) => MaybePromise<ServerAuthenticateResponse | 401>
 
 export const createServerAuthenticateRouteHandler =
     <TConfigurationOptions extends ServerOptionsModel>(
         sonolus: SonolusBase & Pick<Sonolus<TConfigurationOptions>, 'authenticateHandler'>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
+        if (!sonolus.authenticateHandler) {
+            res.status(404).end()
+            return
+        }
+
         const body: unknown = req.body
         if (!(body instanceof Buffer)) {
             res.status(400).end()
@@ -71,8 +74,8 @@ export const createServerAuthenticateRouteHandler =
             ...ctx,
             userProfile: request.userProfile,
         })
-        if (!response) {
-            res.status(401).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

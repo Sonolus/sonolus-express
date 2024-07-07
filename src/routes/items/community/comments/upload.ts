@@ -17,9 +17,7 @@ export type ServerUploadItemCommunityCommentActionHandler<
         key: string
         files: Express.Multer.File[]
     },
-) => MaybePromise<ServerUploadItemCommunityCommentActionResponse | undefined>
-
-export const defaultServerUploadItemCommunityCommentActionHandler = (): undefined => undefined
+) => MaybePromise<ServerUploadItemCommunityCommentActionResponse | 400 | 401 | 404>
 
 export const createServerUploadItemCommunityCommentActionRouteHandler =
     <
@@ -40,15 +38,20 @@ export const createServerUploadItemCommunityCommentActionRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
+        if (!group.community.comment.uploadHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
         const commentName = req.params.commentName
         if (!commentName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
@@ -71,8 +74,8 @@ export const createServerUploadItemCommunityCommentActionRouteHandler =
             key,
             files,
         })
-        if (!response) {
-            res.status(400).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

@@ -17,9 +17,7 @@ export type ServerCreateItemHandler<
     ctx: SonolusCtx<TConfigurationOptions> & {
         value: ServerFormsValue<NonNullable<TCreates>>
     },
-) => MaybePromise<ServerCreateItemResponse | undefined>
-
-export const defaultServerCreateItemHandler = (): undefined => undefined
+) => MaybePromise<ServerCreateItemResponse | 400 | 401>
 
 export const createServerCreateItemRouteHandler =
     <
@@ -40,8 +38,13 @@ export const createServerCreateItemRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
+        if (!group.createHandler) {
+            res.status(404).end()
+            return
+        }
+
         if (!group.creates) {
-            res.status(400).end()
+            res.status(404).end()
             return
         }
 
@@ -67,8 +70,8 @@ export const createServerCreateItemRouteHandler =
         }
 
         const response = await group.createHandler({ ...ctx, value })
-        if (!response) {
-            res.status(404).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

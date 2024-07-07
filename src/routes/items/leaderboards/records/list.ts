@@ -18,9 +18,7 @@ export type ServerItemLeaderboardRecordListHandler<
         leaderboardName: string
         page: number
     },
-) => MaybePromise<ServerItemLeaderboardRecordListModel | undefined>
-
-export const defaultServerItemLeaderboardRecordListHandler = (): undefined => undefined
+) => MaybePromise<ServerItemLeaderboardRecordListModel | 401 | 404>
 
 export const createServerItemLeaderboardRecordListRouteHandler =
     <
@@ -41,28 +39,33 @@ export const createServerItemLeaderboardRecordListRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, localize, ctx }) => {
+        if (!group.leaderboard.record.listHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
         const leaderboardName = req.params.leaderboardName
         if (!leaderboardName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
-        const list = await group.leaderboard.record.listHandler({
+        const response = await group.leaderboard.record.listHandler({
             ...ctx,
             itemName,
             leaderboardName,
             page: +(req.query.page ?? '') || 0,
         })
-        if (!list) {
-            res.status(404).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 
-        res.json(toServerItemLeaderboardRecordList(localize, list))
+        res.json(toServerItemLeaderboardRecordList(localize, response))
     }

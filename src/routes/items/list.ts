@@ -18,7 +18,7 @@ export type ServerItemListHandler<
         search: ServerSearchesValue<TSearches>
         page: number
     },
-) => MaybePromise<ServerItemListModel<TItemModel, TSearches>>
+) => MaybePromise<ServerItemListModel<TItemModel, TSearches> | 400 | 401>
 
 export const createDefaultServerItemListHandler =
     <
@@ -69,19 +69,17 @@ export const createServerItemListRouteHandler =
         toItem: ToItem<TItemModel, unknown>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, localize, ctx }) => {
-        res.json(
-            toServerItemList(
-                sonolus,
-                localize,
-                toItem,
-                await group.listHandler({
-                    ...ctx,
-                    search: parseServerSearchesValue(req.query, group.searches),
-                    page: +(req.query.page ?? '') || 0,
-                }),
-                group.searches,
-            ),
-        )
+        const response = await group.listHandler({
+            ...ctx,
+            search: parseServerSearchesValue(req.query, group.searches),
+            page: +(req.query.page ?? '') || 0,
+        })
+        if (typeof response === 'number') {
+            res.status(response).end()
+            return
+        }
+
+        res.json(toServerItemList(sonolus, localize, toItem, response, group.searches))
     }
 
 export const paginateItems = <T>(

@@ -14,9 +14,7 @@ export type ServerPreUploadItemCommunityActionHandler<
         itemName: string
         key: string
     },
-) => MaybePromise<boolean>
-
-export const defaultServerPreUploadItemCommunityActionHandler = (): boolean => false
+) => MaybePromise<true | 400 | 401 | 404>
 
 export const createServerPreUploadItemCommunityActionRouteHandler =
     <
@@ -37,9 +35,14 @@ export const createServerPreUploadItemCommunityActionRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, next, ctx }) => {
+        if (!group.community.preUploadHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
@@ -50,8 +53,8 @@ export const createServerPreUploadItemCommunityActionRouteHandler =
         }
 
         const response = await group.community.preUploadHandler({ ...ctx, itemName, key })
-        if (!response) {
-            res.status(400).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

@@ -13,9 +13,7 @@ export type ServerUploadItemHandler<TConfigurationOptions extends ServerOptionsM
         key: string
         files: Express.Multer.File[]
     },
-) => MaybePromise<ServerUploadItemResponse | undefined>
-
-export const defaultServerUploadServerHandler = (): undefined => undefined
+) => MaybePromise<ServerUploadItemResponse | 400 | 401>
 
 export const createServerUploadItemRouteHandler =
     <
@@ -36,6 +34,11 @@ export const createServerUploadItemRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
+        if (!group.uploadHandler) {
+            res.status(404).end()
+            return
+        }
+
         const key = extractString(req.headers['sonolus-upload-key'])
         if (key === undefined) {
             res.status(400).end()
@@ -49,8 +52,8 @@ export const createServerUploadItemRouteHandler =
         }
 
         const response = await group.uploadHandler({ ...ctx, key, files })
-        if (!response) {
-            res.status(400).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

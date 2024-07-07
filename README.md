@@ -49,6 +49,7 @@ Create a Sonolus server.
 
 -   `options.address`: address of server (should not have ending `/`).
 -   `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
+-   `options.configuration`: server configuration.
 -   `options.upload`: upload options.
 -   `options[type]`: options for item group, `type` can be: `post`, `playlist`, `level`, `skin`, `background`, `effect`, `particle`, `engine`, `replay`, or `room`.
 -   `options[type].creates`: creates for item group.

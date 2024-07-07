@@ -18,9 +18,7 @@ export type ServerItemCommunityCommentListHandler<
         itemName: string
         page: number
     },
-) => MaybePromise<ServerItemCommunityCommentListModel<TCommunityActions> | undefined>
-
-export const defaultServerItemCommunityCommentListHandler = (): undefined => undefined
+) => MaybePromise<ServerItemCommunityCommentListModel<TCommunityActions> | 401 | 404>
 
 export const createServerItemCommunityCommentListRouteHandler =
     <
@@ -41,21 +39,26 @@ export const createServerItemCommunityCommentListRouteHandler =
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, localize, ctx }) => {
-        const itemName = req.params.itemName
-        if (!itemName) {
+        if (!group.community.comment.listHandler) {
             res.status(404).end()
             return
         }
 
-        const list = await group.community.comment.listHandler({
+        const itemName = req.params.itemName
+        if (!itemName) {
+            res.status(400).end()
+            return
+        }
+
+        const response = await group.community.comment.listHandler({
             ...ctx,
             itemName,
             page: +(req.query.page ?? '') || 0,
         })
-        if (!list) {
-            res.status(404).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 
-        res.json(toServerItemCommunityCommentList(localize, list, group.community.actions))
+        res.json(toServerItemCommunityCommentList(localize, response, group.community.actions))
     }

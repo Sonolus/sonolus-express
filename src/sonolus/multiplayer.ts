@@ -4,13 +4,8 @@ import { SonolusRouteHandler } from '../routes/handler'
 import {
     ServerCreateRoomHandler,
     createServerCreateRoomRouteHandler,
-    defaultServerCreateRoomHandler,
 } from '../routes/multiplayer/create'
-import {
-    ServerJoinRoomHandler,
-    createServerJoinRoomRouteHandler,
-    defaultServerJoinRoomHandler,
-} from '../routes/multiplayer/join'
+import { ServerJoinRoomHandler, createServerJoinRoomRouteHandler } from '../routes/multiplayer/join'
 import { SonolusBase } from './base'
 
 export class SonolusMultiplayer<
@@ -19,9 +14,9 @@ export class SonolusMultiplayer<
 > {
     private readonly _getCreates: () => TCreates
 
-    createHandler: ServerCreateRoomHandler<TConfigurationOptions>
+    createHandler?: ServerCreateRoomHandler<TConfigurationOptions>
 
-    joinHandler: ServerJoinRoomHandler<TConfigurationOptions, TCreates>
+    joinHandler?: ServerJoinRoomHandler<TConfigurationOptions, TCreates>
 
     private readonly _createRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
@@ -29,10 +24,6 @@ export class SonolusMultiplayer<
 
     constructor(sonolus: SonolusBase, getCreates: () => TCreates) {
         this._getCreates = getCreates
-
-        this.createHandler = defaultServerCreateRoomHandler
-
-        this.joinHandler = defaultServerJoinRoomHandler
 
         this._createRouteHandler = createServerCreateRoomRouteHandler(this)
 
