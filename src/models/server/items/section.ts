@@ -27,7 +27,10 @@ export type ServerItemSectionModel<T extends ServerFormsModel> = (
     | ServerItemSectionModelTyped<'replay', ReplayItemModel>
     | ServerItemSectionModelTyped<'room', RoomItemModel>
 ) & {
-    searchValue?: ServerFormsValue<T>
+    search?: {
+        value: ServerFormsValue<T>
+        showSearch: boolean
+    }
 }
 
 type ServerItemSectionModelTyped<TItemType, TItem> = {
@@ -65,11 +68,11 @@ export const toServerItemSection = <T extends ServerFormsModel>(
         toItemByType[section.itemType] as never,
         section.items as never,
     ) as never,
-    search:
-        section.searchValue &&
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        toServerForm(localize, section.searchValue.type, searches[section.searchValue.type]!),
-    searchValues: section.searchValue && serializeServerFormsValue(section.searchValue, searches),
+    search: section.search?.showSearch
+        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          toServerForm(localize, section.search.value.type, searches[section.search.value.type]!)
+        : undefined,
+    searchValues: section.search && serializeServerFormsValue(section.search.value, searches),
 })
 
 export const toServerItemSections = <T extends ServerFormsModel>(
