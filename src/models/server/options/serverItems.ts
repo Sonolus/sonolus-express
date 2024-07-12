@@ -17,29 +17,23 @@ export type ServerServerItemsOptionModel = {
 
 export type ServerServerItemsOptionValue = Sil[]
 
-export const parseServerServerItemsOptionValue = (
+export const parseRawServerServerItemsOptionValue = (
     value: unknown,
-    option: ServerServerItemsOptionModel,
-): ServerServerItemsOptionValue => {
-    if (typeof value !== 'string') return option.def
+): ServerServerItemsOptionValue | undefined => {
+    if (typeof value !== 'string') return
 
-    const parsed = parse(value, Type.Array(silSchema))
-    if (!parsed) return option.def
-
-    return parsed
+    return parse(value, Type.Array(silSchema))
 }
+
+export const normalizeServerServerItemsOptionValue = (
+    value: ServerServerItemsOptionValue | undefined,
+    option: ServerServerItemsOptionModel,
+): ServerServerItemsOptionValue =>
+    value !== undefined && (option.limit === 0 || value.length <= option.limit) ? value : option.def
 
 export const serializeServerServerItemsOptionValue = (
     value: ServerServerItemsOptionValue,
-    option: ServerServerItemsOptionModel,
-): string | undefined =>
-    value.length !== option.def.length ||
-    value.some(
-        (value, index) =>
-            value.address !== option.def[index]?.address || value.name !== option.def[index].name,
-    )
-        ? JSON.stringify(value)
-        : undefined
+): string => JSON.stringify(value)
 
 export const toServerServerItemsOption = (
     localize: Localize,

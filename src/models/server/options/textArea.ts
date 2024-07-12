@@ -14,19 +14,22 @@ export type ServerTextAreaOptionModel = {
 
 export type ServerTextAreaOptionValue = string
 
-export const parseServerTextAreaOptionValue = (
+export const parseRawServerTextAreaOptionValue = (
     value: unknown,
-    option: ServerTextAreaOptionModel,
-): ServerTextAreaOptionValue => {
-    if (typeof value !== 'string') return option.def
+): ServerTextAreaOptionValue | undefined => {
+    if (typeof value !== 'string') return
 
     return value
 }
 
-export const serializeServerTextAreaOptionValue = (
-    value: ServerTextAreaOptionValue,
+export const normalizeServerTextAreaOptionValue = (
+    value: ServerTextAreaOptionValue | undefined,
     option: ServerTextAreaOptionModel,
-): string | undefined => (value !== option.def ? value : undefined)
+): ServerTextAreaOptionValue =>
+    value !== undefined && (option.limit === 0 || value.length <= option.limit) ? value : option.def
+
+export const serializeServerTextAreaOptionValue = (value: ServerTextAreaOptionValue): string =>
+    value
 
 export const toServerTextAreaOption = (
     localize: Localize,

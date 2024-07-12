@@ -15,24 +15,25 @@ export type ServerSliderOptionModel = {
 
 export type ServerSliderOptionValue = number
 
-export const parseServerSliderOptionValue = (
+export const parseRawServerSliderOptionValue = (
     value: unknown,
-    option: ServerSliderOptionModel,
-): ServerSliderOptionValue => {
-    if (typeof value !== 'string') return option.def
+): ServerSliderOptionValue | undefined => {
+    if (typeof value !== 'string') return
 
     const parsed = +value
-    if (Number.isNaN(parsed)) return option.def
+    if (Number.isNaN(parsed)) return
 
-    if (parsed < option.min) return option.min
-    if (parsed > option.max) return option.max
     return parsed
 }
 
-export const serializeServerSliderOptionValue = (
-    value: ServerSliderOptionValue,
+export const normalizeServerSliderOptionValue = (
+    value: ServerSliderOptionValue | undefined,
     option: ServerSliderOptionModel,
-): string | undefined => (value !== option.def ? `${value}` : undefined)
+): ServerSliderOptionValue =>
+    value !== undefined && value >= option.min && value <= option.max ? value : option.def
+
+export const serializeServerSliderOptionValue = (value: ServerSliderOptionValue): string =>
+    `${value}`
 
 export const toServerSliderOption = (
     localize: Localize,

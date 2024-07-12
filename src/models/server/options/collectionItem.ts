@@ -62,18 +62,22 @@ const schemas = {
     room: roomItemSchema,
 }
 
-export const parseServerCollectionItemOptionValue = <T extends ServerCollectionItemOptionModel>(
+export const parseRawServerCollectionItemOptionValue = <T extends ServerCollectionItemOptionModel>(
     value: unknown,
     option: T,
-): ServerCollectionItemOptionValue<T> => {
+): ServerCollectionItemOptionValue<T> | undefined => {
     if (typeof value !== 'string') return
 
     return parse(value, schemas[option.itemType]) as never
 }
 
+export const normalizeServerCollectionItemOptionValue = <T extends ServerCollectionItemOptionModel>(
+    value: ServerCollectionItemOptionValue<T> | undefined,
+): ServerCollectionItemOptionValue<T> => value
+
 export const serializeServerCollectionItemOptionValue = (
-    value: ServerCollectionItemOptionValue<ServerCollectionItemOptionModel>,
-): string | undefined => value && JSON.stringify(value)
+    value: Exclude<ServerCollectionItemOptionValue<ServerCollectionItemOptionModel>, undefined>,
+): string => JSON.stringify(value)
 
 export const toServerCollectionItemOption = (
     localize: Localize,

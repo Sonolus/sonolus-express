@@ -14,19 +14,21 @@ export type ServerTextOptionModel = {
 
 export type ServerTextOptionValue = string
 
-export const parseServerTextOptionValue = (
+export const parseRawServerTextOptionValue = (
     value: unknown,
-    option: ServerTextOptionModel,
-): ServerTextOptionValue => {
-    if (typeof value !== 'string') return option.def
+): ServerTextOptionValue | undefined => {
+    if (typeof value !== 'string') return
 
     return value
 }
 
-export const serializeServerTextOptionValue = (
-    value: ServerTextOptionValue,
+export const normalizeServerTextOptionValue = (
+    value: ServerTextOptionValue | undefined,
     option: ServerTextOptionModel,
-): string | undefined => (value !== option.def ? value : undefined)
+): ServerTextOptionValue =>
+    value !== undefined && (option.limit === 0 || value.length <= option.limit) ? value : option.def
+
+export const serializeServerTextOptionValue = (value: ServerTextOptionValue): string => value
 
 export const toServerTextOption = (
     localize: Localize,

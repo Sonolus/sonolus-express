@@ -16,29 +16,22 @@ export type ServerMultiOptionValueModel = {
 
 export type ServerMultiOptionValue = boolean[]
 
-export const parseServerMultiOptionValue = (
+export const parseRawServerMultiOptionValue = (
     value: unknown,
-    option: ServerMultiOptionModel,
-): ServerMultiOptionValue => {
-    const values = option.values.map(({ def }) => def)
+): ServerMultiOptionValue | undefined => {
+    if (typeof value !== 'string') return
 
-    if (typeof value !== 'string') return values
-
-    for (const [index, flag] of [...value.slice(0, values.length)].entries()) {
-        values[index] = flag !== '0'
-    }
-
-    return values
+    return [...value].map((flag) => flag !== '0')
 }
 
-export const serializeServerMultiOptionValue = (
-    value: ServerMultiOptionValue,
+export const normalizeServerMultiOptionValue = (
+    value: ServerMultiOptionValue | undefined,
     option: ServerMultiOptionModel,
-): string | undefined =>
-    value.length === option.values.length &&
-    value.some((value, index) => value !== option.values[index]?.def)
-        ? value.map((value) => `${+value}`).join('')
-        : undefined
+): ServerMultiOptionValue =>
+    value?.length === option.values.length ? value : option.values.map(({ def }) => def)
+
+export const serializeServerMultiOptionValue = (value: ServerMultiOptionValue): string =>
+    value.map((value) => `${+value}`).join('')
 
 export const toServerMultiOption = (
     localize: Localize,

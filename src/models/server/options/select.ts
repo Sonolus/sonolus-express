@@ -12,23 +12,24 @@ export type ServerSelectOptionModel = {
 
 export type ServerSelectOptionValue = number
 
-export const parseServerSelectOptionValue = (
+export const parseRawServerSelectOptionValue = (
     value: unknown,
-    option: ServerSelectOptionModel,
-): ServerSelectOptionValue => {
-    if (typeof value !== 'string') return option.def
+): ServerSelectOptionValue | undefined => {
+    if (typeof value !== 'string') return
 
-    const parsed = +value
-    if (Number.isNaN(parsed)) return option.def
+    const parsed = Number.parseInt(value, 10)
+    if (!(parsed >= 0)) return
 
-    if (option.values[parsed] === undefined) return option.def
     return parsed
 }
 
-export const serializeServerSelectOptionValue = (
-    value: ServerSelectOptionValue,
+export const normalizeServerSelectOptionValue = (
+    value: ServerSelectOptionValue | undefined,
     option: ServerSelectOptionModel,
-): string | undefined => (value !== option.def ? `${value}` : undefined)
+): ServerSelectOptionValue => (value !== undefined && option.values[value] ? value : option.def)
+
+export const serializeServerSelectOptionValue = (value: ServerSelectOptionValue): string =>
+    `${value}`
 
 export const toServerSelectOption = (
     localize: Localize,

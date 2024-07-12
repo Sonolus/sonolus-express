@@ -15,7 +15,7 @@ import { RoomItemModel, toRoomItem } from '../models/items/room'
 import { SkinItemModel, toSkinItem } from '../models/items/skin'
 import { ServerFormsModel } from '../models/server/forms/form'
 import { ServerOptionsModel } from '../models/server/options/option'
-import { parseServerOptionsValue } from '../models/server/options/value'
+import { parseRawServerOptionsValue, parseServerOptionsValue } from '../models/server/options/value'
 import {
     ServerAuthenticateHandler,
     createServerAuthenticateRouteHandler,
@@ -465,17 +465,21 @@ export class Sonolus<
                 const localize: Localize = (text) => this.localize(text, localization)
 
                 const options = parseServerOptionsValue(req.query, this.configuration.options)
+                const rawOptions = parseRawServerOptionsValue(req.query, this.configuration.options)
 
                 const session = extractString(req.headers['sonolus-session'])
+
+                const ctx = { session, localization, options, rawOptions }
+
                 if (this.sessionHandler) {
-                    const result = await this.sessionHandler({ session, localization, options })
+                    const result = await this.sessionHandler(ctx)
                     if (typeof result === 'number') {
                         res.status(result).end()
                         return
                     }
                 }
 
-                await handler({ req, res, next, localize, ctx: { session, localization, options } })
+                await handler({ req, res, next, localize, ctx })
             } catch (error) {
                 console.error(error)
                 res.status(500).end()

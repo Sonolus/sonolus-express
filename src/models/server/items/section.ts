@@ -13,7 +13,7 @@ import { ReplayItemModel, toReplayItem } from '../../items/replay'
 import { RoomItemModel, toRoomItem } from '../../items/room'
 import { SkinItemModel, toSkinItem } from '../../items/skin'
 import { ServerFormsModel, toServerForm } from '../forms/form'
-import { serializeServerFormsValue, ServerFormsValue } from '../forms/value'
+import { RawServerFormsValue, serializeRawServerFormsValue } from '../forms/value'
 
 export type ServerItemSectionModel<T extends ServerFormsModel> = (
     | ServerItemSectionModelTyped<'post', PostItemModel>
@@ -28,7 +28,7 @@ export type ServerItemSectionModel<T extends ServerFormsModel> = (
     | ServerItemSectionModelTyped<'room', RoomItemModel>
 ) & {
     search?: {
-        value: ServerFormsValue<T>
+        value: RawServerFormsValue<T>
         showSearch: boolean
     }
 }
@@ -72,7 +72,7 @@ export const toServerItemSection = <T extends ServerFormsModel>(
         ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           toServerForm(localize, section.search.value.type, searches[section.search.value.type]!)
         : undefined,
-    searchValues: section.search && serializeServerFormsValue(section.search.value, searches),
+    searchValues: section.search && serializeRawServerFormsValue(section.search.value, searches),
 })
 
 export const toServerItemSections = <T extends ServerFormsModel>(

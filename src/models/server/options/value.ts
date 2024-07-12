@@ -1,55 +1,67 @@
 import {
     ServerCollectionItemOptionModel,
     ServerCollectionItemOptionValue,
-    parseServerCollectionItemOptionValue,
+    normalizeServerCollectionItemOptionValue,
+    parseRawServerCollectionItemOptionValue,
     serializeServerCollectionItemOptionValue,
 } from './collectionItem'
 import {
     ServerFileOptionValue,
-    parseServerFileOptionValue,
+    normalizeServerFileOptionValue,
+    parseRawServerFileOptionValue,
     serializeServerFileOptionValue,
 } from './file'
 import {
     ServerMultiOptionValue,
-    parseServerMultiOptionValue,
+    normalizeServerMultiOptionValue,
+    parseRawServerMultiOptionValue,
     serializeServerMultiOptionValue,
 } from './multi'
 import { ServerOptionModel, ServerOptionsModel } from './option'
 import {
     ServerSelectOptionValue,
-    parseServerSelectOptionValue,
+    normalizeServerSelectOptionValue,
+    parseRawServerSelectOptionValue,
     serializeServerSelectOptionValue,
 } from './select'
 import {
     ServerServerItemOptionValue,
-    parseServerServerItemOptionValue,
+    normalizeServerServerItemOptionValue,
+    parseRawServerServerItemOptionValue,
     serializeServerServerItemOptionValue,
 } from './serverItem'
 import {
     ServerServerItemsOptionValue,
-    parseServerServerItemsOptionValue,
+    normalizeServerServerItemsOptionValue,
+    parseRawServerServerItemsOptionValue,
     serializeServerServerItemsOptionValue,
 } from './serverItems'
 import {
     ServerSliderOptionValue,
-    parseServerSliderOptionValue,
+    normalizeServerSliderOptionValue,
+    parseRawServerSliderOptionValue,
     serializeServerSliderOptionValue,
 } from './slider'
 import {
     ServerTextOptionValue,
-    parseServerTextOptionValue,
+    normalizeServerTextOptionValue,
+    parseRawServerTextOptionValue,
     serializeServerTextOptionValue,
 } from './text'
 import {
     ServerTextAreaOptionValue,
-    parseServerTextAreaOptionValue,
+    normalizeServerTextAreaOptionValue,
+    parseRawServerTextAreaOptionValue,
     serializeServerTextAreaOptionValue,
 } from './textArea'
 import {
     ServerToggleOptionValue,
-    parseServerToggleOptionValue,
+    normalizeServerToggleOptionValue,
+    parseRawServerToggleOptionValue,
     serializeServerToggleOptionValue,
 } from './toggle'
+
+export type RawServerOptionValue<T extends ServerOptionModel> = ServerOptionValue<T> | undefined
 
 export type ServerOptionValue<T extends ServerOptionModel> = {
     text: ServerTextOptionValue
@@ -64,27 +76,51 @@ export type ServerOptionValue<T extends ServerOptionModel> = {
     file: ServerFileOptionValue
 }[T['type']]
 
+const parseRawServerOptionValueByType = {
+    text: parseRawServerTextOptionValue,
+    textArea: parseRawServerTextAreaOptionValue,
+    slider: parseRawServerSliderOptionValue,
+    toggle: parseRawServerToggleOptionValue,
+    select: parseRawServerSelectOptionValue,
+    multi: parseRawServerMultiOptionValue,
+    serverItem: parseRawServerServerItemOptionValue,
+    serverItems: parseRawServerServerItemsOptionValue,
+    collectionItem: parseRawServerCollectionItemOptionValue,
+    file: parseRawServerFileOptionValue,
+}
+
+export const parseRawServerOptionValue = <T extends ServerOptionModel>(
+    value: unknown,
+    option: T,
+): RawServerOptionValue<T> =>
+    parseRawServerOptionValueByType[option.type](value, option as never) as never
+
+const normalizeServerOptionValueByType = {
+    text: normalizeServerTextOptionValue,
+    textArea: normalizeServerTextAreaOptionValue,
+    slider: normalizeServerSliderOptionValue,
+    toggle: normalizeServerToggleOptionValue,
+    select: normalizeServerSelectOptionValue,
+    multi: normalizeServerMultiOptionValue,
+    serverItem: normalizeServerServerItemOptionValue,
+    serverItems: normalizeServerServerItemsOptionValue,
+    collectionItem: normalizeServerCollectionItemOptionValue,
+    file: normalizeServerFileOptionValue,
+}
+
 export const parseServerOptionValue = <T extends ServerOptionModel>(
     value: unknown,
     option: T,
 ): ServerOptionValue<T> =>
-    ({
-        text: parseServerTextOptionValue,
-        textArea: parseServerTextAreaOptionValue,
-        slider: parseServerSliderOptionValue,
-        toggle: parseServerToggleOptionValue,
-        select: parseServerSelectOptionValue,
-        multi: parseServerMultiOptionValue,
-        serverItem: parseServerServerItemOptionValue,
-        serverItems: parseServerServerItemsOptionValue,
-        collectionItem: parseServerCollectionItemOptionValue,
-        file: parseServerFileOptionValue,
-    })[option.type](value, option as never) as never
+    normalizeServerOptionValueByType[option.type](
+        parseRawServerOptionValue(value, option) as never,
+        option as never,
+    ) as never
 
-export const serializeServerOptionValue = <T extends ServerOptionModel>(
-    value: ServerOptionValue<T>,
+export const serializeRawServerOptionValue = <T extends ServerOptionModel>(
+    value: Exclude<RawServerOptionValue<T>, undefined>,
     option: T,
-): string | undefined =>
+): string =>
     ({
         text: serializeServerTextOptionValue,
         textArea: serializeServerTextAreaOptionValue,
@@ -96,11 +132,26 @@ export const serializeServerOptionValue = <T extends ServerOptionModel>(
         serverItems: serializeServerServerItemsOptionValue,
         collectionItem: serializeServerCollectionItemOptionValue,
         file: serializeServerFileOptionValue,
-    })[option.type](value as never, option as never)
+    })[option.type](value as never)
+
+export type RawServerOptionsValue<T extends ServerOptionsModel> = {
+    [K in keyof T]: RawServerOptionValue<T[K]>
+}
 
 export type ServerOptionsValue<T extends ServerOptionsModel> = {
     [K in keyof T]: ServerOptionValue<T[K]>
 }
+
+export const parseRawServerOptionsValue = <T extends ServerOptionsModel>(
+    value: Record<string, unknown>,
+    options: T,
+): RawServerOptionsValue<T> =>
+    Object.fromEntries(
+        Object.entries(options).map(([key, option]) => [
+            key,
+            parseRawServerOptionValue(value[key], option),
+        ]),
+    ) as never
 
 export const parseServerOptionsValue = <T extends ServerOptionsModel>(
     value: Record<string, unknown>,

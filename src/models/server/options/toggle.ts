@@ -11,19 +11,21 @@ export type ServerToggleOptionModel = {
 
 export type ServerToggleOptionValue = boolean
 
-export const parseServerToggleOptionValue = (
+export const parseRawServerToggleOptionValue = (
     value: unknown,
-    option: ServerToggleOptionModel,
-): ServerToggleOptionValue => {
-    if (typeof value !== 'string') return option.def
+): ServerToggleOptionValue | undefined => {
+    if (typeof value !== 'string') return
 
     return value !== '0'
 }
 
-export const serializeServerToggleOptionValue = (
-    value: ServerToggleOptionValue,
+export const normalizeServerToggleOptionValue = (
+    value: ServerToggleOptionValue | undefined,
     option: ServerToggleOptionModel,
-): string | undefined => (value !== option.def ? `${+value}` : undefined)
+): ServerToggleOptionValue => value ?? option.def
+
+export const serializeServerToggleOptionValue = (value: ServerToggleOptionValue): string =>
+    `${+value}`
 
 export const toServerToggleOption = (
     localize: Localize,

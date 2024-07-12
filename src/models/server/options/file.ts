@@ -10,14 +10,21 @@ export type ServerFileOptionModel = {
 
 export type ServerFileOptionValue = string | undefined
 
-export const parseServerFileOptionValue = (value: unknown): ServerFileOptionValue => {
+export const parseRawServerFileOptionValue = (
+    value: unknown,
+): ServerFileOptionValue | undefined => {
     if (typeof value !== 'string') return
 
     return value
 }
 
-export const serializeServerFileOptionValue = (value: ServerFileOptionValue): string | undefined =>
-    value
+export const normalizeServerFileOptionValue = (
+    value: ServerFileOptionValue | undefined,
+): ServerFileOptionValue => value
+
+export const serializeServerFileOptionValue = (
+    value: Exclude<ServerFileOptionValue, undefined>,
+): string => value
 
 export const toServerFileOption = (
     localize: Localize,
