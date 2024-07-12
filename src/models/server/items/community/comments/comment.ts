@@ -1,13 +1,13 @@
 import { LocalizationText, ServerItemCommunityComment } from '@sonolus/core'
 import { Localize } from '../../../../../utils/localization'
-import { ServerFormsModel, toServerForms } from '../../../forms/form'
+import { PickForms, ServerFormsModel, toServerForms } from '../../../forms/form'
 
 export type ServerItemCommunityCommentModel<T extends ServerFormsModel> = {
     name: string
     author: LocalizationText
     time: number
     content: LocalizationText
-    actions: (keyof T & string)[]
+    actions: PickForms<T>
 }
 
 export const toServerItemCommunityComment = <T extends ServerFormsModel>(

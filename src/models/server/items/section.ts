@@ -13,7 +13,7 @@ import { ReplayItemModel, toReplayItem } from '../../items/replay'
 import { RoomItemModel, toRoomItem } from '../../items/room'
 import { SkinItemModel, toSkinItem } from '../../items/skin'
 import { ServerFormsModel, toServerForm } from '../forms/form'
-import { RawServerFormsValue, serializeRawServerFormsValue } from '../forms/value'
+import { RawServerFormValue, serializeRawServerFormsValue } from '../forms/value'
 
 export type ServerItemSectionModel<T extends ServerFormsModel> = (
     | ServerItemSectionModelTyped<'post', PostItemModel>
@@ -28,9 +28,11 @@ export type ServerItemSectionModel<T extends ServerFormsModel> = (
     | ServerItemSectionModelTyped<'room', RoomItemModel>
 ) & {
     search?: {
-        value: RawServerFormsValue<T>
-        showSearch: boolean
-    }
+        [K in keyof T]: {
+            value: RawServerFormValue<K & string, T[K]>
+            form?: boolean | T[K]
+        }
+    }[keyof T]
 }
 
 type ServerItemSectionModelTyped<TItemType, TItem> = {
@@ -68,9 +70,15 @@ export const toServerItemSection = <T extends ServerFormsModel>(
         toItemByType[section.itemType] as never,
         section.items as never,
     ) as never,
-    search: section.search?.showSearch
-        ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          toServerForm(localize, section.search.value.type, searches[section.search.value.type]!)
+    search: section.search?.form
+        ? toServerForm(
+              localize,
+              section.search.value.type,
+              section.search.form === true
+                  ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    searches[section.search.value.type]!
+                  : section.search.form,
+          )
         : undefined,
     searchValues: section.search && serializeRawServerFormsValue(section.search.value, searches),
 })

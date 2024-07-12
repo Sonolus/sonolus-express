@@ -1,15 +1,15 @@
 import { ServerItemInfo, Srl } from '@sonolus/core'
 import { SonolusBase } from '../../../sonolus/base'
 import { Localize } from '../../../utils/localization'
-import { ServerFormsModel, toServerForms } from '../../server/forms/form'
+import { PickForms, ServerFormsModel, toServerForms } from '../../server/forms/form'
 import { ServerItemSectionModel, toServerItemSections } from '../../server/items/section'
 
 export type ServerItemInfoModel<
     TCreates extends ServerFormsModel | undefined,
     TSearches extends ServerFormsModel,
 > = {
-    creates?: (keyof NonNullable<TCreates> & string)[]
-    searches?: (keyof TSearches & string)[]
+    creates?: PickForms<NonNullable<TCreates>>
+    searches?: PickForms<TSearches>
     sections: ServerItemSectionModel<TSearches>[]
     banner?: Srl
 }

@@ -1,5 +1,5 @@
 import { ServerInfoModel, toServerInfo } from '../models/server/info'
-import { optionTypes, ServerOptionsModel } from '../models/server/options/option'
+import { ServerOptionsModel } from '../models/server/options/option'
 import { SonolusBase } from '../sonolus/base'
 import { Sonolus } from '../sonolus/sonolus'
 import { MaybePromise } from '../utils/promise'
@@ -30,7 +30,7 @@ export const createDefaultServerInfoHandler =
             { type: 'configuration' },
         ],
         configuration: {
-            options: optionTypes(sonolus.configuration.options),
+            options: sonolus.configuration.options,
         },
         banner: sonolus.banner,
     })

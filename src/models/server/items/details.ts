@@ -2,7 +2,7 @@ import { LocalizationText, ServerItemDetails } from '@sonolus/core'
 import { SonolusBase } from '../../../sonolus/base'
 import { Localize } from '../../../utils/localization'
 import { ToItem } from '../../items/item'
-import { ServerFormsModel, toServerForms } from '../../server/forms/form'
+import { PickForms, ServerFormsModel, toServerForms } from '../../server/forms/form'
 import { ServerItemSectionModel, toServerItemSections } from '../../server/items/section'
 import { ServerItemLeaderboardModel, toServerItemLeaderboard } from './leaderboards/leaderboard'
 
@@ -13,7 +13,7 @@ export type ServerItemDetailsModel<
 > = {
     item: TItemModel
     description?: LocalizationText
-    actions: (keyof TActions & string)[]
+    actions: PickForms<TActions>
     hasCommunity: boolean
     leaderboards: ServerItemLeaderboardModel[]
     sections: ServerItemSectionModel<TSearches>[]

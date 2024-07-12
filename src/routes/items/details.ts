@@ -1,6 +1,6 @@
 import { Icon, Text } from '@sonolus/core'
 import { ItemModel, ToItem } from '../../models/items/item'
-import { formTypes, ServerFormsModel } from '../../models/server/forms/form'
+import { ServerFormsModel } from '../../models/server/forms/form'
 import { ServerItemDetailsModel, toServerItemDetails } from '../../models/server/items/details'
 import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
@@ -46,7 +46,7 @@ export const createDefaultServerItemDetailsHandler =
         return {
             item,
             description: item.description,
-            actions: formTypes(group.actions),
+            actions: group.actions,
             hasCommunity: false,
             leaderboards: [],
             sections: [

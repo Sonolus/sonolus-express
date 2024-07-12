@@ -4,6 +4,10 @@ import { ServerOptionsModel, toServerOption } from '../options/option'
 
 export type ServerFormsModel = Record<string, ServerFormModel>
 
+export type PickForms<T extends ServerFormsModel> = {
+    [K in keyof T]?: boolean | T[K]
+}
+
 export type ServerFormModel = {
     title: LocalizationText
     icon?: Icon
@@ -11,9 +15,6 @@ export type ServerFormModel = {
     requireConfirmation: boolean
     options: ServerOptionsModel
 }
-
-export const formTypes = <T extends ServerFormsModel>(forms: T): (keyof T & string)[] =>
-    Object.keys(forms)
 
 export const toServerForm = (
     localize: Localize,
@@ -32,8 +33,13 @@ export const toServerForm = (
 
 export const toServerForms = <T extends ServerFormsModel>(
     localize: Localize,
-    types: (keyof T & string)[],
+    pick: PickForms<T>,
     forms: T,
 ): ServerForm[] =>
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    types.map((type) => toServerForm(localize, type, forms[type]!))
+    Object.entries(pick as Partial<Record<string, boolean | ServerFormModel>>)
+        .map(
+            ([type, value]) =>
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                value && toServerForm(localize, type, value === true ? forms[type]! : value),
+        )
+        .filter((form) => !!form)

@@ -13,6 +13,10 @@ import { ServerToggleOptionModel, toServerToggleOption } from './toggle'
 
 export type ServerOptionsModel = Record<string, ServerOptionModel>
 
+export type PickOptions<T extends ServerOptionsModel> = {
+    [K in keyof T]?: boolean | T[K]
+}
+
 export type ServerOptionModel =
     | ServerTextOptionModel
     | ServerTextAreaOptionModel
@@ -24,9 +28,6 @@ export type ServerOptionModel =
     | ServerServerItemsOptionModel
     | ServerCollectionItemOptionModel
     | ServerFileOptionModel
-
-export const optionTypes = <T extends ServerOptionsModel>(options: T): (keyof T & string)[] =>
-    Object.keys(options)
 
 export const toServerOption = (
     localize: Localize,
@@ -48,8 +49,13 @@ export const toServerOption = (
 
 export const toServerOptions = <T extends ServerOptionsModel>(
     localize: Localize,
-    types: (keyof T & string)[],
+    pick: PickOptions<T>,
     options: T,
 ): ServerOption[] =>
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    types.map((type) => toServerOption(localize, type, options[type]!))
+    Object.entries(pick as Partial<Record<string, boolean | ServerOptionModel>>)
+        .map(
+            ([type, value]) =>
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                value && toServerOption(localize, type, value === true ? options[type]! : value),
+        )
+        .filter((form) => !!form)

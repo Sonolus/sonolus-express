@@ -1,6 +1,6 @@
 import { Text } from '@sonolus/core'
 import { ItemModel } from '../../models/items/item'
-import { ServerFormsModel, formTypes } from '../../models/server/forms/form'
+import { ServerFormsModel } from '../../models/server/forms/form'
 import { ServerItemInfoModel, toServerItemInfo } from '../../models/server/items/info'
 import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
@@ -37,8 +37,8 @@ export const createDefaultServerItemInfoHandler =
         >,
     ): ServerItemInfoHandler<TConfigurationOptions, TCreates, TSearches> =>
     () => ({
-        creates: group.creates && formTypes(group.creates),
-        searches: formTypes(group.searches),
+        creates: group.creates ?? undefined,
+        searches: group.searches,
         sections: [
             {
                 title: { en: Text.Newest },

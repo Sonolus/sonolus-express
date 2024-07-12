@@ -6,9 +6,9 @@ export {
     ServerMultiOptionValueModel,
 } from './multi'
 export {
+    PickOptions,
     ServerOptionModel,
     ServerOptionsModel,
-    optionTypes,
     toServerOption,
     toServerOptions,
 } from './option'

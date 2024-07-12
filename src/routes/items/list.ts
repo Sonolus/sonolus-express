@@ -1,5 +1,5 @@
 import { ItemModel, ToItem } from '../../models/items/item'
-import { ServerFormsModel, formTypes } from '../../models/server/forms/form'
+import { ServerFormsModel } from '../../models/server/forms/form'
 import { ServerSearchesValue, parseServerSearchesValue } from '../../models/server/forms/value'
 import { ServerItemListModel, toServerItemList } from '../../models/server/items/list'
 import { ServerOptionsModel } from '../../models/server/options/option'
@@ -43,7 +43,7 @@ export const createDefaultServerItemListHandler =
         const items = filter(group.items, (search as { keywords?: string }).keywords ?? '')
 
         return {
-            searches: formTypes(group.searches),
+            searches: group.searches,
             ...paginateItems(items, page),
         }
     }
