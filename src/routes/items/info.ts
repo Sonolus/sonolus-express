@@ -11,7 +11,7 @@ import { SonolusRouteHandler } from '../handler'
 
 export type ServerItemInfoHandler<
     TConfigurationOptions extends ServerOptionsModel,
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions>,
@@ -21,7 +21,7 @@ export const createDefaultServerItemInfoHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
@@ -37,7 +37,7 @@ export const createDefaultServerItemInfoHandler =
         >,
     ): ServerItemInfoHandler<TConfigurationOptions, TCreates, TSearches> =>
     () => ({
-        creates: group.creates ?? undefined,
+        creates: group.creates,
         searches: group.searches,
         sections: [
             {
@@ -53,7 +53,7 @@ export const createServerItemInfoRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,

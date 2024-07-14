@@ -10,7 +10,7 @@ import { SonolusBase } from './base'
 
 export class SonolusMultiplayer<
     TConfigurationOptions extends ServerOptionsModel,
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
 > {
     private readonly _getCreates: () => TCreates
 

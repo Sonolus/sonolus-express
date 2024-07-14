@@ -15,7 +15,6 @@ export type ServerItemLeaderboardRecordDetailsHandler<
     TConfigurationOptions extends ServerOptionsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
-        session: string | undefined
         itemName: string
         leaderboardName: string
         recordName: string
@@ -26,7 +25,7 @@ export const createServerItemLeaderboardRecordDetailsRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,

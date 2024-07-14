@@ -13,10 +13,7 @@ export type ServerCreateRoomHandler<TConfigurationOptions extends ServerOptionsM
 ) => MaybePromise<ServerCreateRoomResponse | 401>
 
 export const createServerCreateRoomRouteHandler =
-    <
-        TConfigurationOptions extends ServerOptionsModel,
-        TCreates extends ServerFormsModel | undefined,
-    >(
+    <TConfigurationOptions extends ServerOptionsModel, TCreates extends ServerFormsModel>(
         multiplayer: SonolusMultiplayer<TConfigurationOptions, TCreates>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {

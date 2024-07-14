@@ -84,7 +84,7 @@ import {
 import { SonolusBase } from './base'
 
 export type SonolusItemGroupOptions<
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
     TActions extends ServerFormsModel,
     TCommunityActions extends ServerFormsModel,
@@ -100,7 +100,7 @@ export type SonolusItemGroupOptions<
 export class SonolusItemGroup<
     TConfigurationOptions extends ServerOptionsModel,
     TItemModel extends ItemModel,
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
     TActions extends ServerFormsModel,
     TCommunityActions extends ServerFormsModel,
@@ -205,7 +205,7 @@ export class SonolusItemGroup<
         this.type = type
         this.items = []
 
-        this.creates = options.creates as never
+        this.creates = options.creates ?? ({} as never)
         this.searches = options.searches ?? ({} as never)
         this.actions = options.actions ?? ({} as never)
 

@@ -5,17 +5,17 @@ import { PickForms, ServerFormsModel, toServerForms } from '../../server/forms/f
 import { ServerItemSectionModel, toServerItemSections } from '../../server/items/section'
 
 export type ServerItemInfoModel<
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
 > = {
-    creates?: PickForms<NonNullable<TCreates>>
+    creates?: PickForms<TCreates>
     searches?: PickForms<TSearches>
     sections: ServerItemSectionModel<TSearches>[]
     banner?: Srl
 }
 
 export const toServerItemInfo = <
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
 >(
     sonolus: SonolusBase,
@@ -24,7 +24,7 @@ export const toServerItemInfo = <
     creates: TCreates,
     searches: TSearches,
 ): ServerItemInfo => ({
-    creates: creates && info.creates && toServerForms(localize, info.creates, creates),
+    creates: info.creates && toServerForms(localize, info.creates, creates),
     searches: info.searches && toServerForms(localize, info.searches, searches),
     sections: toServerItemSections(sonolus, localize, info.sections, searches),
     banner: info.banner,

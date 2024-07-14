@@ -13,7 +13,7 @@ import { SonolusRouteHandler } from '../handler'
 
 export type ServerJoinRoomHandler<
     TConfigurationOptions extends ServerOptionsModel,
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
@@ -22,16 +22,13 @@ export type ServerJoinRoomHandler<
         signature: Buffer
         create?: {
             key: string
-            value: ServerFormsValue<NonNullable<TCreates>>
+            value: ServerFormsValue<TCreates>
         }
     },
 ) => MaybePromise<ServerJoinRoomResponse | 400 | 401 | 404>
 
 export const createServerJoinRoomRouteHandler =
-    <
-        TConfigurationOptions extends ServerOptionsModel,
-        TCreates extends ServerFormsModel | undefined,
-    >(
+    <TConfigurationOptions extends ServerOptionsModel, TCreates extends ServerFormsModel>(
         sonolus: SonolusBase,
         multiplayer: SonolusMultiplayer<TConfigurationOptions, TCreates>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
@@ -95,7 +92,7 @@ export const createServerJoinRoomRouteHandler =
         }
 
         const key = req.headers['sonolus-room-key']
-        const value = multiplayer.creates && parseServerFormsValue(req.query, multiplayer.creates)
+        const value = parseServerFormsValue(req.query, multiplayer.creates)
 
         const response = await multiplayer.joinHandler({
             ...ctx,

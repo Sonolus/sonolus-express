@@ -12,10 +12,10 @@ import { SonolusRouteHandler } from '../handler'
 
 export type ServerCreateItemHandler<
     TConfigurationOptions extends ServerOptionsModel,
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
-        value: ServerFormsValue<NonNullable<TCreates>>
+        value: ServerFormsValue<TCreates>
     },
 ) => MaybePromise<ServerCreateItemResponse | 400 | 401>
 
@@ -23,7 +23,7 @@ export const createServerCreateItemRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
@@ -39,11 +39,6 @@ export const createServerCreateItemRouteHandler =
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
         if (!group.createHandler) {
-            res.status(404).end()
-            return
-        }
-
-        if (!group.creates) {
             res.status(404).end()
             return
         }

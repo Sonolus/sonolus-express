@@ -23,7 +23,7 @@ export const createServerUploadItemCommunityCommentActionRouteHandler =
     <
         TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
