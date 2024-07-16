@@ -21,6 +21,7 @@ export const createServerPreUploadItemRouteHandler =
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         group: SonolusItemGroup<
             TConfigurationOptions,
@@ -28,7 +29,8 @@ export const createServerPreUploadItemRouteHandler =
             TCreates,
             TSearches,
             TActions,
-            TCommunityActions
+            TCommunityActions,
+            TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, next, ctx }) => {

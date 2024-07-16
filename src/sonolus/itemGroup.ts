@@ -88,12 +88,16 @@ export type SonolusItemGroupOptions<
     TSearches extends ServerFormsModel,
     TActions extends ServerFormsModel,
     TCommunityActions extends ServerFormsModel,
+    TCommunityCommentActions extends ServerFormsModel,
 > = {
     creates?: TCreates
     searches?: TSearches
     actions?: TActions
     community?: {
         actions?: TCommunityActions
+        comment?: {
+            actions?: TCommunityCommentActions
+        }
     }
 }
 
@@ -104,6 +108,7 @@ export class SonolusItemGroup<
     TSearches extends ServerFormsModel,
     TActions extends ServerFormsModel,
     TCommunityActions extends ServerFormsModel,
+    TCommunityCommentActions extends ServerFormsModel,
 > {
     readonly type: ItemType
     items: TItemModel[]
@@ -129,7 +134,11 @@ export class SonolusItemGroup<
     community: {
         actions: TCommunityActions
 
-        infoHandler?: ServerItemCommunityInfoHandler<TConfigurationOptions, TCommunityActions>
+        infoHandler?: ServerItemCommunityInfoHandler<
+            TConfigurationOptions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >
 
         submitHandler?: ServerSubmitItemCommunityActionHandler<
             TConfigurationOptions,
@@ -139,14 +148,16 @@ export class SonolusItemGroup<
         uploadHandler?: ServerUploadItemCommunityActionHandler<TConfigurationOptions>
 
         comment: {
+            actions: TCommunityCommentActions
+
             listHandler?: ServerItemCommunityCommentListHandler<
                 TConfigurationOptions,
-                TCommunityActions
+                TCommunityCommentActions
             >
 
             submitHandler?: ServerSubmitItemCommunityCommentActionHandler<
                 TConfigurationOptions,
-                TCommunityActions
+                TCommunityCommentActions
             >
             preUploadHandler?: ServerPreUploadItemCommunityCommentActionHandler<TConfigurationOptions>
             uploadHandler?: ServerUploadItemCommunityCommentActionHandler<TConfigurationOptions>
@@ -198,7 +209,13 @@ export class SonolusItemGroup<
     constructor(
         sonolus: SonolusBase,
         type: ItemType,
-        options: SonolusItemGroupOptions<TCreates, TSearches, TActions, TCommunityActions> = {},
+        options: SonolusItemGroupOptions<
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        > = {},
         toItem: ToItem<TItemModel, unknown>,
         filter: FilterItems<TItemModel>,
     ) {
@@ -218,7 +235,9 @@ export class SonolusItemGroup<
         this.community = {
             actions: options.community?.actions ?? ({} as never),
 
-            comment: {},
+            comment: {
+                actions: options.community?.comment?.actions ?? ({} as never),
+            },
         }
 
         this.leaderboard = {

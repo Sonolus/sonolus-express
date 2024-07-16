@@ -25,6 +25,7 @@ export const createDefaultServerItemInfoHandler =
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
         group: SonolusItemGroup<
@@ -33,7 +34,8 @@ export const createDefaultServerItemInfoHandler =
             TCreates,
             TSearches,
             TActions,
-            TCommunityActions
+            TCommunityActions,
+            TCommunityCommentActions
         >,
     ): ServerItemInfoHandler<TConfigurationOptions, TCreates, TSearches> =>
     () => ({
@@ -57,6 +59,7 @@ export const createServerItemInfoRouteHandler =
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
         group: SonolusItemGroup<
@@ -65,7 +68,8 @@ export const createServerItemInfoRouteHandler =
             TCreates,
             TSearches,
             TActions,
-            TCommunityActions
+            TCommunityActions,
+            TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ res, localize, ctx }) => {

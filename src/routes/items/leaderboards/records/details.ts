@@ -29,6 +29,7 @@ export const createServerItemLeaderboardRecordDetailsRouteHandler =
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
         group: SonolusItemGroup<
@@ -37,7 +38,8 @@ export const createServerItemLeaderboardRecordDetailsRouteHandler =
             TCreates,
             TSearches,
             TActions,
-            TCommunityActions
+            TCommunityActions,
+            TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, localize, ctx }) => {

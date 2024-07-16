@@ -13,11 +13,14 @@ import { SonolusRouteHandler } from '../../handler'
 export type ServerItemCommunityInfoHandler<
     TConfigurationOptions extends ServerOptionsModel,
     TCommunityActions extends ServerFormsModel,
+    TCommunityCommentActions extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
     },
-) => MaybePromise<ServerItemCommunityInfoModel<TCommunityActions> | 401 | 404>
+) => MaybePromise<
+    ServerItemCommunityInfoModel<TCommunityActions, TCommunityCommentActions> | 401 | 404
+>
 
 export const createServerItemCommunityInfoRouteHandler =
     <
@@ -27,6 +30,7 @@ export const createServerItemCommunityInfoRouteHandler =
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         group: SonolusItemGroup<
             TConfigurationOptions,
@@ -34,7 +38,8 @@ export const createServerItemCommunityInfoRouteHandler =
             TCreates,
             TSearches,
             TActions,
-            TCommunityActions
+            TCommunityActions,
+            TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, localize, ctx }) => {
@@ -55,5 +60,12 @@ export const createServerItemCommunityInfoRouteHandler =
             return
         }
 
-        res.json(toServerItemCommunityInfo(localize, response, group.community.actions))
+        res.json(
+            toServerItemCommunityInfo(
+                localize,
+                response,
+                group.community.actions,
+                group.community.comment.actions,
+            ),
+        )
     }

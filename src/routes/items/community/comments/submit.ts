@@ -12,12 +12,12 @@ import { SonolusRouteHandler } from '../../../handler'
 
 export type ServerSubmitItemCommunityCommentActionHandler<
     TConfigurationOptions extends ServerOptionsModel,
-    TCommunityActions extends ServerFormsModel,
+    TCommunityCommentActions extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
         commentName: string
-        value: ServerFormsValue<TCommunityActions>
+        value: ServerFormsValue<TCommunityCommentActions>
     },
 ) => MaybePromise<ServerSubmitItemCommunityCommentActionResponse | 400 | 401 | 404>
 
@@ -29,6 +29,7 @@ export const createServerSubmitItemCommunityCommentActionRouteHandler =
         TSearches extends ServerFormsModel,
         TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         group: SonolusItemGroup<
             TConfigurationOptions,
@@ -36,7 +37,8 @@ export const createServerSubmitItemCommunityCommentActionRouteHandler =
             TCreates,
             TSearches,
             TActions,
-            TCommunityActions
+            TCommunityActions,
+            TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, ctx }) => {
@@ -71,7 +73,7 @@ export const createServerSubmitItemCommunityCommentActionRouteHandler =
 
         const value = parseServerFormsValue(
             Object.fromEntries(new URLSearchParams(request.values)),
-            group.community.actions,
+            group.community.comment.actions,
         )
         if (!value) {
             res.status(400).end()

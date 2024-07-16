@@ -104,6 +104,16 @@ export class Sonolus<
     TEngineCommunityActions extends ServerFormsModel = {},
     TReplayCommunityActions extends ServerFormsModel = {},
     TRoomCommunityActions extends ServerFormsModel = {},
+    TPostCommunityCommentActions extends ServerFormsModel = {},
+    TPlaylistCommunityCommentActions extends ServerFormsModel = {},
+    TLevelCommunityCommentActions extends ServerFormsModel = {},
+    TSkinCommunityCommentActions extends ServerFormsModel = {},
+    TBackgroundCommunityCommentActions extends ServerFormsModel = {},
+    TEffectCommunityCommentActions extends ServerFormsModel = {},
+    TParticleCommunityCommentActions extends ServerFormsModel = {},
+    TEngineCommunityCommentActions extends ServerFormsModel = {},
+    TReplayCommunityCommentActions extends ServerFormsModel = {},
+    TRoomCommunityCommentActions extends ServerFormsModel = {},
 > {
     readonly address?: string
     readonly fallbackLocale: string
@@ -130,7 +140,8 @@ export class Sonolus<
         TPostCreates,
         TPostSearches,
         TPostActions,
-        TPostCommunityActions
+        TPostCommunityActions,
+        TPostCommunityCommentActions
     >
     readonly playlist!: SonolusItemGroup<
         TConfigurationOptions,
@@ -138,7 +149,8 @@ export class Sonolus<
         TPlaylistCreates,
         TPlaylistSearches,
         TPlaylistActions,
-        TPlaylistCommunityActions
+        TPlaylistCommunityActions,
+        TPlaylistCommunityCommentActions
     >
     readonly level!: SonolusItemGroup<
         TConfigurationOptions,
@@ -146,7 +158,8 @@ export class Sonolus<
         TLevelCreates,
         TLevelSearches,
         TLevelActions,
-        TLevelCommunityActions
+        TLevelCommunityActions,
+        TLevelCommunityCommentActions
     >
     readonly skin!: SonolusItemGroup<
         TConfigurationOptions,
@@ -154,7 +167,8 @@ export class Sonolus<
         TSkinCreates,
         TSkinSearches,
         TSkinActions,
-        TSkinCommunityActions
+        TSkinCommunityActions,
+        TSkinCommunityCommentActions
     >
     readonly background!: SonolusItemGroup<
         TConfigurationOptions,
@@ -162,7 +176,8 @@ export class Sonolus<
         TBackgroundCreates,
         TBackgroundSearches,
         TBackgroundActions,
-        TBackgroundCommunityActions
+        TBackgroundCommunityActions,
+        TBackgroundCommunityCommentActions
     >
     readonly effect!: SonolusItemGroup<
         TConfigurationOptions,
@@ -170,7 +185,8 @@ export class Sonolus<
         TEffectCreates,
         TEffectSearches,
         TEffectActions,
-        TEffectCommunityActions
+        TEffectCommunityActions,
+        TEffectCommunityCommentActions
     >
     readonly particle!: SonolusItemGroup<
         TConfigurationOptions,
@@ -178,7 +194,8 @@ export class Sonolus<
         TParticleCreates,
         TParticleSearches,
         TParticleActions,
-        TParticleCommunityActions
+        TParticleCommunityActions,
+        TParticleCommunityCommentActions
     >
     readonly engine!: SonolusItemGroup<
         TConfigurationOptions,
@@ -186,7 +203,8 @@ export class Sonolus<
         TEngineCreates,
         TEngineSearches,
         TEngineActions,
-        TEngineCommunityActions
+        TEngineCommunityActions,
+        TEngineCommunityCommentActions
     >
     readonly replay!: SonolusItemGroup<
         TConfigurationOptions,
@@ -194,7 +212,8 @@ export class Sonolus<
         TReplayCreates,
         TReplaySearches,
         TReplayActions,
-        TReplayCommunityActions
+        TReplayCommunityActions,
+        TReplayCommunityCommentActions
     >
     readonly room!: SonolusItemGroup<
         TConfigurationOptions,
@@ -202,7 +221,8 @@ export class Sonolus<
         TRoomCreates,
         TRoomSearches,
         TRoomActions,
-        TRoomCommunityActions
+        TRoomCommunityActions,
+        TRoomCommunityCommentActions
     >
 
     constructor(
@@ -218,61 +238,71 @@ export class Sonolus<
                 TPostCreates,
                 TPostSearches,
                 TPostActions,
-                TPostCommunityActions
+                TPostCommunityActions,
+                TPostCommunityCommentActions
             >
             playlist?: SonolusItemGroupOptions<
                 TPlaylistCreates,
                 TPlaylistSearches,
                 TPlaylistActions,
-                TPlaylistCommunityActions
+                TPlaylistCommunityActions,
+                TPlaylistCommunityCommentActions
             >
             level?: SonolusItemGroupOptions<
                 TLevelCreates,
                 TLevelSearches,
                 TLevelActions,
-                TLevelCommunityActions
+                TLevelCommunityActions,
+                TLevelCommunityCommentActions
             >
             skin?: SonolusItemGroupOptions<
                 TSkinCreates,
                 TSkinSearches,
                 TSkinActions,
-                TSkinCommunityActions
+                TSkinCommunityActions,
+                TSkinCommunityCommentActions
             >
             background?: SonolusItemGroupOptions<
                 TBackgroundCreates,
                 TBackgroundSearches,
                 TBackgroundActions,
-                TBackgroundCommunityActions
+                TBackgroundCommunityActions,
+                TBackgroundCommunityCommentActions
             >
             effect?: SonolusItemGroupOptions<
                 TEffectCreates,
                 TEffectSearches,
                 TEffectActions,
-                TEffectCommunityActions
+                TEffectCommunityActions,
+                TEffectCommunityCommentActions
             >
             particle?: SonolusItemGroupOptions<
                 TParticleCreates,
                 TParticleSearches,
                 TParticleActions,
-                TParticleCommunityActions
+                TParticleCommunityActions,
+                TParticleCommunityCommentActions
             >
             engine?: SonolusItemGroupOptions<
                 TEngineCreates,
                 TEngineSearches,
                 TEngineActions,
-                TEngineCommunityActions
+                TEngineCommunityActions,
+                TEngineCommunityCommentActions
             >
             replay?: SonolusItemGroupOptions<
                 TReplayCreates,
                 TReplaySearches,
                 TReplayActions,
-                TReplayCommunityActions
+                TReplayCommunityActions,
+                TReplayCommunityCommentActions
             >
             room?: SonolusItemGroupOptions<
                 TRoomCreates,
                 TRoomSearches,
                 TRoomActions,
-                TRoomCommunityActions
+                TRoomCommunityActions,
+                TRoomCommunityCommentActions
             >
         } = {},
     ) {
