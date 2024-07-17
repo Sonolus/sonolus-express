@@ -135,7 +135,7 @@ export const serializeRawServerOptionValue = <T extends ServerOptionModel>(
     })[option.type](value as never)
 
 export type RawServerOptionsValue<T extends ServerOptionsModel> = {
-    [K in keyof T]: RawServerOptionValue<T[K]>
+    [K in keyof T]?: RawServerOptionValue<T[K]>
 }
 
 export type ServerOptionsValue<T extends ServerOptionsModel> = {
