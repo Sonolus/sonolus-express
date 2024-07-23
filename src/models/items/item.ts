@@ -4,7 +4,7 @@ import { Localize } from '../../utils/localization'
 
 export type ItemModel = {
     name: string
-    description: LocalizationText
+    description?: LocalizationText
 }
 
 export type Model<TItem, TOverride> = Omit<TItem, keyof TOverride> & TOverride

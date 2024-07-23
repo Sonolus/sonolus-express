@@ -1,69 +1,103 @@
 import { Icon, Text } from '@sonolus/core'
-import { ServerFormsModel } from '../../models/forms/form'
-import { ItemDetailsModel, toItemDetails } from '../../models/items/details'
 import { ItemModel, ToItem } from '../../models/items/item'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerItemDetailsModel, toServerItemDetails } from '../../models/server/items/details'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { MaybePromise } from '../../utils/promise'
+import { SonolusCtx } from '../ctx'
 import { SonolusRouteHandler } from '../handler'
 
-export type ItemDetailsHandler<TItemModel> = (ctx: {
-    session: string | undefined
-    itemName: string
-}) => MaybePromise<ItemDetailsModel<TItemModel> | undefined>
+export type ServerItemDetailsHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+    TSearches extends ServerFormsModel,
+    TActions extends ServerFormsModel,
+    TItemModel,
+> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
+    },
+) => MaybePromise<ServerItemDetailsModel<TItemModel, TSearches, TActions> | 401 | 404>
 
-export const createDefaultItemDetailsHandler =
+export const createDefaultServerItemDetailsHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): ItemDetailsHandler<TItemModel> =>
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
+    ): ServerItemDetailsHandler<TConfigurationOptions, TSearches, TActions, TItemModel> =>
     ({ itemName }) => {
         const item = group.items.find(({ name }) => name === itemName)
-        if (!item) return undefined
+        if (!item) return 404
 
         const index = group.items.indexOf(item)
         return {
             item,
             description: item.description,
+            actions: group.actions,
             hasCommunity: false,
             leaderboards: [],
             sections: [
                 {
                     title: { en: Text.Recommended },
                     icon: Icon.Star,
-                    items: group.items.slice(index + 1, index + 6),
+                    itemType: group.type,
+                    items: group.items.slice(index + 1, index + 6) as never,
                 },
             ],
         }
     }
 
-export const createItemDetailsRouteHandler =
+export const createServerItemDetailsRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
         toItem: ToItem<TItemModel, unknown>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, localize, session }) => {
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, localize, ctx }) => {
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
-        const details = await group.detailsHandler({ session, itemName })
-        if (!details) {
-            res.status(404).end()
+        const response = await group.detailsHandler({ ...ctx, itemName })
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 
-        res.json(toItemDetails(sonolus, localize, toItem, details))
+        res.json(
+            toServerItemDetails(sonolus, localize, toItem, response, group.searches, group.actions),
+        )
     }

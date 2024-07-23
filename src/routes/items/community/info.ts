@@ -1,38 +1,71 @@
-import { ItemModel } from '../../../models'
-import { ServerFormsModel } from '../../../models/forms/form'
-import { ItemCommunityInfoModel, toItemCommunityInfo } from '../../../models/items/community/info'
+import { ItemModel } from '../../../models/items/item'
+import { ServerFormsModel } from '../../../models/server/forms/form'
+import {
+    ServerItemCommunityInfoModel,
+    toServerItemCommunityInfo,
+} from '../../../models/server/items/community/info'
+import { ServerOptionsModel } from '../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../utils/promise'
+import { SonolusCtx } from '../../ctx'
 import { SonolusRouteHandler } from '../../handler'
 
-export type ItemCommunityInfoHandler<TCommunityActions extends ServerFormsModel> = (ctx: {
-    session: string | undefined
-    itemName: string
-}) => MaybePromise<ItemCommunityInfoModel<TCommunityActions> | undefined>
+export type ServerItemCommunityInfoHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+    TCommunityActions extends ServerFormsModel,
+    TCommunityCommentActions extends ServerFormsModel,
+> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
+    },
+) => MaybePromise<
+    ServerItemCommunityInfoModel<TCommunityActions, TCommunityCommentActions> | 401 | 404
+>
 
-export const defaultItemCommunityInfoHandler = (): undefined => undefined
-
-export const createItemCommunityInfoRouteHandler =
+export const createServerItemCommunityInfoRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, localize, session }) => {
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, localize, ctx }) => {
+        if (!group.community.infoHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
-        const info = await group.community.infoHandler({ session, itemName })
-        if (!info) {
-            res.status(404).end()
+        const response = await group.community.infoHandler({ ...ctx, itemName })
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 
-        res.json(toItemCommunityInfo(localize, info, group.community.actions))
+        res.json(
+            toServerItemCommunityInfo(
+                localize,
+                response,
+                group.community.actions,
+                group.community.comment.actions,
+            ),
+        )
     }

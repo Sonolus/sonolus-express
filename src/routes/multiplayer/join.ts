@@ -1,35 +1,43 @@
-import { JoinRoomResponse, UserProfile, getSignaturePublicKey } from '@sonolus/core'
+import { ServerJoinRoomResponse, ServiceUserProfile, getSignaturePublicKey } from '@sonolus/core'
 import { webcrypto } from 'node:crypto'
-import { ServerFormsModel } from '../../models/forms/form'
-import { ParsedQuery, parseQuery } from '../../models/forms/query'
-import { joinRoomRequestSchema } from '../../schemas/server/joinRoomRequest'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerFormsValue, parseServerFormsValue } from '../../models/server/forms/value'
+import { ServerOptionsModel } from '../../models/server/options/option'
+import { serverJoinRoomRequestSchema } from '../../schemas/server/multiplayer/joinRoom'
 import { SonolusBase } from '../../sonolus'
 import { SonolusMultiplayer } from '../../sonolus/multiplayer'
 import { parse } from '../../utils/json'
 import { MaybePromise } from '../../utils/promise'
+import { SonolusCtx } from '../ctx'
 import { SonolusRouteHandler } from '../handler'
 
-export type MultiplayerJoinHandler<TCreates extends ServerFormsModel | undefined> = (ctx: {
-    session: string | undefined
-    localization: string
-    itemName: string
-    userProfile: UserProfile
-    authentication: Buffer
-    signature: Buffer
-    create?: {
-        key: string
-        values: ParsedQuery<NonNullable<TCreates>>
-    }
-}) => MaybePromise<JoinRoomResponse | undefined>
+export type ServerJoinRoomHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+    TCreates extends ServerFormsModel,
+> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
+        userProfile: ServiceUserProfile
+        authentication: Buffer
+        signature: Buffer
+        create?: {
+            key: string
+            value: ServerFormsValue<TCreates>
+        }
+    },
+) => MaybePromise<ServerJoinRoomResponse | 400 | 401 | 404>
 
-export const defaultMultiplayerJoinHandler = (): undefined => undefined
-
-export const createMultiplayerJoinRouteHandler =
-    <TCreates extends ServerFormsModel | undefined>(
+export const createServerJoinRoomRouteHandler =
+    <TConfigurationOptions extends ServerOptionsModel, TCreates extends ServerFormsModel>(
         sonolus: SonolusBase,
-        multiplayer: SonolusMultiplayer<TCreates>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, localization, session }) => {
+        multiplayer: SonolusMultiplayer<TConfigurationOptions, TCreates>,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, ctx }) => {
+        if (!multiplayer.joinHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
             res.status(400).end()
@@ -42,7 +50,7 @@ export const createMultiplayerJoinRouteHandler =
             return
         }
 
-        const request = parse(body, joinRoomRequestSchema)
+        const request = parse(body, serverJoinRoomRequestSchema)
         if (!request) {
             res.status(400).end()
             return
@@ -84,19 +92,18 @@ export const createMultiplayerJoinRouteHandler =
         }
 
         const key = req.headers['sonolus-room-key']
-        const values = multiplayer.creates && parseQuery(req.query, multiplayer.creates)
+        const value = parseServerFormsValue(req.query, multiplayer.creates)
 
         const response = await multiplayer.joinHandler({
-            session,
-            localization,
+            ...ctx,
             itemName,
             userProfile: request.userProfile,
             authentication: body,
             signature: signatureBuffer,
-            create: typeof key === 'string' && values ? { key, values } : undefined,
+            create: typeof key === 'string' && value ? { key, value } : undefined,
         })
-        if (!response) {
-            res.status(404).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

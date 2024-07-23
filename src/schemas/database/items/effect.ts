@@ -13,7 +13,7 @@ export const databaseEffectItemSchema = Type.Object({
     subtitle: localizationTextSchema,
     author: localizationTextSchema,
     tags: Type.Array(databaseTagSchema),
-    description: localizationTextSchema,
+    description: Type.Optional(localizationTextSchema),
     thumbnail: srlSchema,
     data: srlSchema,
     audio: srlSchema,

@@ -2,8 +2,8 @@ import { Type } from '@sinclair/typebox'
 import { SkinItem } from '@sonolus/core'
 import { Expect } from '../../../utils/test'
 import { srlSchema } from '../../srl'
+import { tagSchema } from '../../tag'
 import { SchemaToMatch } from '../../test'
-import { tagSchema } from '../tag'
 
 export const skinItemSchema = Type.Object({
     name: Type.String(),

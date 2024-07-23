@@ -1,52 +1,70 @@
-import { ServerFormsModel } from '../../../models/forms/form'
 import { ItemModel } from '../../../models/items/item'
+import { ServerFormsModel } from '../../../models/server/forms/form'
 import {
-    ItemLeaderboardDetailsModel,
-    toItemLeaderboardDetails,
-} from '../../../models/items/leaderboards/details'
+    ServerItemLeaderboardDetailsModel,
+    toServerItemLeaderboardDetails,
+} from '../../../models/server/items/leaderboards/details'
+import { ServerOptionsModel } from '../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { MaybePromise } from '../../../utils/promise'
+import { SonolusCtx } from '../../ctx'
 import { SonolusRouteHandler } from '../../handler'
 
-export type ItemLeaderboardDetailsHandler = (ctx: {
-    session: string | undefined
-    itemName: string
-    leaderboardName: string
-}) => MaybePromise<ItemLeaderboardDetailsModel | undefined>
+export type ServerItemLeaderboardDetailsHandler<TConfigurationOptions extends ServerOptionsModel> =
+    (
+        ctx: SonolusCtx<TConfigurationOptions> & {
+            itemName: string
+            leaderboardName: string
+        },
+    ) => MaybePromise<ServerItemLeaderboardDetailsModel | 401 | 404>
 
-export const defaultItemLeaderboardDetailsHandler = (): undefined => undefined
-
-export const createItemLeaderboardDetailsRouteHandler =
+export const createServerItemLeaderboardDetailsRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, localize, session }) => {
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, localize, ctx }) => {
+        if (!group.leaderboard.detailsHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
         const leaderboardName = req.params.leaderboardName
         if (!leaderboardName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
-        const details = await group.leaderboard.detailsHandler({
-            session,
+        const response = await group.leaderboard.detailsHandler({
+            ...ctx,
             itemName,
             leaderboardName,
         })
-        if (!details) {
-            res.status(404).end()
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 
-        res.json(toItemLeaderboardDetails(localize, details))
+        res.json(toServerItemLeaderboardDetails(localize, response))
     }

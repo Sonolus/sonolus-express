@@ -1,34 +1,33 @@
-import { ServerFormsModel } from '../models/forms/form'
+import { ServerFormsModel } from '../models/server/forms/form'
+import { ServerOptionsModel } from '../models/server/options/option'
 import { SonolusRouteHandler } from '../routes/handler'
 import {
-    MultiplayerCreateHandler,
-    createMultiplayerCreateRouteHandler,
-    defaultMultiplayerCreateHandler,
+    ServerCreateRoomHandler,
+    createServerCreateRoomRouteHandler,
 } from '../routes/multiplayer/create'
-import {
-    MultiplayerJoinHandler,
-    createMultiplayerJoinRouteHandler,
-    defaultMultiplayerJoinHandler,
-} from '../routes/multiplayer/join'
+import { ServerJoinRoomHandler, createServerJoinRoomRouteHandler } from '../routes/multiplayer/join'
 import { SonolusBase } from './base'
 
-export class SonolusMultiplayer<TCreates extends ServerFormsModel | undefined> {
+export class SonolusMultiplayer<
+    TConfigurationOptions extends ServerOptionsModel,
+    TCreates extends ServerFormsModel,
+> {
     private readonly _getCreates: () => TCreates
 
-    createHandler: MultiplayerCreateHandler
-    joinHandler: MultiplayerJoinHandler<TCreates>
+    createHandler?: ServerCreateRoomHandler<TConfigurationOptions>
 
-    private readonly _createRouteHandler: SonolusRouteHandler
-    private readonly _joinRouteHandler: SonolusRouteHandler
+    joinHandler?: ServerJoinRoomHandler<TConfigurationOptions, TCreates>
+
+    private readonly _createRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _joinRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
     constructor(sonolus: SonolusBase, getCreates: () => TCreates) {
         this._getCreates = getCreates
 
-        this.createHandler = defaultMultiplayerCreateHandler
-        this.joinHandler = defaultMultiplayerJoinHandler
+        this._createRouteHandler = createServerCreateRoomRouteHandler(this)
 
-        this._createRouteHandler = createMultiplayerCreateRouteHandler(this)
-        this._joinRouteHandler = createMultiplayerJoinRouteHandler(sonolus, this)
+        this._joinRouteHandler = createServerJoinRoomRouteHandler(sonolus, this)
     }
 
     get creates(): TCreates {

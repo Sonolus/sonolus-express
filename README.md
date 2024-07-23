@@ -49,6 +49,7 @@ Create a Sonolus server.
 
 -   `options.address`: address of server (should not have ending `/`).
 -   `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
+-   `options.configuration`: server configuration.
 -   `options.upload`: upload options.
 -   `options[type]`: options for item group, `type` can be: `post`, `playlist`, `level`, `skin`, `background`, `effect`, `particle`, `engine`, `replay`, or `room`.
 -   `options[type].creates`: creates for item group.
@@ -143,6 +144,18 @@ Handler for uploading item.
 
 Handler for requesting item details.
 
+#### `[type].submitActionHandler`
+
+Handler for submitting item action.
+
+#### `[type].preUploadActionHandler`
+
+Pre handler for uploading item action.
+
+#### `[type].uploadActionHandler`
+
+Handler for uploading item action.
+
 #### `[type].community.actions`
 
 Community actions.
@@ -155,6 +168,18 @@ Handler for requesting item community info.
 
 Handler for submitting item community action.
 
+#### `[type].community.preUploadHandler`
+
+Pre handler for uploading item community action.
+
+#### `[type].community.uploadHandler`
+
+Handler for uploading item community action.
+
+#### `[type].community.comment.actions`
+
+Community comment actions.
+
 #### `[type].community.comment.listHandler`
 
 Handler for requesting item community comment list.
@@ -162,6 +187,14 @@ Handler for requesting item community comment list.
 #### `[type].community.comment.submitHandler`
 
 Handler for submitting item community comment action.
+
+#### `[type].community.comment.preUploadHandler`
+
+Pre handler for uploading item community comment action.
+
+#### `[type].community.comment.uploadHandler`
+
+Handler for uploading item community comment action.
 
 #### `[type].leaderboard.detailsHandler`
 
@@ -183,7 +216,7 @@ Load a pack created by [sonolus-pack](https://github.com/NonSpicyBurrito/sonolus
 
 #### `add(type, data, hash?)`
 
-Add a resource. Returns `SRL` which can be used to access the resource.
+Add a resource. Returns `Srl` which can be used to access the resource.
 
 -   `type`: resource type.
 -   `data`: data (`Buffer`) or file path (`string`) to the data.
@@ -219,34 +252,6 @@ Create a Sonolus redirect share server.
 #### `router`
 
 Configured Express.js router.
-
-### `formTypes(forms)`
-
-Get types of forms.
-
--   `forms`: forms model.
-
-### `toServerForms(localize, types, forms)`
-
-Convert forms model to forms.
-
--   `localize`: localize function.
--   `types`: types to be converted.
--   `forms`: forms model.
-
-### `parseQuery(query, forms)`
-
-Parse query based on forms model.
-
--   `query`: query.
--   `forms`: forms model.
-
-### `parseSearchQuery(query, searches)`
-
-Parse search query based on searches.
-
--   `query`: query.
--   `searches`: searches.
 
 ### `filter*(items, keywords)`
 

@@ -13,7 +13,7 @@ export const databaseEngineItemSchema = Type.Object({
     subtitle: localizationTextSchema,
     author: localizationTextSchema,
     tags: Type.Array(databaseTagSchema),
-    description: localizationTextSchema,
+    description: Type.Optional(localizationTextSchema),
     skin: Type.String(),
     background: Type.String(),
     effect: Type.String(),

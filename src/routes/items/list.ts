@@ -1,63 +1,89 @@
-import { ServerFormsModel, formTypes } from '../../models/forms/form'
-import { ParsedSearchQuery, parseSearchQuery } from '../../models/forms/query'
 import { ItemModel, ToItem } from '../../models/items/item'
-import { ItemListModel, toItemList } from '../../models/items/list'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerSearchesValue, parseServerSearchesValue } from '../../models/server/forms/value'
+import { ServerItemListModel, toServerItemList } from '../../models/server/items/list'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { MaybePromise } from '../../utils/promise'
+import { SonolusCtx } from '../ctx'
 import { SonolusRouteHandler } from '../handler'
 
-export type ItemListHandler<TItemModel, TSearches extends ServerFormsModel> = (ctx: {
-    session: string | undefined
-    query: ParsedSearchQuery<TSearches>
-    page: number
-}) => MaybePromise<ItemListModel<TItemModel, TSearches>>
+export type ServerItemListHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+    TItemModel,
+    TSearches extends ServerFormsModel,
+> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        search: ServerSearchesValue<TSearches>
+        page: number
+    },
+) => MaybePromise<ServerItemListModel<TItemModel, TSearches> | 400 | 401>
 
-export const createDefaultItemListHandler =
+export const createDefaultServerItemListHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
         filter: (items: TItemModel[], keywords: string) => TItemModel[],
-    ): ItemListHandler<TItemModel, TSearches> =>
-    ({ query, page }) => {
-        const parsedQuery = parseSearchQuery(query, {})
-        const items = filter(group.items, parsedQuery.keywords)
+    ): ServerItemListHandler<TConfigurationOptions, TItemModel, TSearches> =>
+    ({ search, page }) => {
+        const items = filter(group.items, (search as { keywords?: string }).keywords ?? '')
 
         return {
-            searches: formTypes(group.searches),
+            searches: group.searches,
             ...paginateItems(items, page),
         }
     }
 
-export const createItemListRouteHandler =
+export const createServerItemListRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
         toItem: ToItem<TItemModel, unknown>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, localize, session }) => {
-        res.json(
-            toItemList(
-                sonolus,
-                localize,
-                toItem,
-                await group.listHandler({
-                    session,
-                    query: parseSearchQuery(req.query, group.searches),
-                    page: +(req.query.page ?? '') || 0,
-                }),
-                group.searches,
-            ),
-        )
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, localize, ctx }) => {
+        const response = await group.listHandler({
+            ...ctx,
+            search: parseServerSearchesValue(req.query, group.searches),
+            page: +(req.query.page ?? '') || 0,
+        })
+        if (typeof response === 'number') {
+            res.status(response).end()
+            return
+        }
+
+        res.json(toServerItemList(sonolus, localize, toItem, response, group.searches))
     }
 
 export const paginateItems = <T>(

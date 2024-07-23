@@ -13,7 +13,7 @@ export const databaseReplayItemSchema = Type.Object({
     subtitle: localizationTextSchema,
     author: localizationTextSchema,
     tags: Type.Array(databaseTagSchema),
-    description: localizationTextSchema,
+    description: Type.Optional(localizationTextSchema),
     level: Type.String(),
     data: srlSchema,
     configuration: srlSchema,

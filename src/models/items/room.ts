@@ -1,6 +1,6 @@
-import { DatabaseTag, LocalizationText, RoomItem, SRL } from '@sonolus/core'
+import { DatabaseTag, LocalizationText, RoomItem, Srl } from '@sonolus/core'
+import { toTags } from '../tag'
 import { ToItem } from './item'
-import { toTags } from './tag'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface RoomItemModel {
@@ -9,10 +9,10 @@ export interface RoomItemModel {
     subtitle: LocalizationText
     master: LocalizationText
     tags: DatabaseTag[]
-    description: LocalizationText
-    cover?: SRL
-    bgm?: SRL
-    preview?: SRL
+    description?: LocalizationText
+    cover?: Srl
+    bgm?: Srl
+    preview?: Srl
 }
 
 export const toRoomItem: ToItem<RoomItemModel, RoomItem> = (sonolus, localize, item) => ({

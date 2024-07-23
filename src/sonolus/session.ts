@@ -1,5 +1,7 @@
+import { ServerOptionsModel } from '../models/server/options/option'
+import { SonolusCtx } from '../routes/ctx'
 import { MaybePromise } from '../utils/promise'
 
-export type SessionHandler = (ctx: { session: string | undefined }) => MaybePromise<boolean>
-
-export const defaultSessionHandler = (): boolean => true
+export type SessionHandler<TConfigurationOptions extends ServerOptionsModel> = (
+    ctx: SonolusCtx<TConfigurationOptions>,
+) => MaybePromise<true | 401>

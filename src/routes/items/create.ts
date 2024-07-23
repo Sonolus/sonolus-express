@@ -1,32 +1,47 @@
-import { CreateItemResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../models/forms/form'
-import { ParsedQuery, parseQuery } from '../../models/forms/query'
+import { ServerCreateItemResponse } from '@sonolus/core'
 import { ItemModel } from '../../models/items/item'
-import { createItemRequestSchema } from '../../schemas/server/createItemRequest'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerFormsValue, parseServerFormsValue } from '../../models/server/forms/value'
+import { ServerOptionsModel } from '../../models/server/options/option'
+import { serverCreateItemRequestSchema } from '../../schemas/server/items/create'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { parse } from '../../utils/json'
 import { MaybePromise } from '../../utils/promise'
+import { SonolusCtx } from '../ctx'
 import { SonolusRouteHandler } from '../handler'
 
-export type ItemCreateHandler<TCreates extends ServerFormsModel | undefined> = (ctx: {
-    session: string | undefined
-    values: ParsedQuery<NonNullable<TCreates>>
-}) => MaybePromise<CreateItemResponse | undefined>
+export type ServerCreateItemHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+    TCreates extends ServerFormsModel,
+> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        value: ServerFormsValue<TCreates>
+    },
+) => MaybePromise<ServerCreateItemResponse | 400 | 401>
 
-export const defaultItemCreateHandler = (): undefined => undefined
-
-export const createItemCreateRouteHandler =
+export const createServerCreateItemRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, session }) => {
-        if (!group.creates) {
-            res.status(400).end()
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, ctx }) => {
+        if (!group.createHandler) {
+            res.status(404).end()
             return
         }
 
@@ -36,24 +51,24 @@ export const createItemCreateRouteHandler =
             return
         }
 
-        const request = parse(body, createItemRequestSchema)
+        const request = parse(body, serverCreateItemRequestSchema)
         if (!request) {
             res.status(400).end()
             return
         }
 
-        const values = parseQuery(
+        const value = parseServerFormsValue(
             Object.fromEntries(new URLSearchParams(request.values)),
             group.creates,
         )
-        if (!values) {
+        if (!value) {
             res.status(400).end()
             return
         }
 
-        const response = await group.createHandler({ session, values })
-        if (!response) {
-            res.status(404).end()
+        const response = await group.createHandler({ ...ctx, value })
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

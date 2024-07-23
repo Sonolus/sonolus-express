@@ -1,9 +1,8 @@
-import { LocalizationText, SRL, localize, hash as sonolusHash, version } from '@sonolus/core'
-import express, { NextFunction, Request, Response, Router } from 'express'
+import { LocalizationText, Srl, localize, hash as sonolusHash, version } from '@sonolus/core'
+import express, { NextFunction, Request, RequestHandler, Response, Router } from 'express'
 import multer from 'multer'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { ServerFormsModel } from '../models/forms/form'
 import { BackgroundItemModel, toBackgroundItem } from '../models/items/background'
 import { EffectItemModel, toEffectItem } from '../models/items/effect'
 import { EngineItemModel, toEngineItem } from '../models/items/engine'
@@ -14,11 +13,13 @@ import { PostItemModel, toPostItem } from '../models/items/post'
 import { ReplayItemModel, toReplayItem } from '../models/items/replay'
 import { RoomItemModel, toRoomItem } from '../models/items/room'
 import { SkinItemModel, toSkinItem } from '../models/items/skin'
+import { ServerFormsModel } from '../models/server/forms/form'
+import { ServerOptionsModel } from '../models/server/options/option'
+import { parseRawServerOptionsValue, parseServerOptionsValue } from '../models/server/options/value'
 import {
-    AuthenticateHandler,
-    createAuthenticateRouteHandler,
-    defaultAuthenticateHandler,
-} from '../routes/authentication'
+    ServerAuthenticateHandler,
+    createServerAuthenticateRouteHandler,
+} from '../routes/authenticate'
 import { SonolusRouteHandler } from '../routes/handler'
 import {
     ServerInfoHandler,
@@ -41,7 +42,7 @@ import { parse } from '../utils/json'
 import { Localize } from '../utils/localization'
 import { SonolusItemGroup, SonolusItemGroupOptions } from './itemGroup'
 import { SonolusMultiplayer } from './multiplayer'
-import { SessionHandler, defaultSessionHandler } from './session'
+import { SessionHandler } from './session'
 
 const itemTypes = [
     ['post', 'posts', toPostItem, filterPosts],
@@ -62,16 +63,17 @@ export type UploadOptions = {
 }
 
 export class Sonolus<
-    TPostCreates extends ServerFormsModel | undefined = undefined,
-    TPlaylistCreates extends ServerFormsModel | undefined = undefined,
-    TLevelCreates extends ServerFormsModel | undefined = undefined,
-    TSkinCreates extends ServerFormsModel | undefined = undefined,
-    TBackgroundCreates extends ServerFormsModel | undefined = undefined,
-    TEffectCreates extends ServerFormsModel | undefined = undefined,
-    TParticleCreates extends ServerFormsModel | undefined = undefined,
-    TEngineCreates extends ServerFormsModel | undefined = undefined,
-    TReplayCreates extends ServerFormsModel | undefined = undefined,
-    TRoomCreates extends ServerFormsModel | undefined = undefined,
+    TConfigurationOptions extends ServerOptionsModel = {},
+    TPostCreates extends ServerFormsModel = {},
+    TPlaylistCreates extends ServerFormsModel = {},
+    TLevelCreates extends ServerFormsModel = {},
+    TSkinCreates extends ServerFormsModel = {},
+    TBackgroundCreates extends ServerFormsModel = {},
+    TEffectCreates extends ServerFormsModel = {},
+    TParticleCreates extends ServerFormsModel = {},
+    TEngineCreates extends ServerFormsModel = {},
+    TReplayCreates extends ServerFormsModel = {},
+    TRoomCreates extends ServerFormsModel = {},
     TPostSearches extends ServerFormsModel = {},
     TPlaylistSearches extends ServerFormsModel = {},
     TLevelSearches extends ServerFormsModel = {},
@@ -82,6 +84,16 @@ export class Sonolus<
     TEngineSearches extends ServerFormsModel = {},
     TReplaySearches extends ServerFormsModel = {},
     TRoomSearches extends ServerFormsModel = {},
+    TPostActions extends ServerFormsModel = {},
+    TPlaylistActions extends ServerFormsModel = {},
+    TLevelActions extends ServerFormsModel = {},
+    TSkinActions extends ServerFormsModel = {},
+    TBackgroundActions extends ServerFormsModel = {},
+    TEffectActions extends ServerFormsModel = {},
+    TParticleActions extends ServerFormsModel = {},
+    TEngineActions extends ServerFormsModel = {},
+    TReplayActions extends ServerFormsModel = {},
+    TRoomActions extends ServerFormsModel = {},
     TPostCommunityActions extends ServerFormsModel = {},
     TPlaylistCommunityActions extends ServerFormsModel = {},
     TLevelCommunityActions extends ServerFormsModel = {},
@@ -92,135 +104,217 @@ export class Sonolus<
     TEngineCommunityActions extends ServerFormsModel = {},
     TReplayCommunityActions extends ServerFormsModel = {},
     TRoomCommunityActions extends ServerFormsModel = {},
+    TPostCommunityCommentActions extends ServerFormsModel = {},
+    TPlaylistCommunityCommentActions extends ServerFormsModel = {},
+    TLevelCommunityCommentActions extends ServerFormsModel = {},
+    TSkinCommunityCommentActions extends ServerFormsModel = {},
+    TBackgroundCommunityCommentActions extends ServerFormsModel = {},
+    TEffectCommunityCommentActions extends ServerFormsModel = {},
+    TParticleCommunityCommentActions extends ServerFormsModel = {},
+    TEngineCommunityCommentActions extends ServerFormsModel = {},
+    TReplayCommunityCommentActions extends ServerFormsModel = {},
+    TRoomCommunityCommentActions extends ServerFormsModel = {},
 > {
     readonly address?: string
     readonly fallbackLocale: string
+    readonly configuration: {
+        options: TConfigurationOptions
+    }
 
     readonly router: Router
 
     title: LocalizationText
     description?: LocalizationText
-    banner?: SRL
+    banner?: Srl
 
-    sessionHandler: SessionHandler
-    authenticateHandler: AuthenticateHandler
+    sessionHandler?: SessionHandler<TConfigurationOptions>
+    authenticateHandler?: ServerAuthenticateHandler<TConfigurationOptions>
 
-    serverInfoHandler: ServerInfoHandler
+    serverInfoHandler: ServerInfoHandler<TConfigurationOptions>
 
-    readonly multiplayer: SonolusMultiplayer<TRoomCreates>
+    readonly multiplayer: SonolusMultiplayer<TConfigurationOptions, TRoomCreates>
 
     readonly post!: SonolusItemGroup<
+        TConfigurationOptions,
         PostItemModel,
         TPostCreates,
         TPostSearches,
-        TPostCommunityActions
+        TPostActions,
+        TPostCommunityActions,
+        TPostCommunityCommentActions
     >
     readonly playlist!: SonolusItemGroup<
+        TConfigurationOptions,
         PlaylistItemModel,
         TPlaylistCreates,
         TPlaylistSearches,
-        TPlaylistCommunityActions
+        TPlaylistActions,
+        TPlaylistCommunityActions,
+        TPlaylistCommunityCommentActions
     >
     readonly level!: SonolusItemGroup<
+        TConfigurationOptions,
         LevelItemModel,
         TLevelCreates,
         TLevelSearches,
-        TLevelCommunityActions
+        TLevelActions,
+        TLevelCommunityActions,
+        TLevelCommunityCommentActions
     >
     readonly skin!: SonolusItemGroup<
+        TConfigurationOptions,
         SkinItemModel,
         TSkinCreates,
         TSkinSearches,
-        TSkinCommunityActions
+        TSkinActions,
+        TSkinCommunityActions,
+        TSkinCommunityCommentActions
     >
     readonly background!: SonolusItemGroup<
+        TConfigurationOptions,
         BackgroundItemModel,
         TBackgroundCreates,
         TBackgroundSearches,
-        TBackgroundCommunityActions
+        TBackgroundActions,
+        TBackgroundCommunityActions,
+        TBackgroundCommunityCommentActions
     >
     readonly effect!: SonolusItemGroup<
+        TConfigurationOptions,
         EffectItemModel,
         TEffectCreates,
         TEffectSearches,
-        TEffectCommunityActions
+        TEffectActions,
+        TEffectCommunityActions,
+        TEffectCommunityCommentActions
     >
     readonly particle!: SonolusItemGroup<
+        TConfigurationOptions,
         ParticleItemModel,
         TParticleCreates,
         TParticleSearches,
-        TParticleCommunityActions
+        TParticleActions,
+        TParticleCommunityActions,
+        TParticleCommunityCommentActions
     >
     readonly engine!: SonolusItemGroup<
+        TConfigurationOptions,
         EngineItemModel,
         TEngineCreates,
         TEngineSearches,
-        TEngineCommunityActions
+        TEngineActions,
+        TEngineCommunityActions,
+        TEngineCommunityCommentActions
     >
     readonly replay!: SonolusItemGroup<
+        TConfigurationOptions,
         ReplayItemModel,
         TReplayCreates,
         TReplaySearches,
-        TReplayCommunityActions
+        TReplayActions,
+        TReplayCommunityActions,
+        TReplayCommunityCommentActions
     >
     readonly room!: SonolusItemGroup<
+        TConfigurationOptions,
         RoomItemModel,
         TRoomCreates,
         TRoomSearches,
-        TRoomCommunityActions
+        TRoomActions,
+        TRoomCommunityActions,
+        TRoomCommunityCommentActions
     >
 
     constructor(
         options: {
             address?: string
             fallbackLocale?: string
+            configuration?: {
+                options: TConfigurationOptions
+            }
             upload?: UploadOptions
 
-            post?: SonolusItemGroupOptions<TPostCreates, TPostSearches, TPostCommunityActions>
+            post?: SonolusItemGroupOptions<
+                TPostCreates,
+                TPostSearches,
+                TPostActions,
+                TPostCommunityActions,
+                TPostCommunityCommentActions
+            >
             playlist?: SonolusItemGroupOptions<
                 TPlaylistCreates,
                 TPlaylistSearches,
-                TPlaylistCommunityActions
+                TPlaylistActions,
+                TPlaylistCommunityActions,
+                TPlaylistCommunityCommentActions
             >
-            level?: SonolusItemGroupOptions<TLevelCreates, TLevelSearches, TLevelCommunityActions>
-            skin?: SonolusItemGroupOptions<TSkinCreates, TSkinSearches, TSkinCommunityActions>
+            level?: SonolusItemGroupOptions<
+                TLevelCreates,
+                TLevelSearches,
+                TLevelActions,
+                TLevelCommunityActions,
+                TLevelCommunityCommentActions
+            >
+            skin?: SonolusItemGroupOptions<
+                TSkinCreates,
+                TSkinSearches,
+                TSkinActions,
+                TSkinCommunityActions,
+                TSkinCommunityCommentActions
+            >
             background?: SonolusItemGroupOptions<
                 TBackgroundCreates,
                 TBackgroundSearches,
-                TBackgroundCommunityActions
+                TBackgroundActions,
+                TBackgroundCommunityActions,
+                TBackgroundCommunityCommentActions
             >
             effect?: SonolusItemGroupOptions<
                 TEffectCreates,
                 TEffectSearches,
-                TEffectCommunityActions
+                TEffectActions,
+                TEffectCommunityActions,
+                TEffectCommunityCommentActions
             >
             particle?: SonolusItemGroupOptions<
                 TParticleCreates,
                 TParticleSearches,
-                TParticleCommunityActions
+                TParticleActions,
+                TParticleCommunityActions,
+                TParticleCommunityCommentActions
             >
             engine?: SonolusItemGroupOptions<
                 TEngineCreates,
                 TEngineSearches,
-                TEngineCommunityActions
+                TEngineActions,
+                TEngineCommunityActions,
+                TEngineCommunityCommentActions
             >
             replay?: SonolusItemGroupOptions<
                 TReplayCreates,
                 TReplaySearches,
-                TReplayCommunityActions
+                TReplayActions,
+                TReplayCommunityActions,
+                TReplayCommunityCommentActions
             >
-            room?: SonolusItemGroupOptions<TRoomCreates, TRoomSearches, TRoomCommunityActions>
+            room?: SonolusItemGroupOptions<
+                TRoomCreates,
+                TRoomSearches,
+                TRoomActions,
+                TRoomCommunityActions,
+                TRoomCommunityCommentActions
+            >
         } = {},
     ) {
         this.address = options.address
         this.fallbackLocale = options.fallbackLocale ?? 'en'
+        this.configuration = {
+            options: options.configuration?.options ?? ({} as never),
+        }
 
         this.router = express.Router()
 
         this.title = {}
-
-        this.sessionHandler = defaultSessionHandler
-        this.authenticateHandler = defaultAuthenticateHandler
 
         this.serverInfoHandler = createDefaultServerInfoHandler(this)
 
@@ -229,6 +323,7 @@ export class Sonolus<
         for (const [type, , toItem, filter] of itemTypes) {
             this[type] = new SonolusItemGroup(
                 this,
+                type,
                 options[type as never],
                 toItem as never,
                 filter as never,
@@ -262,7 +357,7 @@ export class Sonolus<
         this.router.use('/sonolus/repository', express.static(repositoryPath))
     }
 
-    add(data: Buffer | string, hash?: string): SRL {
+    add(data: Buffer | string, hash?: string): Srl {
         hash ??= sonolusHash(typeof data === 'string' ? readFileSync(data) : data)
 
         const url = `/sonolus/repository/${hash}`
@@ -288,45 +383,76 @@ export class Sonolus<
     private _installRoutes(upload: UploadOptions) {
         const uploader = multer(upload.options).array('files', upload.maxCount)
 
-        this._post('/authenticate', createAuthenticateRouteHandler(this))
+        this._post('/authenticate', createServerAuthenticateRouteHandler(this))
 
         this._get('/info', createServerInfoRouteHandler(this))
 
         this._post('/rooms/create', this.multiplayer['_createRouteHandler'])
+
         this._post('/rooms/:itemName', this.multiplayer['_joinRouteHandler'])
 
         for (const [type, path] of itemTypes) {
             this._get(`/${path}/info`, this[type]['_infoRouteHandler'])
+
             this._get(`/${path}/list`, this[type]['_listRouteHandler'])
+
             this._post(`/${path}/create`, this[type]['_createRouteHandler'])
-            this.router.post(
-                `/sonolus/${path}/upload`,
-                this._toMiddleware(this[type]['_preUploadRouteHandler']),
+            this._upload(
+                `/${path}/upload`,
+                this[type]['_preUploadRouteHandler'],
                 uploader,
-                this._toMiddleware(this[type]['_uploadRouteHandler']),
+                this[type]['_uploadRouteHandler'],
             )
+
             this._get(`/${path}/:itemName`, this[type]['_detailsRouteHandler'])
+
+            this._post(`/${path}/:itemName/submit`, this[type]['_submitActionRouteHandler'])
+            this._upload(
+                `/${path}/:itemName/upload`,
+                this[type]['_preUploadActionRouteHandler'],
+                uploader,
+                this[type]['_uploadActionRouteHandler'],
+            )
+
             this._get(`/${path}/:itemName/community/info`, this[type]['_communityInfoRouteHandler'])
+
             this._post(
                 `/${path}/:itemName/community/submit`,
                 this[type]['_communitySubmitRouteHandler'],
             )
+            this._upload(
+                `/${path}/:itemName/community/upload`,
+                this[type]['_communityPreUploadRouteHandler'],
+                uploader,
+                this[type]['_communityUploadRouteHandler'],
+            )
+
             this._get(
                 `/${path}/:itemName/community/comments/list`,
                 this[type]['_communityCommentListRouteHandler'],
             )
+
             this._post(
                 `/${path}/:itemName/community/comments/:commentName/submit`,
                 this[type]['_communityCommentSubmitRouteHandler'],
             )
+            this._upload(
+                `/${path}/:itemName/community/comments/:commentName/upload`,
+                this[type]['_communityCommentPreUploadRouteHandler'],
+                uploader,
+                this[type]['_communityCommentUploadRouteHandler'],
+            )
+
             this._get(
                 `/${path}/:itemName/leaderboards/:leaderboardName`,
                 this[type]['_leaderboardDetailsRouteHandler'],
             )
+
             this._get(
                 `/${path}/:itemName/leaderboards/:leaderboardName/records/list`,
                 this[type]['_leaderboardRecordListRouteHandler'],
             )
+
             this._get(
                 `/${path}/:itemName/leaderboards/:leaderboardName/records/:recordName`,
                 this[type]['_leaderboardRecordDetailsRouteHandler'],
@@ -334,11 +460,11 @@ export class Sonolus<
         }
     }
 
-    private _get(path: string, handler: SonolusRouteHandler) {
+    private _get(path: string, handler: SonolusRouteHandler<TConfigurationOptions>) {
         this.router.get(`/sonolus${path}`, this._toMiddleware(handler))
     }
 
-    private _post(path: string, handler: SonolusRouteHandler) {
+    private _post(path: string, handler: SonolusRouteHandler<TConfigurationOptions>) {
         this.router.post(
             `/sonolus${path}`,
             express.raw({ type: 'application/json' }),
@@ -346,7 +472,21 @@ export class Sonolus<
         )
     }
 
-    private _toMiddleware(handler: SonolusRouteHandler) {
+    private _upload(
+        path: string,
+        preHandler: SonolusRouteHandler<TConfigurationOptions>,
+        uploader: RequestHandler,
+        handler: SonolusRouteHandler<TConfigurationOptions>,
+    ) {
+        this.router.post(
+            `/sonolus${path}`,
+            this._toMiddleware(preHandler),
+            uploader,
+            this._toMiddleware(handler),
+        )
+    }
+
+    private _toMiddleware(handler: SonolusRouteHandler<TConfigurationOptions>) {
         return async (req: Request, res: Response, next: NextFunction) => {
             try {
                 res.set('Sonolus-Version', version.sonolus)
@@ -354,13 +494,22 @@ export class Sonolus<
                 const localization = extractString(req.query.localization) ?? ''
                 const localize: Localize = (text) => this.localize(text, localization)
 
+                const options = parseServerOptionsValue(req.query, this.configuration.options)
+                const rawOptions = parseRawServerOptionsValue(req.query, this.configuration.options)
+
                 const session = extractString(req.headers['sonolus-session'])
-                if (!(await this.sessionHandler({ session }))) {
-                    res.status(401).end()
-                    return
+
+                const ctx = { session, localization, options, rawOptions }
+
+                if (this.sessionHandler) {
+                    const result = await this.sessionHandler(ctx)
+                    if (typeof result === 'number') {
+                        res.status(result).end()
+                        return
+                    }
                 }
 
-                await handler({ req, res, next, localization, localize, session })
+                await handler({ req, res, next, localize, ctx })
             } catch (error) {
                 console.error(error)
                 res.status(500).end()

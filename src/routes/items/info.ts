@@ -1,62 +1,83 @@
 import { Text } from '@sonolus/core'
-import { ServerFormsModel, formTypes } from '../../models/forms/form'
-import { ItemInfoModel, toItemInfo } from '../../models/items/info'
-import { ItemModel, ToItem } from '../../models/items/item'
+import { ItemModel } from '../../models/items/item'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerItemInfoModel, toServerItemInfo } from '../../models/server/items/info'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { MaybePromise } from '../../utils/promise'
+import { SonolusCtx } from '../ctx'
 import { SonolusRouteHandler } from '../handler'
 
-export type ItemInfoHandler<
-    TItemModel,
-    TCreates extends ServerFormsModel | undefined,
+export type ServerItemInfoHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+    TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
-> = (ctx: {
-    session: string | undefined
-}) => MaybePromise<ItemInfoModel<TItemModel, TCreates, TSearches>>
+> = (
+    ctx: SonolusCtx<TConfigurationOptions>,
+) => MaybePromise<ServerItemInfoModel<TCreates, TSearches> | 401>
 
-export const createDefaultItemInfoHandler =
+export const createDefaultServerItemInfoHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): ItemInfoHandler<TItemModel, TCreates, TSearches> =>
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
+    ): ServerItemInfoHandler<TConfigurationOptions, TCreates, TSearches> =>
     () => ({
-        creates: group.creates && formTypes(group.creates),
-        searches: formTypes(group.searches),
+        creates: group.creates,
+        searches: group.searches,
         sections: [
             {
                 title: { en: Text.Newest },
-                items: group.items.slice(0, 5),
+                itemType: group.type,
+                items: group.items.slice(0, 5) as never,
             },
         ],
         banner: sonolus.banner,
     })
 
-export const createItemInfoRouteHandler =
+export const createServerItemInfoRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
         sonolus: SonolusBase,
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-        toItem: ToItem<TItemModel, unknown>,
-    ): SonolusRouteHandler =>
-    async ({ res, localize, session }) => {
-        res.json(
-            toItemInfo(
-                sonolus,
-                localize,
-                toItem,
-                await group.infoHandler({ session }),
-                group.creates,
-                group.searches,
-            ),
-        )
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ res, localize, ctx }) => {
+        const response = await group.infoHandler(ctx)
+        if (typeof response === 'number') {
+            res.status(response).end()
+            return
+        }
+
+        res.json(toServerItemInfo(sonolus, localize, response, group.creates, group.searches))
     }

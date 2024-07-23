@@ -13,7 +13,7 @@ export const databasePlaylistItemSchema = Type.Object({
     subtitle: localizationTextSchema,
     author: localizationTextSchema,
     tags: Type.Array(databaseTagSchema),
-    description: localizationTextSchema,
+    description: Type.Optional(localizationTextSchema),
     levels: Type.Array(Type.String()),
     thumbnail: Type.Optional(srlSchema),
     meta: Type.Optional(Type.Unknown()),

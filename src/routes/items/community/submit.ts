@@ -1,34 +1,54 @@
-import { SubmitItemCommunityActionResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../../models/forms/form'
-import { ParsedQuery, parseQuery } from '../../../models/forms/query'
+import { ServerSubmitItemCommunityActionResponse } from '@sonolus/core'
 import { ItemModel } from '../../../models/items/item'
-import { submitItemCommunityActionRequestSchema } from '../../../schemas/server/submitItemCommunityActionRequest'
+import { ServerFormsModel } from '../../../models/server/forms/form'
+import { ServerFormsValue, parseServerFormsValue } from '../../../models/server/forms/value'
+import { ServerOptionsModel } from '../../../models/server/options/option'
+import { serverSubmitItemCommunityActionRequestSchema } from '../../../schemas/server/items/community/submitItemCommunityActionRequest'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { parse } from '../../../utils/json'
 import { MaybePromise } from '../../../utils/promise'
+import { SonolusCtx } from '../../ctx'
 import { SonolusRouteHandler } from '../../handler'
 
-export type ItemCommunitySubmitHandler<TCommunityActions extends ServerFormsModel> = (ctx: {
-    session: string | undefined
-    itemName: string
-    query: ParsedQuery<TCommunityActions>
-}) => MaybePromise<SubmitItemCommunityActionResponse | undefined>
+export type ServerSubmitItemCommunityActionHandler<
+    TConfigurationOptions extends ServerOptionsModel,
+    TCommunityActions extends ServerFormsModel,
+> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        itemName: string
+        value: ServerFormsValue<TCommunityActions>
+    },
+) => MaybePromise<ServerSubmitItemCommunityActionResponse | 400 | 401 | 404>
 
-export const defaultItemCommunitySubmitHandler = (): undefined => undefined
-
-export const createItemCommunitySubmitRouteHandler =
+export const createServerSubmitItemCommunityActionRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, session }) => {
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, ctx }) => {
+        if (!group.community.submitHandler) {
+            res.status(404).end()
+            return
+        }
+
         const itemName = req.params.itemName
         if (!itemName) {
-            res.status(404).end()
+            res.status(400).end()
             return
         }
 
@@ -38,24 +58,24 @@ export const createItemCommunitySubmitRouteHandler =
             return
         }
 
-        const request = parse(body, submitItemCommunityActionRequestSchema)
+        const request = parse(body, serverSubmitItemCommunityActionRequestSchema)
         if (!request) {
             res.status(400).end()
             return
         }
 
-        const query = parseQuery(
+        const value = parseServerFormsValue(
             Object.fromEntries(new URLSearchParams(request.values)),
             group.community.actions,
         )
-        if (!query) {
+        if (!value) {
             res.status(400).end()
             return
         }
 
-        const response = await group.community.submitHandler({ session, itemName, query })
-        if (!response) {
-            res.status(404).end()
+        const response = await group.community.submitHandler({ ...ctx, itemName, value })
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 

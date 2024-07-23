@@ -1,194 +1,286 @@
-import { ServerFormsModel } from '../models/forms/form'
+import { ItemType } from '@sonolus/core'
 import { ItemModel, ToItem } from '../models/items/item'
+import { ServerFormsModel } from '../models/server/forms/form'
+import { ServerOptionsModel } from '../models/server/options/option'
 import { SonolusRouteHandler } from '../routes/handler'
 import {
-    ItemCommunityCommentListHandler,
-    createItemCommunityCommentListRouteHandler,
-    defaultItemCommunityCommentListHandler,
+    ServerItemCommunityCommentListHandler,
+    createServerItemCommunityCommentListRouteHandler,
 } from '../routes/items/community/comments/list'
 import {
-    ItemCommunityCommentSubmitHandler,
-    createItemCommunityCommentSubmitRouteHandler,
-    defaultItemCommunityCommentSubmitHandler,
+    ServerPreUploadItemCommunityCommentActionHandler,
+    createServerPreUploadItemCommunityCommentActionRouteHandler,
+} from '../routes/items/community/comments/preUpload'
+import {
+    ServerSubmitItemCommunityCommentActionHandler,
+    createServerSubmitItemCommunityCommentActionRouteHandler,
 } from '../routes/items/community/comments/submit'
 import {
-    ItemCommunityInfoHandler,
-    createItemCommunityInfoRouteHandler,
-    defaultItemCommunityInfoHandler,
+    ServerUploadItemCommunityCommentActionHandler,
+    createServerUploadItemCommunityCommentActionRouteHandler,
+} from '../routes/items/community/comments/upload'
+import {
+    ServerItemCommunityInfoHandler,
+    createServerItemCommunityInfoRouteHandler,
 } from '../routes/items/community/info'
 import {
-    ItemCommunitySubmitHandler,
-    createItemCommunitySubmitRouteHandler,
-    defaultItemCommunitySubmitHandler,
+    ServerPreUploadItemCommunityActionHandler,
+    createServerPreUploadItemCommunityActionRouteHandler,
+} from '../routes/items/community/preUpload'
+import {
+    ServerSubmitItemCommunityActionHandler,
+    createServerSubmitItemCommunityActionRouteHandler,
 } from '../routes/items/community/submit'
 import {
-    ItemCreateHandler,
-    createItemCreateRouteHandler,
-    defaultItemCreateHandler,
-} from '../routes/items/create'
+    ServerUploadItemCommunityActionHandler,
+    createServerUploadItemCommunityActionRouteHandler,
+} from '../routes/items/community/upload'
+import { ServerCreateItemHandler, createServerCreateItemRouteHandler } from '../routes/items/create'
 import {
-    ItemDetailsHandler,
-    createDefaultItemDetailsHandler,
-    createItemDetailsRouteHandler,
+    ServerItemDetailsHandler,
+    createDefaultServerItemDetailsHandler,
+    createServerItemDetailsRouteHandler,
 } from '../routes/items/details'
 import { FilterItems } from '../routes/items/filters/filter'
 import {
-    ItemInfoHandler,
-    createDefaultItemInfoHandler,
-    createItemInfoRouteHandler,
+    ServerItemInfoHandler,
+    createDefaultServerItemInfoHandler,
+    createServerItemInfoRouteHandler,
 } from '../routes/items/info'
 import {
-    ItemLeaderboardDetailsHandler,
-    createItemLeaderboardDetailsRouteHandler,
-    defaultItemLeaderboardDetailsHandler,
+    ServerItemLeaderboardDetailsHandler,
+    createServerItemLeaderboardDetailsRouteHandler,
 } from '../routes/items/leaderboards/details'
 import {
-    ItemLeaderboardRecordDetailsHandler,
-    createItemLeaderboardRecordDetailsRouteHandler,
-    defaultItemLeaderboardRecordDetailsHandler,
+    ServerItemLeaderboardRecordDetailsHandler,
+    createServerItemLeaderboardRecordDetailsRouteHandler,
 } from '../routes/items/leaderboards/records/details'
 import {
-    ItemLeaderboardRecordListHandler,
-    createItemLeaderboardRecordListRouteHandler,
-    defaultItemLeaderboardRecordListHandler,
+    ServerItemLeaderboardRecordListHandler,
+    createServerItemLeaderboardRecordListRouteHandler,
 } from '../routes/items/leaderboards/records/list'
 import {
-    ItemListHandler,
-    createDefaultItemListHandler,
-    createItemListRouteHandler,
+    ServerItemListHandler,
+    createDefaultServerItemListHandler,
+    createServerItemListRouteHandler,
 } from '../routes/items/list'
 import {
-    ItemPreUploadHandler,
-    createItemPreUploadRouteHandler,
-    defaultItemPreUploadHandler,
+    ServerPreUploadItemHandler,
+    createServerPreUploadItemRouteHandler,
 } from '../routes/items/preUpload'
 import {
-    ItemUploadHandler,
-    createItemUploadRouteHandler,
-    defaultItemUploadHandler,
-} from '../routes/items/upload'
+    ServerPreUploadItemActionHandler,
+    createServerPreUploadItemActionRouteHandler,
+} from '../routes/items/preUploadAction'
+import {
+    ServerSubmitItemActionHandler,
+    createServerSubmitItemActionRouteHandler,
+} from '../routes/items/submitAction'
+import { ServerUploadItemHandler, createServerUploadItemRouteHandler } from '../routes/items/upload'
+import {
+    ServerUploadItemActionHandler,
+    createServerUploadItemActionRouteHandler,
+} from '../routes/items/uploadAction'
 import { SonolusBase } from './base'
 
 export type SonolusItemGroupOptions<
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
+    TActions extends ServerFormsModel,
     TCommunityActions extends ServerFormsModel,
+    TCommunityCommentActions extends ServerFormsModel,
 > = {
     creates?: TCreates
     searches?: TSearches
+    actions?: TActions
     community?: {
         actions?: TCommunityActions
+        comment?: {
+            actions?: TCommunityCommentActions
+        }
     }
 }
 
 export class SonolusItemGroup<
+    TConfigurationOptions extends ServerOptionsModel,
     TItemModel extends ItemModel,
-    TCreates extends ServerFormsModel | undefined,
+    TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
+    TActions extends ServerFormsModel,
     TCommunityActions extends ServerFormsModel,
+    TCommunityCommentActions extends ServerFormsModel,
 > {
+    readonly type: ItemType
     items: TItemModel[]
 
     creates: TCreates
     searches: TSearches
+    actions: TActions
 
-    infoHandler: ItemInfoHandler<TItemModel, TCreates, TSearches>
-    listHandler: ItemListHandler<TItemModel, TSearches>
-    createHandler: ItemCreateHandler<TCreates>
-    preUploadHandler: ItemPreUploadHandler
-    uploadHandler: ItemUploadHandler
-    detailsHandler: ItemDetailsHandler<TItemModel>
+    infoHandler: ServerItemInfoHandler<TConfigurationOptions, TCreates, TSearches>
+
+    listHandler: ServerItemListHandler<TConfigurationOptions, TItemModel, TSearches>
+
+    createHandler?: ServerCreateItemHandler<TConfigurationOptions, TCreates>
+    preUploadHandler?: ServerPreUploadItemHandler<TConfigurationOptions>
+    uploadHandler?: ServerUploadItemHandler<TConfigurationOptions>
+
+    detailsHandler: ServerItemDetailsHandler<TConfigurationOptions, TSearches, TActions, TItemModel>
+
+    submitActionHandler?: ServerSubmitItemActionHandler<TConfigurationOptions, TActions>
+    preUploadActionHandler?: ServerPreUploadItemActionHandler<TConfigurationOptions>
+    uploadActionHandler?: ServerUploadItemActionHandler<TConfigurationOptions>
 
     community: {
         actions: TCommunityActions
 
-        infoHandler: ItemCommunityInfoHandler<TCommunityActions>
-        submitHandler: ItemCommunitySubmitHandler<TCommunityActions>
+        infoHandler?: ServerItemCommunityInfoHandler<
+            TConfigurationOptions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >
+
+        submitHandler?: ServerSubmitItemCommunityActionHandler<
+            TConfigurationOptions,
+            TCommunityActions
+        >
+        preUploadHandler?: ServerPreUploadItemCommunityActionHandler<TConfigurationOptions>
+        uploadHandler?: ServerUploadItemCommunityActionHandler<TConfigurationOptions>
 
         comment: {
-            listHandler: ItemCommunityCommentListHandler<TCommunityActions>
-            submitHandler: ItemCommunityCommentSubmitHandler<TCommunityActions>
+            actions: TCommunityCommentActions
+
+            listHandler?: ServerItemCommunityCommentListHandler<
+                TConfigurationOptions,
+                TCommunityCommentActions
+            >
+
+            submitHandler?: ServerSubmitItemCommunityCommentActionHandler<
+                TConfigurationOptions,
+                TCommunityCommentActions
+            >
+            preUploadHandler?: ServerPreUploadItemCommunityCommentActionHandler<TConfigurationOptions>
+            uploadHandler?: ServerUploadItemCommunityCommentActionHandler<TConfigurationOptions>
         }
     }
 
     leaderboard: {
-        detailsHandler: ItemLeaderboardDetailsHandler
+        detailsHandler?: ServerItemLeaderboardDetailsHandler<TConfigurationOptions>
 
         record: {
-            listHandler: ItemLeaderboardRecordListHandler
-            detailsHandler: ItemLeaderboardRecordDetailsHandler
+            listHandler?: ServerItemLeaderboardRecordListHandler<TConfigurationOptions>
+
+            detailsHandler?: ServerItemLeaderboardRecordDetailsHandler<TConfigurationOptions>
         }
     }
 
-    private readonly _infoRouteHandler: SonolusRouteHandler
-    private readonly _listRouteHandler: SonolusRouteHandler
-    private readonly _createRouteHandler: SonolusRouteHandler
-    private readonly _preUploadRouteHandler: SonolusRouteHandler
-    private readonly _uploadRouteHandler: SonolusRouteHandler
-    private readonly _detailsRouteHandler: SonolusRouteHandler
-    private readonly _communityInfoRouteHandler: SonolusRouteHandler
-    private readonly _communitySubmitRouteHandler: SonolusRouteHandler
-    private readonly _communityCommentListRouteHandler: SonolusRouteHandler
-    private readonly _communityCommentSubmitRouteHandler: SonolusRouteHandler
-    private readonly _leaderboardDetailsRouteHandler: SonolusRouteHandler
-    private readonly _leaderboardRecordListRouteHandler: SonolusRouteHandler
-    private readonly _leaderboardRecordDetailsRouteHandler: SonolusRouteHandler
+    private readonly _infoRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _listRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _createRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _preUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _uploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _detailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _submitActionRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _preUploadActionRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _uploadActionRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _communityInfoRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _communitySubmitRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityPreUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _communityCommentListRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _communityCommentSubmitRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityCommentPreUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+    private readonly _communityCommentUploadRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _leaderboardDetailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _leaderboardRecordListRouteHandler: SonolusRouteHandler<TConfigurationOptions>
+
+    private readonly _leaderboardRecordDetailsRouteHandler: SonolusRouteHandler<TConfigurationOptions>
 
     constructor(
         sonolus: SonolusBase,
-        options: SonolusItemGroupOptions<TCreates, TSearches, TCommunityActions> = {},
+        type: ItemType,
+        options: SonolusItemGroupOptions<
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        > = {},
         toItem: ToItem<TItemModel, unknown>,
         filter: FilterItems<TItemModel>,
     ) {
+        this.type = type
         this.items = []
 
-        this.creates = options.creates as never
+        this.creates = options.creates ?? ({} as never)
         this.searches = options.searches ?? ({} as never)
+        this.actions = options.actions ?? ({} as never)
 
-        this.infoHandler = createDefaultItemInfoHandler(sonolus, this)
-        this.listHandler = createDefaultItemListHandler(this, filter)
-        this.createHandler = defaultItemCreateHandler
-        this.preUploadHandler = defaultItemPreUploadHandler
-        this.uploadHandler = defaultItemUploadHandler
-        this.detailsHandler = createDefaultItemDetailsHandler(this)
+        this.infoHandler = createDefaultServerItemInfoHandler(sonolus, this)
+
+        this.listHandler = createDefaultServerItemListHandler(this, filter)
+
+        this.detailsHandler = createDefaultServerItemDetailsHandler(this)
 
         this.community = {
             actions: options.community?.actions ?? ({} as never),
 
-            infoHandler: defaultItemCommunityInfoHandler,
-            submitHandler: defaultItemCommunitySubmitHandler,
-
             comment: {
-                listHandler: defaultItemCommunityCommentListHandler,
-                submitHandler: defaultItemCommunityCommentSubmitHandler,
+                actions: options.community?.comment?.actions ?? ({} as never),
             },
         }
 
         this.leaderboard = {
-            detailsHandler: defaultItemLeaderboardDetailsHandler,
-
-            record: {
-                listHandler: defaultItemLeaderboardRecordListHandler,
-                detailsHandler: defaultItemLeaderboardRecordDetailsHandler,
-            },
+            record: {},
         }
 
-        this._infoRouteHandler = createItemInfoRouteHandler(sonolus, this, toItem)
-        this._listRouteHandler = createItemListRouteHandler(sonolus, this, toItem)
-        this._detailsRouteHandler = createItemDetailsRouteHandler(sonolus, this, toItem)
-        this._createRouteHandler = createItemCreateRouteHandler(this)
-        this._preUploadRouteHandler = createItemPreUploadRouteHandler(this)
-        this._uploadRouteHandler = createItemUploadRouteHandler(this)
-        this._communityInfoRouteHandler = createItemCommunityInfoRouteHandler(this)
-        this._communitySubmitRouteHandler = createItemCommunitySubmitRouteHandler(this)
-        this._communityCommentListRouteHandler = createItemCommunityCommentListRouteHandler(this)
+        this._infoRouteHandler = createServerItemInfoRouteHandler(sonolus, this)
+
+        this._listRouteHandler = createServerItemListRouteHandler(sonolus, this, toItem)
+
+        this._createRouteHandler = createServerCreateItemRouteHandler(this)
+        this._preUploadRouteHandler = createServerPreUploadItemRouteHandler(this)
+        this._uploadRouteHandler = createServerUploadItemRouteHandler(this)
+
+        this._detailsRouteHandler = createServerItemDetailsRouteHandler(sonolus, this, toItem)
+
+        this._submitActionRouteHandler = createServerSubmitItemActionRouteHandler(this)
+        this._preUploadActionRouteHandler = createServerPreUploadItemActionRouteHandler(this)
+        this._uploadActionRouteHandler = createServerUploadItemActionRouteHandler(this)
+
+        this._communityInfoRouteHandler = createServerItemCommunityInfoRouteHandler(this)
+
+        this._communitySubmitRouteHandler = createServerSubmitItemCommunityActionRouteHandler(this)
+        this._communityPreUploadRouteHandler =
+            createServerPreUploadItemCommunityActionRouteHandler(this)
+        this._communityUploadRouteHandler = createServerUploadItemCommunityActionRouteHandler(this)
+
+        this._communityCommentListRouteHandler =
+            createServerItemCommunityCommentListRouteHandler(this)
+
         this._communityCommentSubmitRouteHandler =
-            createItemCommunityCommentSubmitRouteHandler(this)
-        this._leaderboardDetailsRouteHandler = createItemLeaderboardDetailsRouteHandler(this)
-        this._leaderboardRecordListRouteHandler = createItemLeaderboardRecordListRouteHandler(this)
-        this._leaderboardRecordDetailsRouteHandler = createItemLeaderboardRecordDetailsRouteHandler(
-            sonolus,
-            this,
-        )
+            createServerSubmitItemCommunityCommentActionRouteHandler(this)
+        this._communityCommentPreUploadRouteHandler =
+            createServerPreUploadItemCommunityCommentActionRouteHandler(this)
+        this._communityCommentUploadRouteHandler =
+            createServerUploadItemCommunityCommentActionRouteHandler(this)
+
+        this._leaderboardDetailsRouteHandler = createServerItemLeaderboardDetailsRouteHandler(this)
+
+        this._leaderboardRecordListRouteHandler =
+            createServerItemLeaderboardRecordListRouteHandler(this)
+
+        this._leaderboardRecordDetailsRouteHandler =
+            createServerItemLeaderboardRecordDetailsRouteHandler(sonolus, this)
     }
 }

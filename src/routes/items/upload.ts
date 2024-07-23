@@ -1,29 +1,46 @@
-import { UploadItemResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../models/forms/form'
+import { ServerUploadItemResponse } from '@sonolus/core'
 import { ItemModel } from '../../models/items/item'
+import { ServerFormsModel } from '../../models/server/forms/form'
+import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { extractString } from '../../utils/extract'
 import { MaybePromise } from '../../utils/promise'
+import { SonolusCtx } from '../ctx'
 import { SonolusRouteHandler } from '../handler'
 
-export type ItemUploadHandler = (ctx: {
-    session: string | undefined
-    key: string
-    files: Express.Multer.File[]
-}) => MaybePromise<UploadItemResponse | undefined>
+export type ServerUploadItemHandler<TConfigurationOptions extends ServerOptionsModel> = (
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        key: string
+        files: Express.Multer.File[]
+    },
+) => MaybePromise<ServerUploadItemResponse | 400 | 401>
 
-export const defaultItemUploadHandler = (): undefined => undefined
-
-export const createItemUploadRouteHandler =
+export const createServerUploadItemRouteHandler =
     <
+        TConfigurationOptions extends ServerOptionsModel,
         TItemModel extends ItemModel,
-        TCreates extends ServerFormsModel | undefined,
+        TCreates extends ServerFormsModel,
         TSearches extends ServerFormsModel,
+        TActions extends ServerFormsModel,
         TCommunityActions extends ServerFormsModel,
+        TCommunityCommentActions extends ServerFormsModel,
     >(
-        group: SonolusItemGroup<TItemModel, TCreates, TSearches, TCommunityActions>,
-    ): SonolusRouteHandler =>
-    async ({ req, res, session }) => {
+        group: SonolusItemGroup<
+            TConfigurationOptions,
+            TItemModel,
+            TCreates,
+            TSearches,
+            TActions,
+            TCommunityActions,
+            TCommunityCommentActions
+        >,
+    ): SonolusRouteHandler<TConfigurationOptions> =>
+    async ({ req, res, ctx }) => {
+        if (!group.uploadHandler) {
+            res.status(404).end()
+            return
+        }
+
         const key = extractString(req.headers['sonolus-upload-key'])
         if (key === undefined) {
             res.status(400).end()
@@ -36,9 +53,9 @@ export const createItemUploadRouteHandler =
             return
         }
 
-        const response = await group.uploadHandler({ session, key, files })
-        if (!response) {
-            res.status(400).end()
+        const response = await group.uploadHandler({ ...ctx, key, files })
+        if (typeof response === 'number') {
+            res.status(response).end()
             return
         }
 
