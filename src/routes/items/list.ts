@@ -42,7 +42,10 @@ export const createDefaultServerItemListHandler =
         filter: (items: TItemModel[], keywords: string) => TItemModel[],
     ): ServerItemListHandler<TConfigurationOptions, TItemModel, TSearches> =>
     ({ search, page }) => {
-        const items = filter(group.items, (search as { keywords?: string }).keywords ?? '')
+        const items = filter(
+            group.items,
+            search.type === 'quick' ? `${search.options.keywords}` : '',
+        )
 
         return {
             searches: group.searches,
