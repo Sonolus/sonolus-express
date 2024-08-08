@@ -24,7 +24,7 @@ export class SonolusRedirectShare {
             res.redirect(`https://open.sonolus.com/${root}`)
         })
 
-        for (const [, path] of itemTypes) {
+        for (const path of itemTypes) {
             this.router.get(`/${path}/info`, (req, res) => {
                 res.redirect(`https://open.sonolus.com/${root}/${path}/info`)
             })
