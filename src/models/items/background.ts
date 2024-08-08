@@ -2,7 +2,7 @@ import { BackgroundItem, DatabaseBackgroundItem } from '@sonolus/core'
 import { toTags } from '../tag'
 import { Model, ToItem } from './item'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface BackgroundItemModel extends Model<DatabaseBackgroundItem, {}> {}
 
 export const toBackgroundItem: ToItem<BackgroundItemModel, BackgroundItem> = (

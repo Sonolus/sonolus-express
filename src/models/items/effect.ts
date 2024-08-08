@@ -2,7 +2,7 @@ import { DatabaseEffectItem, EffectItem } from '@sonolus/core'
 import { toTags } from '../tag'
 import { Model, ToItem } from './item'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface EffectItemModel extends Model<DatabaseEffectItem, {}> {}
 
 export const toEffectItem: ToItem<EffectItemModel, EffectItem> = (sonolus, localize, item) => ({

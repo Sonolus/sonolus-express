@@ -2,7 +2,7 @@ import { DatabaseSkinItem, SkinItem } from '@sonolus/core'
 import { toTags } from '../tag'
 import { Model, ToItem } from './item'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface SkinItemModel extends Model<DatabaseSkinItem, {}> {}
 
 export const toSkinItem: ToItem<SkinItemModel, SkinItem> = (sonolus, localize, item) => ({

@@ -2,7 +2,7 @@ import { DatabaseParticleItem, ParticleItem } from '@sonolus/core'
 import { toTags } from '../tag'
 import { Model, ToItem } from './item'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface ParticleItemModel extends Model<DatabaseParticleItem, {}> {}
 
 export const toParticleItem: ToItem<ParticleItemModel, ParticleItem> = (
