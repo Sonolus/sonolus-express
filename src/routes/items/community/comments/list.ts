@@ -6,9 +6,9 @@ import {
 } from '../../../../models/server/items/community/comments/list'
 import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
-import { MaybePromise } from '../../../../utils/promise'
 import { SonolusCtx } from '../../../ctx'
-import { SonolusRouteHandler } from '../../../handler'
+import { handleError } from '../../../error'
+import { HandlerResponse, SonolusRouteHandler } from '../../../handler'
 
 export type ServerItemCommunityCommentListHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -18,7 +18,7 @@ export type ServerItemCommunityCommentListHandler<
         itemName: string
         page: number
     },
-) => MaybePromise<ServerItemCommunityCommentListModel<TCommunityCommentActions> | 401 | 404>
+) => HandlerResponse<ServerItemCommunityCommentListModel<TCommunityCommentActions>, 401 | 404>
 
 export const createServerItemCommunityCommentListRouteHandler =
     <
@@ -57,10 +57,7 @@ export const createServerItemCommunityCommentListRouteHandler =
             itemName,
             page: +(req.query.page ?? '') || 0,
         })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(
             toServerItemCommunityCommentList(localize, response, group.community.comment.actions),

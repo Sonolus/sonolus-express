@@ -4,16 +4,16 @@ import { ServerFormsModel } from '../../models/server/forms/form'
 import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { extractString } from '../../utils/extract'
-import { MaybePromise } from '../../utils/promise'
 import { SonolusCtx } from '../ctx'
-import { SonolusRouteHandler } from '../handler'
+import { handleError } from '../error'
+import { HandlerResponse, SonolusRouteHandler } from '../handler'
 
 export type ServerUploadItemHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         key: string
         files: Express.Multer.File[]
     },
-) => MaybePromise<ServerUploadItemResponse | 400 | 401>
+) => HandlerResponse<ServerUploadItemResponse, 400 | 401>
 
 export const createServerUploadItemRouteHandler =
     <
@@ -35,7 +35,7 @@ export const createServerUploadItemRouteHandler =
             TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ req, res, ctx }) => {
+    async ({ req, res, localize, ctx }) => {
         if (!group.uploadHandler) {
             res.status(404).end()
             return
@@ -54,10 +54,7 @@ export const createServerUploadItemRouteHandler =
         }
 
         const response = await group.uploadHandler({ ...ctx, key, files })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(response)
     }

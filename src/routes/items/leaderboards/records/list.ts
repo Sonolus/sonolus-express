@@ -6,9 +6,9 @@ import {
 } from '../../../../models/server/items/leaderboards/records/list'
 import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
-import { MaybePromise } from '../../../../utils/promise'
 import { SonolusCtx } from '../../../ctx'
-import { SonolusRouteHandler } from '../../../handler'
+import { handleError } from '../../../error'
+import { HandlerResponse, SonolusRouteHandler } from '../../../handler'
 
 export type ServerItemLeaderboardRecordListHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -18,7 +18,7 @@ export type ServerItemLeaderboardRecordListHandler<
         leaderboardName: string
         page: number
     },
-) => MaybePromise<ServerItemLeaderboardRecordListModel | 401 | 404>
+) => HandlerResponse<ServerItemLeaderboardRecordListModel, 401 | 404>
 
 export const createServerItemLeaderboardRecordListRouteHandler =
     <
@@ -64,10 +64,7 @@ export const createServerItemLeaderboardRecordListRouteHandler =
             leaderboardName,
             page: +(req.query.page ?? '') || 0,
         })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(toServerItemLeaderboardRecordList(localize, response))
     }

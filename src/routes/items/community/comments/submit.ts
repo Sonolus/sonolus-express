@@ -1,14 +1,14 @@
 import { ServerSubmitItemCommunityCommentActionResponse } from '@sonolus/core'
 import { ItemModel } from '../../../../models/items/item'
 import { ServerFormsModel } from '../../../../models/server/forms/form'
-import { ServerFormsValue, parseServerFormsValue } from '../../../../models/server/forms/value'
+import { parseServerFormsValue, ServerFormsValue } from '../../../../models/server/forms/value'
 import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { serverSubmitItemCommunityActionRequestSchema } from '../../../../schemas/server/items/community/submitItemCommunityActionRequest'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { parse } from '../../../../utils/json'
-import { MaybePromise } from '../../../../utils/promise'
 import { SonolusCtx } from '../../../ctx'
-import { SonolusRouteHandler } from '../../../handler'
+import { handleError } from '../../../error'
+import { HandlerResponse, SonolusRouteHandler } from '../../../handler'
 
 export type ServerSubmitItemCommunityCommentActionHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -19,7 +19,7 @@ export type ServerSubmitItemCommunityCommentActionHandler<
         commentName: string
         value: ServerFormsValue<TCommunityCommentActions>
     },
-) => MaybePromise<ServerSubmitItemCommunityCommentActionResponse | 400 | 401 | 404>
+) => HandlerResponse<ServerSubmitItemCommunityCommentActionResponse, 400 | 401 | 404>
 
 export const createServerSubmitItemCommunityCommentActionRouteHandler =
     <
@@ -41,7 +41,7 @@ export const createServerSubmitItemCommunityCommentActionRouteHandler =
             TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ req, res, ctx }) => {
+    async ({ req, res, localize, ctx }) => {
         if (!group.community.comment.submitHandler) {
             res.status(404).end()
             return
@@ -86,10 +86,7 @@ export const createServerSubmitItemCommunityCommentActionRouteHandler =
             commentName,
             value,
         })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(response)
     }

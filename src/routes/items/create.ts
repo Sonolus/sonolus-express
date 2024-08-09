@@ -6,9 +6,9 @@ import { ServerOptionsModel } from '../../models/server/options/option'
 import { serverCreateItemRequestSchema } from '../../schemas/server/items/create'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
 import { parse } from '../../utils/json'
-import { MaybePromise } from '../../utils/promise'
 import { SonolusCtx } from '../ctx'
-import { SonolusRouteHandler } from '../handler'
+import { handleError } from '../error'
+import { HandlerResponse, SonolusRouteHandler } from '../handler'
 
 export type ServerCreateItemHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -17,7 +17,7 @@ export type ServerCreateItemHandler<
     ctx: SonolusCtx<TConfigurationOptions> & {
         value: ServerFormsValue<TCreates>
     },
-) => MaybePromise<ServerCreateItemResponse | 400 | 401>
+) => HandlerResponse<ServerCreateItemResponse, 400 | 401>
 
 export const createServerCreateItemRouteHandler =
     <
@@ -39,7 +39,7 @@ export const createServerCreateItemRouteHandler =
             TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ req, res, ctx }) => {
+    async ({ req, res, localize, ctx }) => {
         if (!group.createHandler) {
             res.status(404).end()
             return
@@ -67,10 +67,7 @@ export const createServerCreateItemRouteHandler =
         }
 
         const response = await group.createHandler({ ...ctx, value })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(response)
     }

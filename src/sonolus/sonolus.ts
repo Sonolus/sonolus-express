@@ -20,6 +20,7 @@ import {
     ServerAuthenticateHandler,
     createServerAuthenticateRouteHandler,
 } from '../routes/authenticate'
+import { handleError } from '../routes/error'
 import { SonolusRouteHandler } from '../routes/handler'
 import {
     ServerInfoHandler,
@@ -503,10 +504,7 @@ export class Sonolus<
 
                 if (this.sessionHandler) {
                     const result = await this.sessionHandler(ctx)
-                    if (typeof result === 'number') {
-                        res.status(result).end()
-                        return
-                    }
+                    if (handleError(result, res, localize)) return
                 }
 
                 await handler({ req, res, next, localize, ctx })

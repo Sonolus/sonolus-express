@@ -7,9 +7,9 @@ import {
 import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusBase } from '../../../../sonolus/base'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
-import { MaybePromise } from '../../../../utils/promise'
 import { SonolusCtx } from '../../../ctx'
-import { SonolusRouteHandler } from '../../../handler'
+import { handleError } from '../../../error'
+import { HandlerResponse, SonolusRouteHandler } from '../../../handler'
 
 export type ServerItemLeaderboardRecordDetailsHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -19,7 +19,7 @@ export type ServerItemLeaderboardRecordDetailsHandler<
         leaderboardName: string
         recordName: string
     },
-) => MaybePromise<ServerItemLeaderboardRecordDetailsModel | 401 | 404>
+) => HandlerResponse<ServerItemLeaderboardRecordDetailsModel, 401 | 404>
 
 export const createServerItemLeaderboardRecordDetailsRouteHandler =
     <
@@ -72,10 +72,7 @@ export const createServerItemLeaderboardRecordDetailsRouteHandler =
             leaderboardName,
             recordName,
         })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(toServerItemLeaderboardRecordDetails(sonolus, localize, response))
     }
