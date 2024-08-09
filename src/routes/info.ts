@@ -18,15 +18,21 @@ export const createDefaultServerInfoHandler =
         title: sonolus.title,
         description: sonolus.description,
         buttons: [
-            { type: 'post' },
-            { type: 'playlist' },
-            { type: 'level' },
-            { type: 'replay' },
-            { type: 'skin' },
-            { type: 'background' },
-            { type: 'effect' },
-            { type: 'particle' },
-            { type: 'engine' },
+            ...(
+                [
+                    'post',
+                    'playlist',
+                    'level',
+                    'replay',
+                    'skin',
+                    'background',
+                    'effect',
+                    'particle',
+                    'engine',
+                ] as const
+            )
+                .filter((type) => sonolus[type].items.length)
+                .map((type) => ({ type })),
             { type: 'configuration' },
         ],
         configuration: {
