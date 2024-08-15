@@ -38,6 +38,8 @@ export type ServerItemSectionModel<T extends ServerFormsModel> = (
 type ServerItemSectionModelTyped<TItemType, TItem> = {
     title: LocalizationText
     icon?: Icon
+    description?: LocalizationText
+    help?: LocalizationText
     itemType: TItemType
     items: TItem[]
 }
@@ -63,6 +65,8 @@ export const toServerItemSection = <T extends ServerFormsModel>(
 ): ServerItemSection => ({
     title: localize(section.title),
     icon: section.icon,
+    description: section.description && localize(section.description),
+    help: section.help && localize(section.help),
     itemType: section.itemType,
     items: toItems(
         sonolus,
