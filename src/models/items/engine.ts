@@ -6,7 +6,7 @@ import { Model, ToItem, getItem } from './item'
 import { ParticleItemModel, toParticleItem } from './particle'
 import { SkinItemModel, toSkinItem } from './skin'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface EngineItemModel
     extends Model<
         DatabaseEngineItem,

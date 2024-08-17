@@ -14,7 +14,7 @@ export default tsEslint.config(
     {
         languageOptions: {
             parserOptions: {
-                project: true,
+                projectService: true,
                 tsconfigRootDir: import.meta.dirname,
             },
         },
@@ -29,15 +29,7 @@ export default tsEslint.config(
                     checksVoidReturn: false,
                 },
             ],
-            '@typescript-eslint/ban-types': [
-                'error',
-                {
-                    types: {
-                        '{}': false,
-                    },
-                    extendDefaults: true,
-                },
-            ],
+            '@typescript-eslint/no-empty-object-type': 'off',
             '@typescript-eslint/dot-notation': [
                 'error',
                 {
