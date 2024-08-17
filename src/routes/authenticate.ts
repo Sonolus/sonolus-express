@@ -1,7 +1,7 @@
 import {
+    getSignaturePublicKey,
     ServerAuthenticateResponse,
     ServiceUserProfile,
-    getSignaturePublicKey,
 } from '@sonolus/core'
 import { webcrypto } from 'node:crypto'
 import { ServerOptionsModel } from '../models/server/options/option'
@@ -9,21 +9,21 @@ import { authenticateServerRequestSchema } from '../schemas/server/authenticate'
 import { SonolusBase } from '../sonolus/base'
 import { Sonolus } from '../sonolus/sonolus'
 import { parse } from '../utils/json'
-import { MaybePromise } from '../utils/promise'
 import { SonolusCtx } from './ctx'
-import { SonolusRouteHandler } from './handler'
+import { handleError } from './error'
+import { HandlerResponse, SonolusRouteHandler } from './handler'
 
 export type ServerAuthenticateHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions> & {
         userProfile: ServiceUserProfile
     },
-) => MaybePromise<ServerAuthenticateResponse | 401>
+) => HandlerResponse<ServerAuthenticateResponse, 401>
 
 export const createServerAuthenticateRouteHandler =
     <TConfigurationOptions extends ServerOptionsModel>(
         sonolus: SonolusBase & Pick<Sonolus<TConfigurationOptions>, 'authenticateHandler'>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ req, res, ctx }) => {
+    async ({ req, res, localize, ctx }) => {
         if (!sonolus.authenticateHandler) {
             res.status(404).end()
             return
@@ -74,10 +74,7 @@ export const createServerAuthenticateRouteHandler =
             ...ctx,
             userProfile: request.userProfile,
         })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(response)
     }

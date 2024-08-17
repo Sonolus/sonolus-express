@@ -6,9 +6,9 @@ import { ServerOptionsModel } from '../../../models/server/options/option'
 import { serverSubmitItemCommunityActionRequestSchema } from '../../../schemas/server/items/community/submitItemCommunityActionRequest'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
 import { parse } from '../../../utils/json'
-import { MaybePromise } from '../../../utils/promise'
 import { SonolusCtx } from '../../ctx'
-import { SonolusRouteHandler } from '../../handler'
+import { handleError } from '../../error'
+import { HandlerResponse, SonolusRouteHandler } from '../../handler'
 
 export type ServerSubmitItemCommunityActionHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -18,7 +18,7 @@ export type ServerSubmitItemCommunityActionHandler<
         itemName: string
         value: ServerFormsValue<TCommunityActions>
     },
-) => MaybePromise<ServerSubmitItemCommunityActionResponse | 400 | 401 | 404>
+) => HandlerResponse<ServerSubmitItemCommunityActionResponse, 400 | 401 | 404>
 
 export const createServerSubmitItemCommunityActionRouteHandler =
     <
@@ -40,7 +40,7 @@ export const createServerSubmitItemCommunityActionRouteHandler =
             TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ req, res, ctx }) => {
+    async ({ req, res, localize, ctx }) => {
         if (!group.community.submitHandler) {
             res.status(404).end()
             return
@@ -74,10 +74,7 @@ export const createServerSubmitItemCommunityActionRouteHandler =
         }
 
         const response = await group.community.submitHandler({ ...ctx, itemName, value })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(response)
     }

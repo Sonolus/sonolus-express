@@ -12,6 +12,7 @@ export type ServerFormModel = {
     title: LocalizationText
     icon?: Icon
     description?: LocalizationText
+    help?: LocalizationText
     requireConfirmation: boolean
     options: ServerOptionsModel
 }
@@ -25,6 +26,7 @@ export const toServerForm = (
     title: localize(form.title),
     icon: form.icon,
     description: form.description && localize(form.description),
+    help: form.help && localize(form.help),
     requireConfirmation: form.requireConfirmation,
     options: Object.entries(form.options).map(([query, option]) =>
         toServerOption(localize, query, option),

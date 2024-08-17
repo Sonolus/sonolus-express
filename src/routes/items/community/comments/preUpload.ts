@@ -3,9 +3,9 @@ import { ServerFormsModel } from '../../../../models/server/forms/form'
 import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { extractString } from '../../../../utils/extract'
-import { MaybePromise } from '../../../../utils/promise'
 import { SonolusCtx } from '../../../ctx'
-import { SonolusRouteHandler } from '../../../handler'
+import { handleError } from '../../../error'
+import { HandlerResponse, SonolusRouteHandler } from '../../../handler'
 
 export type ServerPreUploadItemCommunityCommentActionHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -15,7 +15,7 @@ export type ServerPreUploadItemCommunityCommentActionHandler<
         commentName: string
         key: string
     },
-) => MaybePromise<true | 400 | 401 | 404>
+) => HandlerResponse<true, 400 | 401 | 404>
 
 export const createServerPreUploadItemCommunityCommentActionRouteHandler =
     <
@@ -37,7 +37,7 @@ export const createServerPreUploadItemCommunityCommentActionRouteHandler =
             TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ req, res, next, ctx }) => {
+    async ({ req, res, next, localize, ctx }) => {
         if (!group.community.comment.preUploadHandler) {
             res.status(404).end()
             return
@@ -67,10 +67,7 @@ export const createServerPreUploadItemCommunityCommentActionRouteHandler =
             commentName,
             key,
         })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         next()
     }

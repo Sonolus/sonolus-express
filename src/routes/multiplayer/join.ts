@@ -7,9 +7,9 @@ import { serverJoinRoomRequestSchema } from '../../schemas/server/multiplayer/jo
 import { SonolusBase } from '../../sonolus'
 import { SonolusMultiplayer } from '../../sonolus/multiplayer'
 import { parse } from '../../utils/json'
-import { MaybePromise } from '../../utils/promise'
 import { SonolusCtx } from '../ctx'
-import { SonolusRouteHandler } from '../handler'
+import { handleError } from '../error'
+import { HandlerResponse, SonolusRouteHandler } from '../handler'
 
 export type ServerJoinRoomHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -25,14 +25,14 @@ export type ServerJoinRoomHandler<
             value: ServerFormsValue<TCreates>
         }
     },
-) => MaybePromise<ServerJoinRoomResponse | 400 | 401 | 404>
+) => HandlerResponse<ServerJoinRoomResponse, 400 | 401 | 404>
 
 export const createServerJoinRoomRouteHandler =
     <TConfigurationOptions extends ServerOptionsModel, TCreates extends ServerFormsModel>(
         sonolus: SonolusBase,
         multiplayer: SonolusMultiplayer<TConfigurationOptions, TCreates>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ req, res, ctx }) => {
+    async ({ req, res, localize, ctx }) => {
         if (!multiplayer.joinHandler) {
             res.status(404).end()
             return
@@ -102,10 +102,7 @@ export const createServerJoinRoomRouteHandler =
             signature: signatureBuffer,
             create: typeof key === 'string' && value ? { key, value } : undefined,
         })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(response)
     }

@@ -6,9 +6,9 @@ import {
 } from '../../../models/server/items/community/info'
 import { ServerOptionsModel } from '../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup'
-import { MaybePromise } from '../../../utils/promise'
 import { SonolusCtx } from '../../ctx'
-import { SonolusRouteHandler } from '../../handler'
+import { handleError } from '../../error'
+import { HandlerResponse, SonolusRouteHandler } from '../../handler'
 
 export type ServerItemCommunityInfoHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -18,8 +18,9 @@ export type ServerItemCommunityInfoHandler<
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
     },
-) => MaybePromise<
-    ServerItemCommunityInfoModel<TCommunityActions, TCommunityCommentActions> | 401 | 404
+) => HandlerResponse<
+    ServerItemCommunityInfoModel<TCommunityActions, TCommunityCommentActions>,
+    401 | 404
 >
 
 export const createServerItemCommunityInfoRouteHandler =
@@ -55,10 +56,7 @@ export const createServerItemCommunityInfoRouteHandler =
         }
 
         const response = await group.community.infoHandler({ ...ctx, itemName })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(
             toServerItemCommunityInfo(

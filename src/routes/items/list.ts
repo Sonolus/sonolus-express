@@ -5,9 +5,9 @@ import { ServerItemListModel, toServerItemList } from '../../models/server/items
 import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
-import { MaybePromise } from '../../utils/promise'
 import { SonolusCtx } from '../ctx'
-import { SonolusRouteHandler } from '../handler'
+import { handleError } from '../error'
+import { HandlerResponse, SonolusRouteHandler } from '../handler'
 
 export type ServerItemListHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -18,7 +18,7 @@ export type ServerItemListHandler<
         search: ServerSearchesValue<TSearches>
         page: number
     },
-) => MaybePromise<ServerItemListModel<TItemModel, TSearches> | 400 | 401>
+) => HandlerResponse<ServerItemListModel<TItemModel, TSearches>, 400 | 401>
 
 export const createDefaultServerItemListHandler =
     <
@@ -81,10 +81,7 @@ export const createServerItemListRouteHandler =
             search: parseServerSearchesValue(req.query, group.searches),
             page: +(req.query.page ?? '') || 0,
         })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(toServerItemList(sonolus, localize, toItem, response, group.searches))
     }

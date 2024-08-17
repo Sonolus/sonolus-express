@@ -5,9 +5,9 @@ import { ServerItemInfoModel, toServerItemInfo } from '../../models/server/items
 import { ServerOptionsModel } from '../../models/server/options/option'
 import { SonolusBase } from '../../sonolus/base'
 import { SonolusItemGroup } from '../../sonolus/itemGroup'
-import { MaybePromise } from '../../utils/promise'
 import { SonolusCtx } from '../ctx'
-import { SonolusRouteHandler } from '../handler'
+import { handleError } from '../error'
+import { HandlerResponse, SonolusRouteHandler } from '../handler'
 
 export type ServerItemInfoHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -15,7 +15,7 @@ export type ServerItemInfoHandler<
     TSearches extends ServerFormsModel,
 > = (
     ctx: SonolusCtx<TConfigurationOptions>,
-) => MaybePromise<ServerItemInfoModel<TCreates, TSearches> | 401>
+) => HandlerResponse<ServerItemInfoModel<TCreates, TSearches>, 401>
 
 export const createDefaultServerItemInfoHandler =
     <
@@ -74,10 +74,7 @@ export const createServerItemInfoRouteHandler =
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ res, localize, ctx }) => {
         const response = await group.infoHandler(ctx)
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(toServerItemInfo(sonolus, localize, response, group.creates, group.searches))
     }

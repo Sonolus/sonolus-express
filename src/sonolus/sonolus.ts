@@ -20,6 +20,7 @@ import {
     ServerAuthenticateHandler,
     createServerAuthenticateRouteHandler,
 } from '../routes/authenticate'
+import { handleError } from '../routes/error'
 import { SonolusRouteHandler } from '../routes/handler'
 import {
     ServerInfoHandler,
@@ -41,6 +42,7 @@ import { extractString } from '../utils/extract'
 import { parse } from '../utils/json'
 import { Localize } from '../utils/localization'
 import { SonolusItemGroup, SonolusItemGroupOptions } from './itemGroup'
+import { SonolusLevelResult, SonolusLevelResultOptions } from './levelResult'
 import { SonolusMultiplayer } from './multiplayer'
 import { SessionHandler } from './session'
 
@@ -114,6 +116,7 @@ export class Sonolus<
     TEngineCommunityCommentActions extends ServerFormsModel = {},
     TReplayCommunityCommentActions extends ServerFormsModel = {},
     TRoomCommunityCommentActions extends ServerFormsModel = {},
+    TLevelResultSubmits extends ServerFormsModel = {},
 > {
     readonly address?: string
     readonly fallbackLocale: string
@@ -133,6 +136,8 @@ export class Sonolus<
     serverInfoHandler: ServerInfoHandler<TConfigurationOptions>
 
     readonly multiplayer: SonolusMultiplayer<TConfigurationOptions, TRoomCreates>
+
+    readonly levelResult: SonolusLevelResult<TConfigurationOptions, TLevelResultSubmits>
 
     readonly post!: SonolusItemGroup<
         TConfigurationOptions,
@@ -304,6 +309,7 @@ export class Sonolus<
                 TRoomCommunityActions,
                 TRoomCommunityCommentActions
             >
+            levelResult?: SonolusLevelResultOptions<TLevelResultSubmits>
         } = {},
     ) {
         this.address = options.address
@@ -319,6 +325,8 @@ export class Sonolus<
         this.serverInfoHandler = createDefaultServerInfoHandler(this)
 
         this.multiplayer = new SonolusMultiplayer(this, () => this.room.creates)
+
+        this.levelResult = new SonolusLevelResult(options.levelResult)
 
         for (const [type, , toItem, filter] of itemTypes) {
             this[type] = new SonolusItemGroup(
@@ -390,6 +398,16 @@ export class Sonolus<
         this._post('/rooms/create', this.multiplayer['_createRouteHandler'])
 
         this._post('/rooms/:itemName', this.multiplayer['_joinRouteHandler'])
+
+        this._get('/levels/result/info', this.levelResult['_infoRouteHandler'])
+
+        this._post('/levels/result/submit', this.levelResult['_submitRouteHandler'])
+        this._upload(
+            '/levels/result/upload',
+            this.levelResult['_preUploadRouteHandler'],
+            uploader,
+            this.levelResult['_uploadRouteHandler'],
+        )
 
         for (const [type, path] of itemTypes) {
             this._get(`/${path}/info`, this[type]['_infoRouteHandler'])
@@ -503,10 +521,7 @@ export class Sonolus<
 
                 if (this.sessionHandler) {
                     const result = await this.sessionHandler(ctx)
-                    if (typeof result === 'number') {
-                        res.status(result).end()
-                        return
-                    }
+                    if (handleError(result, res, localize)) return
                 }
 
                 await handler({ req, res, next, localize, ctx })

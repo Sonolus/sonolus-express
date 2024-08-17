@@ -2,13 +2,13 @@ import { ServerInfoModel, toServerInfo } from '../models/server/info'
 import { ServerOptionsModel } from '../models/server/options/option'
 import { SonolusBase } from '../sonolus/base'
 import { Sonolus } from '../sonolus/sonolus'
-import { MaybePromise } from '../utils/promise'
 import { SonolusCtx } from './ctx'
-import { SonolusRouteHandler } from './handler'
+import { handleError } from './error'
+import { HandlerResponse, SonolusRouteHandler } from './handler'
 
 export type ServerInfoHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions>,
-) => MaybePromise<ServerInfoModel<TConfigurationOptions> | 401>
+) => HandlerResponse<ServerInfoModel<TConfigurationOptions>, 401>
 
 export const createDefaultServerInfoHandler =
     <TConfigurationOptions extends ServerOptionsModel>(
@@ -18,15 +18,21 @@ export const createDefaultServerInfoHandler =
         title: sonolus.title,
         description: sonolus.description,
         buttons: [
-            { type: 'post' },
-            { type: 'playlist' },
-            { type: 'level' },
-            { type: 'replay' },
-            { type: 'skin' },
-            { type: 'background' },
-            { type: 'effect' },
-            { type: 'particle' },
-            { type: 'engine' },
+            ...(
+                [
+                    'post',
+                    'playlist',
+                    'level',
+                    'replay',
+                    'skin',
+                    'background',
+                    'effect',
+                    'particle',
+                    'engine',
+                ] as const
+            )
+                .filter((type) => sonolus[type].items.length)
+                .map((type) => ({ type })),
             { type: 'configuration' },
         ],
         configuration: {
@@ -42,10 +48,7 @@ export const createServerInfoRouteHandler =
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ res, localize, ctx }) => {
         const response = await sonolus.serverInfoHandler(ctx)
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(toServerInfo(localize, response, sonolus.configuration.options))
     }

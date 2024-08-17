@@ -3,6 +3,7 @@ import { ServerOptionsModel } from '../models/server/options/option'
 import { Localize } from '../utils/localization'
 import { MaybePromise } from '../utils/promise'
 import { SonolusCtx } from './ctx'
+import { ServerError } from './error'
 
 export type SonolusRouteHandler<TConfigurationOptions extends ServerOptionsModel> = (ctx: {
     req: Request
@@ -11,3 +12,5 @@ export type SonolusRouteHandler<TConfigurationOptions extends ServerOptionsModel
     localize: Localize
     ctx: SonolusCtx<TConfigurationOptions>
 }) => MaybePromise<void>
+
+export type HandlerResponse<T, E extends number> = MaybePromise<T | ServerError<E>>

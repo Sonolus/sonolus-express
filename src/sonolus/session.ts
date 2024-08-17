@@ -1,7 +1,7 @@
 import { ServerOptionsModel } from '../models/server/options/option'
 import { SonolusCtx } from '../routes/ctx'
-import { MaybePromise } from '../utils/promise'
+import { HandlerResponse } from '../routes/handler'
 
 export type SessionHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions>,
-) => MaybePromise<true | 401>
+) => HandlerResponse<true, 401>

@@ -4,9 +4,9 @@ import { ServerFormsModel } from '../../../../models/server/forms/form'
 import { ServerOptionsModel } from '../../../../models/server/options/option'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
 import { extractString } from '../../../../utils/extract'
-import { MaybePromise } from '../../../../utils/promise'
 import { SonolusCtx } from '../../../ctx'
-import { SonolusRouteHandler } from '../../../handler'
+import { handleError } from '../../../error'
+import { HandlerResponse, SonolusRouteHandler } from '../../../handler'
 
 export type ServerUploadItemCommunityCommentActionHandler<
     TConfigurationOptions extends ServerOptionsModel,
@@ -17,7 +17,7 @@ export type ServerUploadItemCommunityCommentActionHandler<
         key: string
         files: Express.Multer.File[]
     },
-) => MaybePromise<ServerUploadItemCommunityCommentActionResponse | 400 | 401 | 404>
+) => HandlerResponse<ServerUploadItemCommunityCommentActionResponse, 400 | 401 | 404>
 
 export const createServerUploadItemCommunityCommentActionRouteHandler =
     <
@@ -39,7 +39,7 @@ export const createServerUploadItemCommunityCommentActionRouteHandler =
             TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ req, res, ctx }) => {
+    async ({ req, res, localize, ctx }) => {
         if (!group.community.comment.uploadHandler) {
             res.status(404).end()
             return
@@ -76,10 +76,7 @@ export const createServerUploadItemCommunityCommentActionRouteHandler =
             key,
             files,
         })
-        if (typeof response === 'number') {
-            res.status(response).end()
-            return
-        }
+        if (handleError(response, res, localize)) return
 
         res.json(response)
     }
