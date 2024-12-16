@@ -6,7 +6,7 @@ export const parse = <T extends TSchema>(
     schema: T,
 ): Static<T> | undefined => {
     try {
-        const value: unknown = JSON.parse(json instanceof Buffer ? json.toString('utf8') : json)
+        const value: unknown = JSON.parse(typeof json === 'string' ? json : json.toString('utf8'))
         if (!Value.Check(schema, value)) return
 
         return Value.Clean(schema, value)

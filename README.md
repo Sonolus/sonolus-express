@@ -4,15 +4,15 @@ TypeScript based developer toolkit for Sonolus servers with [Express.js](https:/
 
 ## Links
 
--   [Sonolus Website](https://sonolus.com)
--   [Sonolus Wiki](https://wiki.sonolus.com)
--   [sonolus-pack](https://github.com/Sonolus/sonolus-pack)
+- [Sonolus Website](https://sonolus.com)
+- [Sonolus Wiki](https://wiki.sonolus.com)
+- [sonolus-pack](https://github.com/Sonolus/sonolus-pack)
 
 ## Features
 
--   Setup all necessary routes automatically, compliant with Sonolus server specifications.
--   Provide handlers to interact with each route.
--   Load packs created by [sonolus-pack](https://github.com/Sonolus/sonolus-pack).
+- Setup all necessary routes automatically, compliant with Sonolus server specifications.
+- Provide handlers to interact with each route.
+- Load packs created by [sonolus-pack](https://github.com/Sonolus/sonolus-pack).
 
 ## Installation
 
@@ -47,14 +47,14 @@ app.listen(port, () => {
 
 Create a Sonolus server.
 
--   `options.address`: address of server (should not have ending `/`).
--   `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
--   `options.configuration`: server configuration.
--   `options.upload`: upload options.
--   `options[type]`: options for item group, `type` can be: `post`, `playlist`, `level`, `skin`, `background`, `effect`, `particle`, `engine`, `replay`, or `room`.
--   `options[type].creates`: creates for item group.
--   `options[type].searches`: searches for item group.
--   `options[type].community.actions`: community actions for item group.
+- `options.address`: address of server (should not have ending `/`).
+- `options.fallbackLocale`: fallback locale when user's preferred locale cannot be used.
+- `options.configuration`: server configuration.
+- `options.upload`: upload options.
+- `options[type]`: options for item group, `type` can be: `post`, `playlist`, `level`, `skin`, `background`, `effect`, `particle`, `engine`, `replay`, or `room`.
+- `options[type].creates`: creates for item group.
+- `options[type].searches`: searches for item group.
+- `options[type].community.actions`: community actions for item group.
 
 #### `address`
 
@@ -212,22 +212,22 @@ Handler for requesting item community record details.
 
 Load a pack created by [sonolus-pack](https://github.com/NonSpicyBurrito/sonolus-pack).
 
--   `path`: file path to the pack.
+- `path`: file path to the pack.
 
 #### `add(type, data, hash?)`
 
 Add a resource. Returns `Srl` which can be used to access the resource.
 
--   `type`: resource type.
--   `data`: data (`Buffer`) or file path (`string`) to the data.
--   `hash`: (optional) hash of the resource, will be calculated automatically when omitted.
+- `type`: resource type.
+- `data`: data (`Buffer`) or file path (`string`) to the data.
+- `hash`: (optional) hash of the resource, will be calculated automatically when omitted.
 
 #### `localize(text, locale)`
 
 Localize text using target and fallback locales.
 
--   `text`: text to localize.
--   `locale`: target locale.
+- `text`: text to localize.
+- `locale`: target locale.
 
 ### `SonolusSpaShare`
 
@@ -235,7 +235,7 @@ Localize text using target and fallback locales.
 
 Create a Sonolus SPA share server.
 
--   `root`: root of static SPA files.
+- `root`: root of static SPA files.
 
 #### `router`
 
@@ -247,7 +247,7 @@ Configured Express.js router.
 
 Create a Sonolus redirect share server.
 
--   `root`: root of redirect.
+- `root`: root of redirect.
 
 #### `router`
 
@@ -257,16 +257,16 @@ Configured Express.js router.
 
 Filter items by keywords.
 
--   `items`: items.
--   `keywords`: keywords.
+- `items`: items.
+- `keywords`: keywords.
 
 ### `paginateItems(items, page, perPage?)`
 
 Paginate items by page and per page size.
 
--   `items`: items.
--   `page`: page.
--   `perPage`: per page size, defaults to 20.
+- `items`: items.
+- `page`: page.
+- `perPage`: per page size, defaults to 20.
 
 ### Using `meta` in TypeScript
 

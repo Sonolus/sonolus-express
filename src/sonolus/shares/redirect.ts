@@ -44,7 +44,7 @@ const getSearch = (query: ParsedQs) => {
     const params = new URLSearchParams()
 
     for (const key in query) {
-        params.append(key, `${query[key]}`)
+        params.append(key, `${query[key] as never}`)
     }
 
     const queryString = params.toString()
