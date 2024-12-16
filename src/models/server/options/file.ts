@@ -6,9 +6,10 @@ export type ServerFileOptionModel = {
     description?: LocalizationText
     required: boolean
     type: 'file'
+    def: string
 }
 
-export type ServerFileOptionValue = string | undefined
+export type ServerFileOptionValue = string
 
 export const parseRawServerFileOptionValue = (
     value: unknown,
@@ -20,11 +21,10 @@ export const parseRawServerFileOptionValue = (
 
 export const normalizeServerFileOptionValue = (
     value: ServerFileOptionValue | undefined,
-): ServerFileOptionValue => value
+    option: ServerFileOptionModel,
+): ServerFileOptionValue => value ?? option.def
 
-export const serializeServerFileOptionValue = (
-    value: Exclude<ServerFileOptionValue, undefined>,
-): string => value
+export const serializeServerFileOptionValue = (value: ServerFileOptionValue): string => value
 
 export const toServerFileOption = (
     localize: Localize,
@@ -36,4 +36,5 @@ export const toServerFileOption = (
     description: option.description && localize(option.description),
     required: option.required,
     type: option.type,
+    def: option.def,
 })

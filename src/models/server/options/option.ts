@@ -45,7 +45,7 @@ export const toServerOption = (
         serverItems: toServerServerItemsOption,
         collectionItem: toServerCollectionItemOption,
         file: toServerFileOption,
-    })[option.type](localize, query, option as never) as never
+    })[option.type](localize, query, option as never)
 
 export const toServerOptions = <T extends ServerOptionsModel>(
     localize: Localize,
