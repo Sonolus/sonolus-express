@@ -17,6 +17,7 @@ export type ServerItemListHandler<
     ctx: SonolusCtx<TConfigurationOptions> & {
         search: ServerSearchesValue<TSearches>
         page: number
+        cursor?: string
     },
 ) => HandlerResponse<ServerItemListModel<TItemModel, TSearches>, 400 | 401>
 
@@ -80,6 +81,7 @@ export const createServerItemListRouteHandler =
             ...ctx,
             search: parseServerSearchesValue(req.query, group.searches),
             page: +(req.query.page ?? '') || 0,
+            cursor: req.query.cursor && `${req.query.cursor as never}`,
         })
         if (handleError(response, res, localize)) return
 
