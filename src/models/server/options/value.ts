@@ -1,5 +1,4 @@
 import {
-    ServerCollectionItemOptionModel,
     ServerCollectionItemOptionValue,
     normalizeServerCollectionItemOptionValue,
     parseRawServerCollectionItemOptionValue,
@@ -68,11 +67,11 @@ export type ServerOptionValue<T extends ServerOptionModel> = {
     textArea: ServerTextAreaOptionValue
     slider: ServerSliderOptionValue
     toggle: ServerToggleOptionValue
-    select: ServerSelectOptionValue
-    multi: ServerMultiOptionValue
+    select: ServerSelectOptionValue<T>
+    multi: ServerMultiOptionValue<T>
     serverItem: ServerServerItemOptionValue
     serverItems: ServerServerItemsOptionValue
-    collectionItem: ServerCollectionItemOptionValue<T & ServerCollectionItemOptionModel>
+    collectionItem: ServerCollectionItemOptionValue<T>
     file: ServerFileOptionValue
 }[T['type']]
 

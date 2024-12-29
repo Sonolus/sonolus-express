@@ -6,30 +6,29 @@ export type ServerSelectOptionModel = {
     description?: LocalizationText
     required: boolean
     type: 'select'
-    def: number
-    values: LocalizationText[]
+    def: string
+    values: Record<string, LocalizationText>
 }
 
-export type ServerSelectOptionValue = number
+export type ServerSelectOptionValue<T = ServerSelectOptionModel> = T extends ServerSelectOptionModel
+    ? T['def'] | keyof T['values']
+    : never
 
 export const parseRawServerSelectOptionValue = (
     value: unknown,
+    option: ServerSelectOptionModel,
 ): ServerSelectOptionValue | undefined => {
     if (typeof value !== 'string') return
 
-    const parsed = Number.parseInt(value, 10)
-    if (!(parsed >= 0)) return
-
-    return parsed
+    return option.values[value] ? value : undefined
 }
 
 export const normalizeServerSelectOptionValue = (
     value: ServerSelectOptionValue | undefined,
     option: ServerSelectOptionModel,
-): ServerSelectOptionValue => (value !== undefined && option.values[value] ? value : option.def)
+): ServerSelectOptionValue => value ?? option.def
 
-export const serializeServerSelectOptionValue = (value: ServerSelectOptionValue): string =>
-    `${value}`
+export const serializeServerSelectOptionValue = (value: ServerSelectOptionValue): string => value
 
 export const toServerSelectOption = (
     localize: Localize,
@@ -42,5 +41,8 @@ export const toServerSelectOption = (
     required: option.required,
     type: option.type,
     def: option.def,
-    values: option.values.map(localize),
+    values: Object.entries(option.values).map(([name, title]) => ({
+        name,
+        title: localize(title),
+    })),
 })

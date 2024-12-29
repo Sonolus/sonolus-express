@@ -17,6 +17,7 @@ export type ServerItemCommunityCommentListHandler<
     ctx: SonolusCtx<TConfigurationOptions> & {
         itemName: string
         page: number
+        cursor?: string
     },
 ) => HandlerResponse<ServerItemCommunityCommentListModel<TCommunityCommentActions>, 401 | 404>
 
@@ -56,6 +57,7 @@ export const createServerItemCommunityCommentListRouteHandler =
             ...ctx,
             itemName,
             page: +(req.query.page ?? '') || 0,
+            cursor: req.query.cursor && `${req.query.cursor as never}`,
         })
         if (handleError(response, res, localize)) return
 

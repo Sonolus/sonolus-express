@@ -17,6 +17,7 @@ export type ServerItemLeaderboardRecordListHandler<
         itemName: string
         leaderboardName: string
         page: number
+        cursor?: string
     },
 ) => HandlerResponse<ServerItemLeaderboardRecordListModel, 401 | 404>
 
@@ -63,6 +64,7 @@ export const createServerItemLeaderboardRecordListRouteHandler =
             itemName,
             leaderboardName,
             page: +(req.query.page ?? '') || 0,
+            cursor: req.query.cursor && `${req.query.cursor as never}`,
         })
         if (handleError(response, res, localize)) return
 

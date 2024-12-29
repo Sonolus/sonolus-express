@@ -34,20 +34,23 @@ export type ServerCollectionItemOptionModel = {
     itemType: ItemType
 }
 
-export type ServerCollectionItemOptionValue<T extends ServerCollectionItemOptionModel> =
-    | {
-          post: PostItem
-          playlist: PlaylistItem
-          level: LevelItem
-          skin: SkinItem
-          background: BackgroundItem
-          effect: EffectItem
-          particle: ParticleItem
-          engine: EngineItem
-          replay: ReplayItem
-          room: RoomItem
-      }[T['itemType']]
-    | undefined
+export type ServerCollectionItemOptionValue<T = ServerCollectionItemOptionModel> =
+    T extends ServerCollectionItemOptionModel
+        ?
+              | {
+                    post: PostItem
+                    playlist: PlaylistItem
+                    level: LevelItem
+                    skin: SkinItem
+                    background: BackgroundItem
+                    effect: EffectItem
+                    particle: ParticleItem
+                    engine: EngineItem
+                    replay: ReplayItem
+                    room: RoomItem
+                }[T['itemType']]
+              | undefined
+        : never
 
 const schemas = {
     post: postItemSchema,
@@ -62,21 +65,21 @@ const schemas = {
     room: roomItemSchema,
 }
 
-export const parseRawServerCollectionItemOptionValue = <T extends ServerCollectionItemOptionModel>(
+export const parseRawServerCollectionItemOptionValue = (
     value: unknown,
-    option: T,
-): ServerCollectionItemOptionValue<T> | undefined => {
+    option: ServerCollectionItemOptionModel,
+): ServerCollectionItemOptionValue | undefined => {
     if (typeof value !== 'string') return
 
-    return parse(value, schemas[option.itemType]) as never
+    return parse(value, schemas[option.itemType])
 }
 
-export const normalizeServerCollectionItemOptionValue = <T extends ServerCollectionItemOptionModel>(
-    value: ServerCollectionItemOptionValue<T> | undefined,
-): ServerCollectionItemOptionValue<T> => value
+export const normalizeServerCollectionItemOptionValue = (
+    value: ServerCollectionItemOptionValue | undefined,
+): ServerCollectionItemOptionValue => value
 
 export const serializeServerCollectionItemOptionValue = (
-    value: Exclude<ServerCollectionItemOptionValue<ServerCollectionItemOptionModel>, undefined>,
+    value: Exclude<ServerCollectionItemOptionValue, undefined>,
 ): string => JSON.stringify(value)
 
 export const toServerCollectionItemOption = (
