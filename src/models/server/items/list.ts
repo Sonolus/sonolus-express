@@ -6,6 +6,7 @@ import { PickForms, ServerFormsModel, toServerForms } from '../../server/forms/f
 
 export type ServerItemListModel<TItemModel, TSearches extends ServerFormsModel> = {
     pageCount: number
+    cursor?: string
     items: TItemModel[]
     searches?: PickForms<TSearches>
 }
@@ -18,6 +19,7 @@ export const toServerItemList = <TItemModel, TSearches extends ServerFormsModel,
     searches: TSearches,
 ): ServerItemList<TItem> => ({
     pageCount: list.pageCount,
+    cursor: list.cursor,
     items: toItems(sonolus, localize, toItem, list.items),
     searches: list.searches && toServerForms(localize, list.searches, searches),
 })
