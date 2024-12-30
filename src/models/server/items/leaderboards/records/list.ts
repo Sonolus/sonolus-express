@@ -4,6 +4,7 @@ import { ServerItemLeaderboardRecordModel, toServerItemLeaderboardRecord } from 
 
 export type ServerItemLeaderboardRecordListModel = {
     pageCount: number
+    cursor?: string
     records: ServerItemLeaderboardRecordModel[]
 }
 
@@ -12,5 +13,6 @@ export const toServerItemLeaderboardRecordList = (
     list: ServerItemLeaderboardRecordListModel,
 ): ServerItemLeaderboardRecordList => ({
     pageCount: list.pageCount,
+    cursor: list.cursor,
     records: list.records.map((record) => toServerItemLeaderboardRecord(localize, record)),
 })

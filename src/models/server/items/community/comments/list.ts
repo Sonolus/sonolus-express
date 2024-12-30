@@ -5,6 +5,7 @@ import { ServerItemCommunityCommentModel, toServerItemCommunityComment } from '.
 
 export type ServerItemCommunityCommentListModel<T extends ServerFormsModel> = {
     pageCount: number
+    cursor?: string
     comments: ServerItemCommunityCommentModel<T>[]
 }
 
@@ -14,6 +15,7 @@ export const toServerItemCommunityCommentList = <T extends ServerFormsModel>(
     actions: T,
 ): ServerItemCommunityCommentList => ({
     pageCount: list.pageCount,
+    cursor: list.cursor,
     comments: list.comments.map((comment) =>
         toServerItemCommunityComment(localize, comment, actions),
     ),
