@@ -12,7 +12,7 @@ import { skinItemSchema } from './skin'
 export const engineItemSchema = Type.Object({
     name: Type.String(),
     source: Type.Optional(Type.String()),
-    version: Type.Literal(12),
+    version: Type.Literal(13),
     title: Type.String(),
     subtitle: Type.String(),
     author: Type.String(),

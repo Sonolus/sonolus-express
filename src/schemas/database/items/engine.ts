@@ -8,7 +8,7 @@ import { DatabaseItemSchemaToMatch } from './test'
 
 export const databaseEngineItemSchema = Type.Object({
     name: Type.String(),
-    version: Type.Literal(12),
+    version: Type.Literal(13),
     title: localizationTextSchema,
     subtitle: localizationTextSchema,
     author: localizationTextSchema,
