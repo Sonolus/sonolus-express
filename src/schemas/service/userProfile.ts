@@ -10,12 +10,6 @@ export const serviceUserProfileSchema = Type.Object({
     avatarForegroundColor: Type.String(),
     avatarBackgroundColor: Type.String(),
     aboutMe: Type.String(),
-    socialLinks: Type.Array(
-        Type.Object({
-            title: Type.String(),
-            address: Type.String(),
-        }),
-    ),
     favorites: Type.Array(Type.String()),
 })
 
