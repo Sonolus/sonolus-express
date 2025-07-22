@@ -1,5 +1,5 @@
 import { LocalizationText, ServerItemLeaderboardRecord } from '@sonolus/core'
-import { Localize } from '../../../../../utils/localization'
+import { Localize } from '../../../../../utils/localization.js'
 
 export type ServerItemLeaderboardRecordModel = {
     name: string

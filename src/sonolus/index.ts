@@ -1,4 +1,4 @@
-export { SonolusBase } from './base'
-export { SessionHandler } from './session'
-export * from './shares'
-export { Sonolus, UploadOptions } from './sonolus'
+export { SonolusBase } from './base.js'
+export { SessionHandler } from './session.js'
+export * from './shares/index.js'
+export { Sonolus, UploadOptions } from './sonolus.js'

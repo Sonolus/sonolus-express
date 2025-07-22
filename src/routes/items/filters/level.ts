@@ -1,5 +1,5 @@
-import { LevelItemModel } from '../../../models/items/level'
-import { createFilterItems } from './filter'
+import { LevelItemModel } from '../../../models/items/level.js'
+import { createFilterItems } from './filter.js'
 
 export const filterLevels = createFilterItems<LevelItemModel>([
     'name',

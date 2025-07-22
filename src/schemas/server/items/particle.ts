@@ -1,9 +1,9 @@
 import { Type } from '@sinclair/typebox'
 import { ParticleItem } from '@sonolus/core'
-import { Expect } from '../../../utils/test'
-import { srlSchema } from '../../srl'
-import { tagSchema } from '../../tag'
-import { SchemaToMatch } from '../../test'
+import { Expect } from '../../../utils/test.js'
+import { srlSchema } from '../../srl.js'
+import { tagSchema } from '../../tag.js'
+import { SchemaToMatch } from '../../test.js'
 
 export const particleItemSchema = Type.Object({
     name: Type.String(),

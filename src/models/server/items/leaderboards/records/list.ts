@@ -1,6 +1,6 @@
 import { ServerItemLeaderboardRecordList } from '@sonolus/core'
-import { Localize } from '../../../../../utils/localization'
-import { ServerItemLeaderboardRecordModel, toServerItemLeaderboardRecord } from './record'
+import { Localize } from '../../../../../utils/localization.js'
+import { ServerItemLeaderboardRecordModel, toServerItemLeaderboardRecord } from './record.js'
 
 export type ServerItemLeaderboardRecordListModel = {
     pageCount: number

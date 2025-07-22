@@ -1,87 +1,93 @@
 import { ItemType } from '@sonolus/core'
-import { ItemModel, ToItem } from '../models/items/item'
-import { ServerFormsModel } from '../models/server/forms/form'
-import { ServerOptionsModel } from '../models/server/options/option'
-import { SonolusRouteHandler } from '../routes/handler'
+import { ItemModel, ToItem } from '../models/items/item.js'
+import { ServerFormsModel } from '../models/server/forms/form.js'
+import { ServerOptionsModel } from '../models/server/options/option.js'
+import { SonolusRouteHandler } from '../routes/handler.js'
 import {
     ServerItemCommunityCommentListHandler,
     createServerItemCommunityCommentListRouteHandler,
-} from '../routes/items/community/comments/list'
+} from '../routes/items/community/comments/list.js'
 import {
     ServerPreUploadItemCommunityCommentActionHandler,
     createServerPreUploadItemCommunityCommentActionRouteHandler,
-} from '../routes/items/community/comments/preUpload'
+} from '../routes/items/community/comments/preUpload.js'
 import {
     ServerSubmitItemCommunityCommentActionHandler,
     createServerSubmitItemCommunityCommentActionRouteHandler,
-} from '../routes/items/community/comments/submit'
+} from '../routes/items/community/comments/submit.js'
 import {
     ServerUploadItemCommunityCommentActionHandler,
     createServerUploadItemCommunityCommentActionRouteHandler,
-} from '../routes/items/community/comments/upload'
+} from '../routes/items/community/comments/upload.js'
 import {
     ServerItemCommunityInfoHandler,
     createServerItemCommunityInfoRouteHandler,
-} from '../routes/items/community/info'
+} from '../routes/items/community/info.js'
 import {
     ServerPreUploadItemCommunityActionHandler,
     createServerPreUploadItemCommunityActionRouteHandler,
-} from '../routes/items/community/preUpload'
+} from '../routes/items/community/preUpload.js'
 import {
     ServerSubmitItemCommunityActionHandler,
     createServerSubmitItemCommunityActionRouteHandler,
-} from '../routes/items/community/submit'
+} from '../routes/items/community/submit.js'
 import {
     ServerUploadItemCommunityActionHandler,
     createServerUploadItemCommunityActionRouteHandler,
-} from '../routes/items/community/upload'
-import { ServerCreateItemHandler, createServerCreateItemRouteHandler } from '../routes/items/create'
+} from '../routes/items/community/upload.js'
+import {
+    ServerCreateItemHandler,
+    createServerCreateItemRouteHandler,
+} from '../routes/items/create.js'
 import {
     ServerItemDetailsHandler,
     createDefaultServerItemDetailsHandler,
     createServerItemDetailsRouteHandler,
-} from '../routes/items/details'
-import { FilterItems } from '../routes/items/filters/filter'
+} from '../routes/items/details.js'
+import { FilterItems } from '../routes/items/filters/filter.js'
 import {
     ServerItemInfoHandler,
     createDefaultServerItemInfoHandler,
     createServerItemInfoRouteHandler,
-} from '../routes/items/info'
+} from '../routes/items/info.js'
 import {
     ServerItemLeaderboardDetailsHandler,
     createServerItemLeaderboardDetailsRouteHandler,
-} from '../routes/items/leaderboards/details'
+} from '../routes/items/leaderboards/details.js'
 import {
     ServerItemLeaderboardRecordDetailsHandler,
     createServerItemLeaderboardRecordDetailsRouteHandler,
-} from '../routes/items/leaderboards/records/details'
+} from '../routes/items/leaderboards/records/details.js'
 import {
     ServerItemLeaderboardRecordListHandler,
     createServerItemLeaderboardRecordListRouteHandler,
-} from '../routes/items/leaderboards/records/list'
+} from '../routes/items/leaderboards/records/list.js'
 import {
     ServerItemListHandler,
     createDefaultServerItemListHandler,
     createServerItemListRouteHandler,
-} from '../routes/items/list'
+} from '../routes/items/list.js'
 import {
     ServerPreUploadItemHandler,
     createServerPreUploadItemRouteHandler,
-} from '../routes/items/preUpload'
+} from '../routes/items/preUpload.js'
 import {
     ServerPreUploadItemActionHandler,
     createServerPreUploadItemActionRouteHandler,
-} from '../routes/items/preUploadAction'
+} from '../routes/items/preUploadAction.js'
 import {
     ServerSubmitItemActionHandler,
     createServerSubmitItemActionRouteHandler,
-} from '../routes/items/submitAction'
-import { ServerUploadItemHandler, createServerUploadItemRouteHandler } from '../routes/items/upload'
+} from '../routes/items/submitAction.js'
+import {
+    ServerUploadItemHandler,
+    createServerUploadItemRouteHandler,
+} from '../routes/items/upload.js'
 import {
     ServerUploadItemActionHandler,
     createServerUploadItemActionRouteHandler,
-} from '../routes/items/uploadAction'
-import { SonolusBase } from './base'
+} from '../routes/items/uploadAction.js'
+import { SonolusBase } from './base.js'
 
 export type SonolusItemGroupOptions<
     TCreates extends ServerFormsModel,

@@ -1,8 +1,8 @@
 import { Type } from '@sinclair/typebox'
 import { DatabaseTag } from '@sonolus/core'
-import { Expect } from '../../utils/test'
-import { SchemaToMatch } from '../test'
-import { localizationTextSchema } from './localizationText'
+import { Expect } from '../../utils/test.js'
+import { SchemaToMatch } from '../test.js'
+import { localizationTextSchema } from './localizationText.js'
 
 export const databaseTagSchema = Type.Object({
     title: localizationTextSchema,

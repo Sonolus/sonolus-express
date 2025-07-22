@@ -1,5 +1,5 @@
-import { ParticleItemModel } from '../../../models/items/particle'
-import { createFilterItems } from './filter'
+import { ParticleItemModel } from '../../../models/items/particle.js'
+import { createFilterItems } from './filter.js'
 
 export const filterParticles = createFilterItems<ParticleItemModel>([
     'name',

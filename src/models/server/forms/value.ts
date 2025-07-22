@@ -4,8 +4,8 @@ import {
     parseRawServerOptionsValue,
     parseServerOptionsValue,
     serializeRawServerOptionValue,
-} from '../options/value'
-import { ServerFormModel, ServerFormsModel } from './form'
+} from '../options/value.js'
+import { ServerFormModel, ServerFormsModel } from './form.js'
 
 export type RawServerFormValue<K extends string, T extends ServerFormModel> = {
     type: K

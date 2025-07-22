@@ -1,8 +1,8 @@
 import { Type } from '@sinclair/typebox'
 import { ServerJoinRoomRequest } from '@sonolus/core'
-import { Expect } from '../../../utils/test'
-import { serviceUserProfileSchema } from '../../service/userProfile'
-import { SchemaToMatch } from '../../test'
+import { Expect } from '../../../utils/test.js'
+import { serviceUserProfileSchema } from '../../service/userProfile.js'
+import { SchemaToMatch } from '../../test.js'
 
 export const serverJoinRoomRequestSchema = Type.Object({
     type: Type.Literal('authenticateMultiplayer'),

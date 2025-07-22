@@ -1,12 +1,12 @@
 import { ServerCreateRoomResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../models/server/forms/form'
-import { ServerOptionsModel } from '../../models/server/options/option'
-import { serverCreateRoomRequestSchema } from '../../schemas/server/multiplayer/createRoom'
-import { SonolusMultiplayer } from '../../sonolus/multiplayer'
-import { parse } from '../../utils/json'
-import { SonolusCtx } from '../ctx'
-import { handleError } from '../error'
-import { HandlerResponse, SonolusRouteHandler } from '../handler'
+import { ServerFormsModel } from '../../models/server/forms/form.js'
+import { ServerOptionsModel } from '../../models/server/options/option.js'
+import { serverCreateRoomRequestSchema } from '../../schemas/server/multiplayer/createRoom.js'
+import { SonolusMultiplayer } from '../../sonolus/multiplayer.js'
+import { parse } from '../../utils/json.js'
+import { SonolusCtx } from '../ctx.js'
+import { handleError } from '../error.js'
+import { HandlerResponse, SonolusRouteHandler } from '../handler.js'
 
 export type ServerCreateRoomHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions>,

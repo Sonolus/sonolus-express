@@ -1,6 +1,6 @@
 import { LocalizationText, ServerMessage } from '@sonolus/core'
 import { Response } from 'express'
-import { Localize } from '../utils'
+import { Localize } from '../utils/localization.js'
 
 export type ServerError<E extends number> = E | [E, LocalizationText]
 

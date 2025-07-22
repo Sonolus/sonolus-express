@@ -1,5 +1,5 @@
-import { EngineItemModel } from '../../../models/items/engine'
-import { createFilterItems } from './filter'
+import { EngineItemModel } from '../../../models/items/engine.js'
+import { createFilterItems } from './filter.js'
 
 export const filterEngines = createFilterItems<EngineItemModel>([
     'name',

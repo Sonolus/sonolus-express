@@ -1,5 +1,5 @@
-import { PostItemModel } from '../../../models/items/post'
-import { createFilterItems } from './filter'
+import { PostItemModel } from '../../../models/items/post.js'
+import { createFilterItems } from './filter.js'
 
 export const filterPosts = createFilterItems<PostItemModel>([
     'name',

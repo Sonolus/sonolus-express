@@ -1,8 +1,8 @@
 import { Type } from '@sinclair/typebox'
 import { ServerSubmitLevelResultRequest } from '@sonolus/core'
-import { Expect } from '../../../../utils/test'
-import { SchemaToMatch } from '../../../test'
-import { replayItemSchema } from '../replay'
+import { Expect } from '../../../../utils/test.js'
+import { SchemaToMatch } from '../../../test.js'
+import { replayItemSchema } from '../replay.js'
 
 export const serverSubmitLevelResultRequestSchema = Type.Object({
     replay: replayItemSchema,

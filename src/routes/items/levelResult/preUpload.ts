@@ -1,10 +1,10 @@
-import { ServerFormsModel } from '../../../models/server/forms/form'
-import { ServerOptionsModel } from '../../../models/server/options/option'
-import { SonolusLevelResult } from '../../../sonolus/levelResult'
-import { extractString } from '../../../utils/extract'
-import { SonolusCtx } from '../../ctx'
-import { handleError } from '../../error'
-import { HandlerResponse, SonolusRouteHandler } from '../../handler'
+import { ServerFormsModel } from '../../../models/server/forms/form.js'
+import { ServerOptionsModel } from '../../../models/server/options/option.js'
+import { SonolusLevelResult } from '../../../sonolus/levelResult.js'
+import { extractString } from '../../../utils/extract.js'
+import { SonolusCtx } from '../../ctx.js'
+import { handleError } from '../../error.js'
+import { HandlerResponse, SonolusRouteHandler } from '../../handler.js'
 
 export type ServerPreUploadLevelResultHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions> & {

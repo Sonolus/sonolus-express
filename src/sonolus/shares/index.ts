@@ -1,2 +1,2 @@
-export { SonolusRedirectShare } from './redirect'
-export { SonolusSpaShare } from './spa'
+export { SonolusRedirectShare } from './redirect.js'
+export { SonolusSpaShare } from './spa.js'

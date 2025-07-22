@@ -1,6 +1,6 @@
 import { DatabasePostItem, PostItem } from '@sonolus/core'
-import { toTags } from '../tag'
-import { Model, ToItem } from './item'
+import { toTags } from '../tag.js'
+import { Model, ToItem } from './item.js'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface PostItemModel extends Model<DatabasePostItem, {}> {}

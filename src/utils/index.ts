@@ -1,2 +1,2 @@
-export { Localize } from './localization'
-export { MaybePromise } from './promise'
+export { Localize } from './localization.js'
+export { MaybePromise } from './promise.js'

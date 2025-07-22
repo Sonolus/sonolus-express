@@ -1,10 +1,10 @@
 import { LocalizationText, ServerItemDetails } from '@sonolus/core'
-import { SonolusBase } from '../../../sonolus/base'
-import { Localize } from '../../../utils/localization'
-import { ToItem } from '../../items/item'
-import { PickForms, ServerFormsModel, toServerForms } from '../../server/forms/form'
-import { ServerItemSectionModel, toServerItemSections } from '../../server/items/section'
-import { ServerItemLeaderboardModel, toServerItemLeaderboard } from './leaderboards/leaderboard'
+import { SonolusBase } from '../../../sonolus/base.js'
+import { Localize } from '../../../utils/localization.js'
+import { ToItem } from '../../items/item.js'
+import { PickForms, ServerFormsModel, toServerForms } from '../../server/forms/form.js'
+import { ServerItemSectionModel, toServerItemSections } from '../../server/items/section.js'
+import { ServerItemLeaderboardModel, toServerItemLeaderboard } from './leaderboards/leaderboard.js'
 
 export type ServerItemDetailsModel<
     TItemModel,

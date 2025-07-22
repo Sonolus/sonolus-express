@@ -1,11 +1,13 @@
-import { ServerLevelResultInfoModel } from '../../../models'
-import { ServerFormsModel } from '../../../models/server/forms/form'
-import { toServerLevelResultInfo } from '../../../models/server/items/levelResult/info'
-import { ServerOptionsModel } from '../../../models/server/options/option'
-import { SonolusLevelResult } from '../../../sonolus/levelResult'
-import { SonolusCtx } from '../../ctx'
-import { handleError } from '../../error'
-import { HandlerResponse, SonolusRouteHandler } from '../../handler'
+import { ServerFormsModel } from '../../../models/server/forms/form.js'
+import {
+    ServerLevelResultInfoModel,
+    toServerLevelResultInfo,
+} from '../../../models/server/items/levelResult/info.js'
+import { ServerOptionsModel } from '../../../models/server/options/option.js'
+import { SonolusLevelResult } from '../../../sonolus/levelResult.js'
+import { SonolusCtx } from '../../ctx.js'
+import { handleError } from '../../error.js'
+import { HandlerResponse, SonolusRouteHandler } from '../../handler.js'
 
 export type ServerLevelResultInfoHandler<
     TConfigurationOptions extends ServerOptionsModel,

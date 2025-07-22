@@ -1,12 +1,15 @@
-import { ServerFormsModel } from '../models/server/forms/form'
-import { ServerOptionsModel } from '../models/server/options/option'
-import { SonolusRouteHandler } from '../routes/handler'
+import { ServerFormsModel } from '../models/server/forms/form.js'
+import { ServerOptionsModel } from '../models/server/options/option.js'
+import { SonolusRouteHandler } from '../routes/handler.js'
 import {
     ServerCreateRoomHandler,
     createServerCreateRoomRouteHandler,
-} from '../routes/multiplayer/create'
-import { ServerJoinRoomHandler, createServerJoinRoomRouteHandler } from '../routes/multiplayer/join'
-import { SonolusBase } from './base'
+} from '../routes/multiplayer/create.js'
+import {
+    ServerJoinRoomHandler,
+    createServerJoinRoomRouteHandler,
+} from '../routes/multiplayer/join.js'
+import { SonolusBase } from './base.js'
 
 export class SonolusMultiplayer<
     TConfigurationOptions extends ServerOptionsModel,

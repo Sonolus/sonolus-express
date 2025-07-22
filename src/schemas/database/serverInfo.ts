@@ -1,9 +1,9 @@
 import { Type } from '@sinclair/typebox'
 import { DatabaseServerInfo } from '@sonolus/core'
-import { Expect } from '../../utils/test'
-import { srlSchema } from '../srl'
-import { SchemaToMatch } from '../test'
-import { localizationTextSchema } from './localizationText'
+import { Expect } from '../../utils/test.js'
+import { srlSchema } from '../srl.js'
+import { SchemaToMatch } from '../test.js'
+import { localizationTextSchema } from './localizationText.js'
 
 export const databaseServerInfoSchema = Type.Object({
     title: localizationTextSchema,

@@ -1,13 +1,13 @@
 import { ReplayItem, ServerSubmitLevelResultResponse } from '@sonolus/core'
-import { ServerFormsModel } from '../../../models/server/forms/form'
-import { ServerFormsValue, parseServerFormsValue } from '../../../models/server/forms/value'
-import { ServerOptionsModel } from '../../../models/server/options/option'
-import { serverSubmitLevelResultRequestSchema } from '../../../schemas/server/items/levelResult/submit'
-import { SonolusLevelResult } from '../../../sonolus/levelResult'
-import { parse } from '../../../utils/json'
-import { SonolusCtx } from '../../ctx'
-import { handleError } from '../../error'
-import { HandlerResponse, SonolusRouteHandler } from '../../handler'
+import { ServerFormsModel } from '../../../models/server/forms/form.js'
+import { ServerFormsValue, parseServerFormsValue } from '../../../models/server/forms/value.js'
+import { ServerOptionsModel } from '../../../models/server/options/option.js'
+import { serverSubmitLevelResultRequestSchema } from '../../../schemas/server/items/levelResult/submit.js'
+import { SonolusLevelResult } from '../../../sonolus/levelResult.js'
+import { parse } from '../../../utils/json.js'
+import { SonolusCtx } from '../../ctx.js'
+import { handleError } from '../../error.js'
+import { HandlerResponse, SonolusRouteHandler } from '../../handler.js'
 
 export type ServerSubmitLevelResultHandler<
     TConfigurationOptions extends ServerOptionsModel,

@@ -1,5 +1,5 @@
-import { PlaylistItemModel } from '../../../models/items/playlist'
-import { createFilterItems } from './filter'
+import { PlaylistItemModel } from '../../../models/items/playlist.js'
+import { createFilterItems } from './filter.js'
 
 export const filterPlaylists = createFilterItems<PlaylistItemModel>([
     'name',

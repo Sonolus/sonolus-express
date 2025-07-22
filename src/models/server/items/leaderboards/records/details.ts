@@ -1,7 +1,7 @@
 import { ServerItemLeaderboardRecordDetails } from '@sonolus/core'
-import { SonolusBase } from '../../../../../sonolus/base'
-import { Localize } from '../../../../../utils/localization'
-import { ReplayItemModel, toReplayItem } from '../../../../items/replay'
+import { SonolusBase } from '../../../../../sonolus/base.js'
+import { Localize } from '../../../../../utils/localization.js'
+import { ReplayItemModel, toReplayItem } from '../../../../items/replay.js'
 
 export type ServerItemLeaderboardRecordDetailsModel = {
     replays: ReplayItemModel[]

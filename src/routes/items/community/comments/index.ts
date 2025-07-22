@@ -1,4 +1,4 @@
-export { ServerItemCommunityCommentListHandler } from './list'
-export { ServerPreUploadItemCommunityCommentActionHandler } from './preUpload'
-export { ServerSubmitItemCommunityCommentActionHandler } from './submit'
-export { ServerUploadItemCommunityCommentActionHandler } from './upload'
+export { ServerItemCommunityCommentListHandler } from './list.js'
+export { ServerPreUploadItemCommunityCommentActionHandler } from './preUpload.js'
+export { ServerSubmitItemCommunityCommentActionHandler } from './submit.js'
+export { ServerUploadItemCommunityCommentActionHandler } from './upload.js'

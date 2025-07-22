@@ -1,4 +1,4 @@
-export * from './forms'
-export { ServerInfoModel } from './info'
-export * from './items'
-export * from './options'
+export * from './forms/index.js'
+export { ServerInfoModel } from './info.js'
+export * from './items/index.js'
+export * from './options/index.js'

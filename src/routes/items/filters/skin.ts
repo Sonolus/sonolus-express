@@ -1,5 +1,5 @@
-import { SkinItemModel } from '../../../models/items/skin'
-import { createFilterItems } from './filter'
+import { SkinItemModel } from '../../../models/items/skin.js'
+import { createFilterItems } from './filter.js'
 
 export const filterSkins = createFilterItems<SkinItemModel>([
     'name',

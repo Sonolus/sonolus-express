@@ -1,4 +1,5 @@
-import { RawServerOptionsValue, ServerOptionsModel, ServerOptionsValue } from '../models'
+import { ServerOptionsModel } from '../models/server/options/option.js'
+import { RawServerOptionsValue, ServerOptionsValue } from '../models/server/options/value.js'
 
 export type SonolusCtx<TConfigurationOptions extends ServerOptionsModel> = {
     session: string | undefined

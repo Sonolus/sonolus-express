@@ -1,6 +1,6 @@
 import { LocalizationText, ServerInfo, ServerInfoButton, Srl } from '@sonolus/core'
-import { Localize } from '../../utils/localization'
-import { PickOptions, ServerOptionsModel, toServerOptions } from './options/option'
+import { Localize } from '../../utils/localization.js'
+import { PickOptions, ServerOptionsModel, toServerOptions } from './options/option.js'
 
 export type ServerInfoModel<T extends ServerOptionsModel> = {
     title: LocalizationText

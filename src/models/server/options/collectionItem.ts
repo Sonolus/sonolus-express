@@ -13,18 +13,18 @@ import {
     ServerCollectionItemOption,
     SkinItem,
 } from '@sonolus/core'
-import { backgroundItemSchema } from '../../../schemas/server/items/background'
-import { effectItemSchema } from '../../../schemas/server/items/effect'
-import { engineItemSchema } from '../../../schemas/server/items/engine'
-import { levelItemSchema } from '../../../schemas/server/items/level'
-import { particleItemSchema } from '../../../schemas/server/items/particle'
-import { playlistItemSchema } from '../../../schemas/server/items/playlist'
-import { postItemSchema } from '../../../schemas/server/items/post'
-import { replayItemSchema } from '../../../schemas/server/items/replay'
-import { roomItemSchema } from '../../../schemas/server/items/room'
-import { skinItemSchema } from '../../../schemas/server/items/skin'
-import { parse } from '../../../utils/json'
-import { Localize } from '../../../utils/localization'
+import { backgroundItemSchema } from '../../../schemas/server/items/background.js'
+import { effectItemSchema } from '../../../schemas/server/items/effect.js'
+import { engineItemSchema } from '../../../schemas/server/items/engine.js'
+import { levelItemSchema } from '../../../schemas/server/items/level.js'
+import { particleItemSchema } from '../../../schemas/server/items/particle.js'
+import { playlistItemSchema } from '../../../schemas/server/items/playlist.js'
+import { postItemSchema } from '../../../schemas/server/items/post.js'
+import { replayItemSchema } from '../../../schemas/server/items/replay.js'
+import { roomItemSchema } from '../../../schemas/server/items/room.js'
+import { skinItemSchema } from '../../../schemas/server/items/skin.js'
+import { parse } from '../../../utils/json.js'
+import { Localize } from '../../../utils/localization.js'
 
 export type ServerCollectionItemOptionModel = {
     name: LocalizationText

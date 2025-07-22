@@ -1,6 +1,6 @@
 import { DatabaseTag, LocalizationText, RoomItem, Srl } from '@sonolus/core'
-import { toTags } from '../tag'
-import { ToItem } from './item'
+import { toTags } from '../tag.js'
+import { ToItem } from './item.js'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface RoomItemModel {

@@ -1,4 +1,10 @@
-export { PickForms, ServerFormModel, ServerFormsModel, toServerForm, toServerForms } from './form'
+export {
+    PickForms,
+    ServerFormModel,
+    ServerFormsModel,
+    toServerForm,
+    toServerForms,
+} from './form.js'
 export {
     RawServerFormValue,
     RawServerFormsValue,
@@ -11,4 +17,4 @@ export {
     parseServerSearchesValue,
     serializeRawServerFormValue,
     serializeRawServerFormsValue,
-} from './value'
+} from './value.js'

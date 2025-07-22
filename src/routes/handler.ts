@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
-import { ServerOptionsModel } from '../models/server/options/option'
-import { Localize } from '../utils/localization'
-import { MaybePromise } from '../utils/promise'
-import { SonolusCtx } from './ctx'
-import { ServerError } from './error'
+import { ServerOptionsModel } from '../models/server/options/option.js'
+import { Localize } from '../utils/localization.js'
+import { MaybePromise } from '../utils/promise.js'
+import { SonolusCtx } from './ctx.js'
+import { ServerError } from './error.js'
 
 export type SonolusRouteHandler<TConfigurationOptions extends ServerOptionsModel> = (ctx: {
     req: Request
