@@ -1,7 +1,7 @@
 import { ServerItemCommunityCommentList } from '@sonolus/core'
-import { Localize } from '../../../../../utils/localization'
-import { ServerFormsModel } from '../../../forms/form'
-import { ServerItemCommunityCommentModel, toServerItemCommunityComment } from './comment'
+import { Localize } from '../../../../../utils/localization.js'
+import { ServerFormsModel } from '../../../forms/form.js'
+import { ServerItemCommunityCommentModel, toServerItemCommunityComment } from './comment.js'
 
 export type ServerItemCommunityCommentListModel<T extends ServerFormsModel> = {
     pageCount: number

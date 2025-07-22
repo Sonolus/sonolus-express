@@ -1,8 +1,8 @@
 import { Type } from '@sinclair/typebox'
 import { ServerAuthenticateRequest } from '@sonolus/core'
-import { Expect } from '../../utils/test'
-import { serviceUserProfileSchema } from '../service/userProfile'
-import { SchemaToMatch } from '../test'
+import { Expect } from '../../utils/test.js'
+import { serviceUserProfileSchema } from '../service/userProfile.js'
+import { SchemaToMatch } from '../test.js'
 
 export const authenticateServerRequestSchema = Type.Object({
     type: Type.Literal('authenticateServer'),

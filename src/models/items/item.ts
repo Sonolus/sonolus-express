@@ -1,6 +1,6 @@
 import { LocalizationText } from '@sonolus/core'
-import { SonolusBase } from '../../sonolus/base'
-import { Localize } from '../../utils/localization'
+import { SonolusBase } from '../../sonolus/base.js'
+import { Localize } from '../../utils/localization.js'
 
 export type ItemModel = {
     name: string

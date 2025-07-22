@@ -3,62 +3,62 @@ import {
     normalizeServerCollectionItemOptionValue,
     parseRawServerCollectionItemOptionValue,
     serializeServerCollectionItemOptionValue,
-} from './collectionItem'
+} from './collectionItem.js'
 import {
     ServerFileOptionValue,
     normalizeServerFileOptionValue,
     parseRawServerFileOptionValue,
     serializeServerFileOptionValue,
-} from './file'
+} from './file.js'
 import {
     ServerMultiOptionValue,
     normalizeServerMultiOptionValue,
     parseRawServerMultiOptionValue,
     serializeServerMultiOptionValue,
-} from './multi'
-import { ServerOptionModel, ServerOptionsModel } from './option'
+} from './multi.js'
+import { ServerOptionModel, ServerOptionsModel } from './option.js'
 import {
     ServerSelectOptionValue,
     normalizeServerSelectOptionValue,
     parseRawServerSelectOptionValue,
     serializeServerSelectOptionValue,
-} from './select'
+} from './select.js'
 import {
     ServerServerItemOptionValue,
     normalizeServerServerItemOptionValue,
     parseRawServerServerItemOptionValue,
     serializeServerServerItemOptionValue,
-} from './serverItem'
+} from './serverItem.js'
 import {
     ServerServerItemsOptionValue,
     normalizeServerServerItemsOptionValue,
     parseRawServerServerItemsOptionValue,
     serializeServerServerItemsOptionValue,
-} from './serverItems'
+} from './serverItems.js'
 import {
     ServerSliderOptionValue,
     normalizeServerSliderOptionValue,
     parseRawServerSliderOptionValue,
     serializeServerSliderOptionValue,
-} from './slider'
+} from './slider.js'
 import {
     ServerTextOptionValue,
     normalizeServerTextOptionValue,
     parseRawServerTextOptionValue,
     serializeServerTextOptionValue,
-} from './text'
+} from './text.js'
 import {
     ServerTextAreaOptionValue,
     normalizeServerTextAreaOptionValue,
     parseRawServerTextAreaOptionValue,
     serializeServerTextAreaOptionValue,
-} from './textArea'
+} from './textArea.js'
 import {
     ServerToggleOptionValue,
     normalizeServerToggleOptionValue,
     parseRawServerToggleOptionValue,
     serializeServerToggleOptionValue,
-} from './toggle'
+} from './toggle.js'
 
 export type RawServerOptionValue<T extends ServerOptionModel> = ServerOptionValue<T> | undefined
 

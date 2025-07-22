@@ -1,6 +1,6 @@
 import { ServerLevelResultInfo } from '@sonolus/core'
-import { Localize } from '../../../../utils/localization'
-import { PickForms, ServerFormsModel, toServerForms } from '../../forms/form'
+import { Localize } from '../../../../utils/localization.js'
+import { PickForms, ServerFormsModel, toServerForms } from '../../forms/form.js'
 
 export type ServerLevelResultInfoModel<TSubmits extends ServerFormsModel> = {
     submits?: PickForms<TSubmits>

@@ -1,6 +1,6 @@
 **/*.*
 
-!eslint.config.mjs
+!eslint.config.js
 !README.md
 
 !src/**/*.*

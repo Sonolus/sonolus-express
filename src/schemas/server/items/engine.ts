@@ -1,13 +1,13 @@
 import { Type } from '@sinclair/typebox'
 import { EngineItem } from '@sonolus/core'
-import { Expect } from '../../../utils/test'
-import { srlSchema } from '../../srl'
-import { tagSchema } from '../../tag'
-import { SchemaToMatch } from '../../test'
-import { backgroundItemSchema } from './background'
-import { effectItemSchema } from './effect'
-import { particleItemSchema } from './particle'
-import { skinItemSchema } from './skin'
+import { Expect } from '../../../utils/test.js'
+import { srlSchema } from '../../srl.js'
+import { tagSchema } from '../../tag.js'
+import { SchemaToMatch } from '../../test.js'
+import { backgroundItemSchema } from './background.js'
+import { effectItemSchema } from './effect.js'
+import { particleItemSchema } from './particle.js'
+import { skinItemSchema } from './skin.js'
 
 export const engineItemSchema = Type.Object({
     name: Type.String(),

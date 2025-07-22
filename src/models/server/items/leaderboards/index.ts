@@ -1,3 +1,3 @@
-export { ServerItemLeaderboardDetailsModel } from './details'
-export { ServerItemLeaderboardModel } from './leaderboard'
-export * from './records'
+export { ServerItemLeaderboardDetailsModel } from './details.js'
+export { ServerItemLeaderboardModel } from './leaderboard.js'
+export * from './records/index.js'

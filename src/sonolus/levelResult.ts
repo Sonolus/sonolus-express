@@ -1,23 +1,23 @@
-import { ServerFormsModel } from '../models/server/forms/form'
-import { ServerOptionsModel } from '../models/server/options/option'
-import { SonolusRouteHandler } from '../routes/handler'
+import { ServerFormsModel } from '../models/server/forms/form.js'
+import { ServerOptionsModel } from '../models/server/options/option.js'
+import { SonolusRouteHandler } from '../routes/handler.js'
 import {
     createDefaultServerLevelResultInfoHandler,
     createServerLevelResultInfoRouteHandler,
     ServerLevelResultInfoHandler,
-} from '../routes/items/levelResult/info'
+} from '../routes/items/levelResult/info.js'
 import {
     createServerPreUploadLevelResultRouteHandler,
     ServerPreUploadLevelResultHandler,
-} from '../routes/items/levelResult/preUpload'
+} from '../routes/items/levelResult/preUpload.js'
 import {
     createServerSubmitLevelResultRouteHandler,
     ServerSubmitLevelResultHandler,
-} from '../routes/items/levelResult/submit'
+} from '../routes/items/levelResult/submit.js'
 import {
     createServerUploadLevelResultRouteHandler,
     ServerUploadLevelResultHandler,
-} from '../routes/items/levelResult/upload'
+} from '../routes/items/levelResult/upload.js'
 
 export type SonolusLevelResultOptions<TSubmits extends ServerFormsModel> = {
     submits?: TSubmits

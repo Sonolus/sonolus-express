@@ -1,7 +1,7 @@
 import { Type } from '@sinclair/typebox'
 import { Sil } from '@sonolus/core'
-import { Expect } from '../utils/test'
-import { SchemaToMatch } from './test'
+import { Expect } from '../utils/test.js'
+import { SchemaToMatch } from './test.js'
 
 export const silSchema = Type.Object({
     address: Type.String(),

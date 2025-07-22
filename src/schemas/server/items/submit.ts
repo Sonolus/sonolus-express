@@ -1,7 +1,7 @@
 import { Type } from '@sinclair/typebox'
 import { ServerSubmitItemActionRequest } from '@sonolus/core'
-import { Expect } from '../../../utils/test'
-import { SchemaToMatch } from '../../test'
+import { Expect } from '../../../utils/test.js'
+import { SchemaToMatch } from '../../test.js'
 
 export const serverSubmitItemActionRequestSchema = Type.Object({
     values: Type.String(),

@@ -1,13 +1,13 @@
 import { Text } from '@sonolus/core'
-import { ItemModel } from '../../models/items/item'
-import { ServerFormsModel } from '../../models/server/forms/form'
-import { ServerItemInfoModel, toServerItemInfo } from '../../models/server/items/info'
-import { ServerOptionsModel } from '../../models/server/options/option'
-import { SonolusBase } from '../../sonolus/base'
-import { SonolusItemGroup } from '../../sonolus/itemGroup'
-import { SonolusCtx } from '../ctx'
-import { handleError } from '../error'
-import { HandlerResponse, SonolusRouteHandler } from '../handler'
+import { ItemModel } from '../../models/items/item.js'
+import { ServerFormsModel } from '../../models/server/forms/form.js'
+import { ServerItemInfoModel, toServerItemInfo } from '../../models/server/items/info.js'
+import { ServerOptionsModel } from '../../models/server/options/option.js'
+import { SonolusBase } from '../../sonolus/base.js'
+import { SonolusItemGroup } from '../../sonolus/itemGroup.js'
+import { SonolusCtx } from '../ctx.js'
+import { handleError } from '../error.js'
+import { HandlerResponse, SonolusRouteHandler } from '../handler.js'
 
 export type ServerItemInfoHandler<
     TConfigurationOptions extends ServerOptionsModel,

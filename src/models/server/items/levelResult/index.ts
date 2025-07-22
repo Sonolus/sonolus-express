@@ -1,1 +1,1 @@
-export { ServerLevelResultInfoModel } from './info'
+export { ServerLevelResultInfoModel } from './info.js'

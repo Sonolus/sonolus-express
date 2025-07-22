@@ -4,14 +4,14 @@ import {
     ServiceUserProfile,
 } from '@sonolus/core'
 import { webcrypto } from 'node:crypto'
-import { ServerOptionsModel } from '../models/server/options/option'
-import { authenticateServerRequestSchema } from '../schemas/server/authenticate'
-import { SonolusBase } from '../sonolus/base'
-import { Sonolus } from '../sonolus/sonolus'
-import { parse } from '../utils/json'
-import { SonolusCtx } from './ctx'
-import { handleError } from './error'
-import { HandlerResponse, SonolusRouteHandler } from './handler'
+import { ServerOptionsModel } from '../models/server/options/option.js'
+import { authenticateServerRequestSchema } from '../schemas/server/authenticate.js'
+import { SonolusBase } from '../sonolus/base.js'
+import { Sonolus } from '../sonolus/sonolus.js'
+import { parse } from '../utils/json.js'
+import { SonolusCtx } from './ctx.js'
+import { handleError } from './error.js'
+import { HandlerResponse, SonolusRouteHandler } from './handler.js'
 
 export type ServerAuthenticateHandler<TConfigurationOptions extends ServerOptionsModel> = (
     ctx: SonolusCtx<TConfigurationOptions> & {

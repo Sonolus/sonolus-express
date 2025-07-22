@@ -1,7 +1,10 @@
 import { ServerItemCommunityInfo } from '@sonolus/core'
-import { Localize } from '../../../../utils/localization'
-import { PickForms, ServerFormsModel, toServerForms } from '../../forms/form'
-import { ServerItemCommunityCommentModel, toServerItemCommunityComment } from './comments/comment'
+import { Localize } from '../../../../utils/localization.js'
+import { PickForms, ServerFormsModel, toServerForms } from '../../forms/form.js'
+import {
+    ServerItemCommunityCommentModel,
+    toServerItemCommunityComment,
+} from './comments/comment.js'
 
 export type ServerItemCommunityInfoModel<
     TCommunityActions extends ServerFormsModel,

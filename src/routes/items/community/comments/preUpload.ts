@@ -1,11 +1,11 @@
-import { ItemModel } from '../../../../models/items/item'
-import { ServerFormsModel } from '../../../../models/server/forms/form'
-import { ServerOptionsModel } from '../../../../models/server/options/option'
-import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
-import { extractString } from '../../../../utils/extract'
-import { SonolusCtx } from '../../../ctx'
-import { handleError } from '../../../error'
-import { HandlerResponse, SonolusRouteHandler } from '../../../handler'
+import { ItemModel } from '../../../../models/items/item.js'
+import { ServerFormsModel } from '../../../../models/server/forms/form.js'
+import { ServerOptionsModel } from '../../../../models/server/options/option.js'
+import { SonolusItemGroup } from '../../../../sonolus/itemGroup.js'
+import { extractString } from '../../../../utils/extract.js'
+import { SonolusCtx } from '../../../ctx.js'
+import { handleError } from '../../../error.js'
+import { HandlerResponse, SonolusRouteHandler } from '../../../handler.js'
 
 export type ServerPreUploadItemCommunityCommentActionHandler<
     TConfigurationOptions extends ServerOptionsModel,

@@ -1,14 +1,14 @@
-import { ItemModel } from '../../../../models/items/item'
-import { ServerFormsModel } from '../../../../models/server/forms/form'
+import { ItemModel } from '../../../../models/items/item.js'
+import { ServerFormsModel } from '../../../../models/server/forms/form.js'
 import {
     ServerItemCommunityCommentListModel,
     toServerItemCommunityCommentList,
-} from '../../../../models/server/items/community/comments/list'
-import { ServerOptionsModel } from '../../../../models/server/options/option'
-import { SonolusItemGroup } from '../../../../sonolus/itemGroup'
-import { SonolusCtx } from '../../../ctx'
-import { handleError } from '../../../error'
-import { HandlerResponse, SonolusRouteHandler } from '../../../handler'
+} from '../../../../models/server/items/community/comments/list.js'
+import { ServerOptionsModel } from '../../../../models/server/options/option.js'
+import { SonolusItemGroup } from '../../../../sonolus/itemGroup.js'
+import { SonolusCtx } from '../../../ctx.js'
+import { handleError } from '../../../error.js'
+import { HandlerResponse, SonolusRouteHandler } from '../../../handler.js'
 
 export type ServerItemCommunityCommentListHandler<
     TConfigurationOptions extends ServerOptionsModel,

@@ -1,2 +1,2 @@
-export * from './comments'
-export { ServerItemCommunityInfoModel } from './info'
+export * from './comments/index.js'
+export { ServerItemCommunityInfoModel } from './info.js'

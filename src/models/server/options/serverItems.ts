@@ -1,8 +1,8 @@
 import { Type } from '@sinclair/typebox'
 import { ItemType, LocalizationText, ServerServerItemsOption, Sil } from '@sonolus/core'
-import { silSchema } from '../../../schemas/sil'
-import { parse } from '../../../utils/json'
-import { Localize } from '../../../utils/localization'
+import { silSchema } from '../../../schemas/sil.js'
+import { parse } from '../../../utils/json.js'
+import { Localize } from '../../../utils/localization.js'
 
 export type ServerServerItemsOptionModel = {
     name: LocalizationText
