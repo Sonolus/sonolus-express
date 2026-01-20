@@ -19,17 +19,16 @@ export type UseItemModel<T> =
       }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export interface LevelItemModel
-    extends Model<
-        DatabaseLevelItem,
-        {
-            engine: string | EngineItemModel
-            useSkin: UseItemModel<SkinItemModel>
-            useBackground: UseItemModel<BackgroundItemModel>
-            useEffect: UseItemModel<EffectItemModel>
-            useParticle: UseItemModel<ParticleItemModel>
-        }
-    > {}
+export interface LevelItemModel extends Model<
+    DatabaseLevelItem,
+    {
+        engine: string | EngineItemModel
+        useSkin: UseItemModel<SkinItemModel>
+        useBackground: UseItemModel<BackgroundItemModel>
+        useEffect: UseItemModel<EffectItemModel>
+        useParticle: UseItemModel<ParticleItemModel>
+    }
+> {}
 
 export const toLevelItem: ToItem<LevelItemModel, LevelItem> = (sonolus, localize, item) => ({
     name: item.name,
