@@ -31,7 +31,7 @@ export type ServerCollectionItemOptionModel = {
     description?: LocalizationText
     required: boolean
     type: 'collectionItem'
-    itemType: ItemType
+    itemType: Exclude<ItemType, 'user'>
 }
 
 export type ServerCollectionItemOptionValue<T = ServerCollectionItemOptionModel> =

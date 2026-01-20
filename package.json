@@ -35,7 +35,7 @@
   },
   "peerDependencies": {
     "@sinclair/typebox": "^0.34.47",
-    "@sonolus/core": "~7.14.2",
+    "@sonolus/core": "~7.15.0",
     "express": "^4.22.1",
     "multer": "^2.0.2"
   }

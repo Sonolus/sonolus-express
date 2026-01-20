@@ -7,7 +7,7 @@ import { SchemaToMatch } from '../../test.js'
 
 export const skinItemSchema = Type.Object({
     name: Type.String(),
-    source: Type.Optional(Type.Union([Type.String(), Type.Undefined()])),
+    source: Type.Optional(Type.String()),
     version: Type.Literal(4),
     title: Type.String(),
     subtitle: Type.String(),

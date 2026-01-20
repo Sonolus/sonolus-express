@@ -5,7 +5,7 @@ import { SchemaToMatch } from '../test.js'
 import { localizationTextSchema } from './localizationText.js'
 
 export const databaseTagSchema = Type.Object({
-    title: localizationTextSchema,
+    title: Type.Optional(localizationTextSchema),
     icon: Type.Optional(Type.String()),
 })
 
