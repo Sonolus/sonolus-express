@@ -283,10 +283,15 @@ export class SonolusItemGroup<
         this._communityCommentUploadRouteHandler =
             createServerUploadItemCommunityCommentActionRouteHandler(this)
 
-        this._leaderboardDetailsRouteHandler = createServerItemLeaderboardDetailsRouteHandler(this)
+        this._leaderboardDetailsRouteHandler = createServerItemLeaderboardDetailsRouteHandler(
+            sonolus,
+            this,
+        )
 
-        this._leaderboardRecordListRouteHandler =
-            createServerItemLeaderboardRecordListRouteHandler(this)
+        this._leaderboardRecordListRouteHandler = createServerItemLeaderboardRecordListRouteHandler(
+            sonolus,
+            this,
+        )
 
         this._leaderboardRecordDetailsRouteHandler =
             createServerItemLeaderboardRecordDetailsRouteHandler(sonolus, this)

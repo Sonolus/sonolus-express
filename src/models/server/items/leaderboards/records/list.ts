@@ -1,4 +1,5 @@
 import { ServerItemLeaderboardRecordList } from '@sonolus/core'
+import { SonolusBase } from '../../../../../sonolus/base.js'
 import { Localize } from '../../../../../utils/localization.js'
 import { ServerItemLeaderboardRecordModel, toServerItemLeaderboardRecord } from './record.js'
 
@@ -9,10 +10,11 @@ export type ServerItemLeaderboardRecordListModel = {
 }
 
 export const toServerItemLeaderboardRecordList = (
+    sonolus: SonolusBase,
     localize: Localize,
     list: ServerItemLeaderboardRecordListModel,
 ): ServerItemLeaderboardRecordList => ({
     pageCount: list.pageCount,
     cursor: list.cursor,
-    records: list.records.map((record) => toServerItemLeaderboardRecord(localize, record)),
+    records: list.records.map((record) => toServerItemLeaderboardRecord(sonolus, localize, record)),
 })
