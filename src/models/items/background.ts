@@ -1,9 +1,12 @@
 import { BackgroundItem, DatabaseBackgroundItem } from '@sonolus/core'
 import { toTags } from '../tag.js'
-import { Model, ToItem } from './item.js'
+import { getItem, Model, ToItem } from './item.js'
+import { toUserItem, UserItemModel } from './user.js'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export interface BackgroundItemModel extends Model<DatabaseBackgroundItem, {}> {}
+export interface BackgroundItemModel extends Model<DatabaseBackgroundItem, {}> {
+    authorUser?: string | UserItemModel
+}
 
 export const toBackgroundItem: ToItem<BackgroundItemModel, BackgroundItem> = (
     sonolus,
@@ -16,6 +19,18 @@ export const toBackgroundItem: ToItem<BackgroundItemModel, BackgroundItem> = (
     title: localize(item.title),
     subtitle: localize(item.subtitle),
     author: localize(item.author),
+    authorUser: item.authorUser
+        ? toUserItem(
+              sonolus,
+              localize,
+              getItem(
+                  sonolus.user.items,
+                  item.authorUser,
+                  `Background/${item.name}`,
+                  '.authorUser',
+              ),
+          )
+        : undefined,
     tags: toTags(localize, item.tags),
     thumbnail: item.thumbnail,
     data: item.data,

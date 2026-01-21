@@ -2,6 +2,7 @@ import { DatabasePlaylistItem, PlaylistItem } from '@sonolus/core'
 import { toTags } from '../tag.js'
 import { Model, ToItem, getItem } from './item.js'
 import { LevelItemModel, toLevelItem } from './level.js'
+import { UserItemModel, toUserItem } from './user.js'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface PlaylistItemModel extends Model<
@@ -9,7 +10,9 @@ export interface PlaylistItemModel extends Model<
     {
         levels: (string | LevelItemModel)[]
     }
-> {}
+> {
+    authorUser?: string | UserItemModel
+}
 
 export const toPlaylistItem: ToItem<PlaylistItemModel, PlaylistItem> = (
     sonolus,
@@ -22,6 +25,13 @@ export const toPlaylistItem: ToItem<PlaylistItemModel, PlaylistItem> = (
     title: localize(item.title),
     subtitle: localize(item.subtitle),
     author: localize(item.author),
+    authorUser: item.authorUser
+        ? toUserItem(
+              sonolus,
+              localize,
+              getItem(sonolus.user.items, item.authorUser, `Playlist/${item.name}`, '.authorUser'),
+          )
+        : undefined,
     tags: toTags(localize, item.tags),
     levels: item.levels.map((level, index) =>
         toLevelItem(
