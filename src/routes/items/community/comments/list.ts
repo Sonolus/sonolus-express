@@ -5,6 +5,7 @@ import {
     toServerItemCommunityCommentList,
 } from '../../../../models/server/items/community/comments/list.js'
 import { ServerOptionsModel } from '../../../../models/server/options/option.js'
+import { SonolusBase } from '../../../../sonolus/base.js'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup.js'
 import { SonolusCtx } from '../../../ctx.js'
 import { handleError } from '../../../error.js'
@@ -31,6 +32,7 @@ export const createServerItemCommunityCommentListRouteHandler =
         TCommunityActions extends ServerFormsModel,
         TCommunityCommentActions extends ServerFormsModel,
     >(
+        sonolus: SonolusBase,
         group: SonolusItemGroup<
             TConfigurationOptions,
             TItemModel,
@@ -62,6 +64,11 @@ export const createServerItemCommunityCommentListRouteHandler =
         if (handleError(response, res, localize)) return
 
         res.json(
-            toServerItemCommunityCommentList(localize, response, group.community.comment.actions),
+            toServerItemCommunityCommentList(
+                sonolus,
+                localize,
+                response,
+                group.community.comment.actions,
+            ),
         )
     }

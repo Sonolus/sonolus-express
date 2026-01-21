@@ -5,6 +5,7 @@ import {
     toServerItemCommunityInfo,
 } from '../../../models/server/items/community/info.js'
 import { ServerOptionsModel } from '../../../models/server/options/option.js'
+import { SonolusBase } from '../../../sonolus/base.js'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup.js'
 import { SonolusCtx } from '../../ctx.js'
 import { handleError } from '../../error.js'
@@ -33,6 +34,7 @@ export const createServerItemCommunityInfoRouteHandler =
         TCommunityActions extends ServerFormsModel,
         TCommunityCommentActions extends ServerFormsModel,
     >(
+        sonolus: SonolusBase,
         group: SonolusItemGroup<
             TConfigurationOptions,
             TItemModel,
@@ -60,6 +62,7 @@ export const createServerItemCommunityInfoRouteHandler =
 
         res.json(
             toServerItemCommunityInfo(
+                sonolus,
                 localize,
                 response,
                 group.community.actions,

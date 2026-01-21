@@ -1,4 +1,5 @@
 import { ServerItemCommunityCommentList } from '@sonolus/core'
+import { SonolusBase } from '../../../../../sonolus/base.js'
 import { Localize } from '../../../../../utils/localization.js'
 import { ServerFormsModel } from '../../../forms/form.js'
 import { ServerItemCommunityCommentModel, toServerItemCommunityComment } from './comment.js'
@@ -10,6 +11,7 @@ export type ServerItemCommunityCommentListModel<T extends ServerFormsModel> = {
 }
 
 export const toServerItemCommunityCommentList = <T extends ServerFormsModel>(
+    sonolus: SonolusBase,
     localize: Localize,
     list: ServerItemCommunityCommentListModel<T>,
     actions: T,
@@ -17,6 +19,6 @@ export const toServerItemCommunityCommentList = <T extends ServerFormsModel>(
     pageCount: list.pageCount,
     cursor: list.cursor,
     comments: list.comments.map((comment) =>
-        toServerItemCommunityComment(localize, comment, actions),
+        toServerItemCommunityComment(sonolus, localize, comment, actions),
     ),
 })
