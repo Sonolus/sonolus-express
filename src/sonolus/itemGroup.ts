@@ -116,7 +116,7 @@ export class SonolusItemGroup<
     TCommunityActions extends ServerFormsModel,
     TCommunityCommentActions extends ServerFormsModel,
 > {
-    readonly type: Exclude<ItemType, 'user'>
+    readonly type: ItemType
     items: TItemModel[]
 
     creates: TCreates
@@ -214,7 +214,7 @@ export class SonolusItemGroup<
 
     constructor(
         sonolus: SonolusBase,
-        type: Exclude<ItemType, 'user'>,
+        type: ItemType,
         options: SonolusItemGroupOptions<
             TCreates,
             TSearches,
