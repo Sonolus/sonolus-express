@@ -7,6 +7,7 @@ export type ServerFileOptionModel = {
     required: boolean
     type: 'file'
     def: string
+    validation?: ServerFileOption['validation']
 }
 
 export type ServerFileOptionValue = string
@@ -37,4 +38,5 @@ export const toServerFileOption = (
     required: option.required,
     type: option.type,
     def: option.def,
+    validation: option.validation,
 })
