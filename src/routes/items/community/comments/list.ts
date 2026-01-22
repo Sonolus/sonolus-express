@@ -7,6 +7,7 @@ import {
 import { ServerOptionsModel } from '../../../../models/server/options/option.js'
 import { SonolusBase } from '../../../../sonolus/base.js'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup.js'
+import { extractString } from '../../../../utils/extract.js'
 import { SonolusCtx } from '../../../ctx.js'
 import { handleError } from '../../../error.js'
 import { HandlerResponse, SonolusRouteHandler } from '../../../handler.js'
@@ -59,7 +60,7 @@ export const createServerItemCommunityCommentListRouteHandler =
             ...ctx,
             itemName,
             page: +(req.query.page ?? '') || 0,
-            cursor: req.query.cursor && `${req.query.cursor as never}`,
+            cursor: extractString(req.query.cursor),
         })
         if (handleError(response, res, localize)) return
 
