@@ -5,6 +5,7 @@ import { ServerItemInfoModel, toServerItemInfo } from '../../models/server/items
 import { ServerOptionsModel } from '../../models/server/options/option.js'
 import { SonolusBase } from '../../sonolus/base.js'
 import { SonolusItemGroup } from '../../sonolus/itemGroup.js'
+import { extractString } from '../../utils/extract.js'
 import { SonolusCtx } from '../ctx.js'
 import { handleError } from '../error.js'
 import { HandlerResponse, SonolusRouteHandler } from '../handler.js'
@@ -14,7 +15,9 @@ export type ServerItemInfoHandler<
     TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
 > = (
-    ctx: SonolusCtx<TConfigurationOptions>,
+    ctx: SonolusCtx<TConfigurationOptions> & {
+        type?: string
+    },
 ) => HandlerResponse<ServerItemInfoModel<TCreates, TSearches>, 401>
 
 export const createDefaultServerItemInfoHandler =
@@ -72,8 +75,11 @@ export const createServerItemInfoRouteHandler =
             TCommunityCommentActions
         >,
     ): SonolusRouteHandler<TConfigurationOptions> =>
-    async ({ res, localize, ctx }) => {
-        const response = await group.infoHandler(ctx)
+    async ({ req, res, localize, ctx }) => {
+        const response = await group.infoHandler({
+            ...ctx,
+            type: extractString(req.query.type),
+        })
         if (handleError(response, res, localize)) return
 
         res.json(toServerItemInfo(sonolus, localize, response, group.creates, group.searches))
