@@ -12,6 +12,7 @@ import {
     RoomItem,
     ServerCollectionItemOption,
     SkinItem,
+    UserItem,
 } from '@sonolus/core'
 import { backgroundItemSchema } from '../../../schemas/server/items/background.js'
 import { effectItemSchema } from '../../../schemas/server/items/effect.js'
@@ -23,6 +24,7 @@ import { postItemSchema } from '../../../schemas/server/items/post.js'
 import { replayItemSchema } from '../../../schemas/server/items/replay.js'
 import { roomItemSchema } from '../../../schemas/server/items/room.js'
 import { skinItemSchema } from '../../../schemas/server/items/skin.js'
+import { userItemSchema } from '../../../schemas/server/items/user.js'
 import { parse } from '../../../utils/json.js'
 import { Localize } from '../../../utils/localization.js'
 
@@ -48,6 +50,7 @@ export type ServerCollectionItemOptionValue<T = ServerCollectionItemOptionModel>
                     engine: EngineItem
                     replay: ReplayItem
                     room: RoomItem
+                    user: UserItem
                 }[T['itemType']]
               | undefined
         : never
@@ -63,6 +66,7 @@ const schemas = {
     engine: engineItemSchema,
     replay: replayItemSchema,
     room: roomItemSchema,
+    user: userItemSchema,
 }
 
 export const parseRawServerCollectionItemOptionValue = (

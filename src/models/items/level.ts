@@ -8,6 +8,7 @@ import { EngineItemModel, toEngineItem } from './engine.js'
 import { ItemModel, Model, ToItem, getItem } from './item.js'
 import { ParticleItemModel, toParticleItem } from './particle.js'
 import { SkinItemModel, toSkinItem } from './skin.js'
+import { UserItemModel, toUserItem } from './user.js'
 
 export type UseItemModel<T> =
     | {
@@ -28,7 +29,9 @@ export interface LevelItemModel extends Model<
         useEffect: UseItemModel<EffectItemModel>
         useParticle: UseItemModel<ParticleItemModel>
     }
-> {}
+> {
+    authorUser?: string | UserItemModel
+}
 
 export const toLevelItem: ToItem<LevelItemModel, LevelItem> = (sonolus, localize, item) => ({
     name: item.name,
@@ -79,6 +82,13 @@ export const toLevelItem: ToItem<LevelItemModel, LevelItem> = (sonolus, localize
     title: localize(item.title),
     artists: localize(item.artists),
     author: localize(item.author),
+    authorUser: item.authorUser
+        ? toUserItem(
+              sonolus,
+              localize,
+              getItem(sonolus.user.items, item.authorUser, `Level/${item.name}`, '.authorUser'),
+          )
+        : undefined,
     tags: toTags(localize, item.tags),
     cover: item.cover,
     bgm: item.bgm,

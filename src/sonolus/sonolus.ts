@@ -13,6 +13,7 @@ import { PostItemModel, toPostItem } from '../models/items/post.js'
 import { ReplayItemModel, toReplayItem } from '../models/items/replay.js'
 import { RoomItemModel, toRoomItem } from '../models/items/room.js'
 import { SkinItemModel, toSkinItem } from '../models/items/skin.js'
+import { UserItemModel, toUserItem } from '../models/items/user.js'
 import { ServerFormsModel } from '../models/server/forms/form.js'
 import { ServerOptionsModel } from '../models/server/options/option.js'
 import {
@@ -25,6 +26,7 @@ import {
 } from '../routes/authenticate.js'
 import { handleError } from '../routes/error.js'
 import { SonolusRouteHandler } from '../routes/handler.js'
+import { filterUsers } from '../routes/index.js'
 import {
     ServerInfoHandler,
     createDefaultServerInfoHandler,
@@ -60,6 +62,7 @@ const itemTypes = [
     ['engine', 'engines', toEngineItem, filterEngines],
     ['replay', 'replays', toReplayItem, filterReplays],
     ['room', 'rooms', toRoomItem, filterRooms],
+    ['user', 'users', toUserItem, filterUsers],
 ] as const
 
 export type UploadOptions = {
@@ -79,6 +82,7 @@ export class Sonolus<
     TEngineCreates extends ServerFormsModel = {},
     TReplayCreates extends ServerFormsModel = {},
     TRoomCreates extends ServerFormsModel = {},
+    TUserCreates extends ServerFormsModel = {},
     TPostSearches extends ServerFormsModel = {},
     TPlaylistSearches extends ServerFormsModel = {},
     TLevelSearches extends ServerFormsModel = {},
@@ -89,6 +93,7 @@ export class Sonolus<
     TEngineSearches extends ServerFormsModel = {},
     TReplaySearches extends ServerFormsModel = {},
     TRoomSearches extends ServerFormsModel = {},
+    TUserSearches extends ServerFormsModel = {},
     TPostActions extends ServerFormsModel = {},
     TPlaylistActions extends ServerFormsModel = {},
     TLevelActions extends ServerFormsModel = {},
@@ -99,6 +104,7 @@ export class Sonolus<
     TEngineActions extends ServerFormsModel = {},
     TReplayActions extends ServerFormsModel = {},
     TRoomActions extends ServerFormsModel = {},
+    TUserActions extends ServerFormsModel = {},
     TPostCommunityActions extends ServerFormsModel = {},
     TPlaylistCommunityActions extends ServerFormsModel = {},
     TLevelCommunityActions extends ServerFormsModel = {},
@@ -109,6 +115,7 @@ export class Sonolus<
     TEngineCommunityActions extends ServerFormsModel = {},
     TReplayCommunityActions extends ServerFormsModel = {},
     TRoomCommunityActions extends ServerFormsModel = {},
+    TUserCommunityActions extends ServerFormsModel = {},
     TPostCommunityCommentActions extends ServerFormsModel = {},
     TPlaylistCommunityCommentActions extends ServerFormsModel = {},
     TLevelCommunityCommentActions extends ServerFormsModel = {},
@@ -119,6 +126,7 @@ export class Sonolus<
     TEngineCommunityCommentActions extends ServerFormsModel = {},
     TReplayCommunityCommentActions extends ServerFormsModel = {},
     TRoomCommunityCommentActions extends ServerFormsModel = {},
+    TUserCommunityCommentActions extends ServerFormsModel = {},
     TLevelResultSubmits extends ServerFormsModel = {},
 > {
     readonly address?: string
@@ -231,6 +239,15 @@ export class Sonolus<
         TRoomActions,
         TRoomCommunityActions,
         TRoomCommunityCommentActions
+    >
+    readonly user!: SonolusItemGroup<
+        TConfigurationOptions,
+        UserItemModel,
+        TUserCreates,
+        TUserSearches,
+        TUserActions,
+        TUserCommunityActions,
+        TUserCommunityCommentActions
     >
 
     constructor(

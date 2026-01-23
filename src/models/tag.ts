@@ -2,7 +2,7 @@ import { DatabaseTag, Tag } from '@sonolus/core'
 import { Localize } from '../utils/localization.js'
 
 export const toTag = (localize: Localize, tag: DatabaseTag): Tag => ({
-    title: localize(tag.title),
+    title: tag.title && localize(tag.title),
     icon: tag.icon,
 })
 

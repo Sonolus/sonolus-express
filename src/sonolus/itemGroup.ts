@@ -264,15 +264,17 @@ export class SonolusItemGroup<
         this._preUploadActionRouteHandler = createServerPreUploadItemActionRouteHandler(this)
         this._uploadActionRouteHandler = createServerUploadItemActionRouteHandler(this)
 
-        this._communityInfoRouteHandler = createServerItemCommunityInfoRouteHandler(this)
+        this._communityInfoRouteHandler = createServerItemCommunityInfoRouteHandler(sonolus, this)
 
         this._communitySubmitRouteHandler = createServerSubmitItemCommunityActionRouteHandler(this)
         this._communityPreUploadRouteHandler =
             createServerPreUploadItemCommunityActionRouteHandler(this)
         this._communityUploadRouteHandler = createServerUploadItemCommunityActionRouteHandler(this)
 
-        this._communityCommentListRouteHandler =
-            createServerItemCommunityCommentListRouteHandler(this)
+        this._communityCommentListRouteHandler = createServerItemCommunityCommentListRouteHandler(
+            sonolus,
+            this,
+        )
 
         this._communityCommentSubmitRouteHandler =
             createServerSubmitItemCommunityCommentActionRouteHandler(this)
@@ -281,10 +283,15 @@ export class SonolusItemGroup<
         this._communityCommentUploadRouteHandler =
             createServerUploadItemCommunityCommentActionRouteHandler(this)
 
-        this._leaderboardDetailsRouteHandler = createServerItemLeaderboardDetailsRouteHandler(this)
+        this._leaderboardDetailsRouteHandler = createServerItemLeaderboardDetailsRouteHandler(
+            sonolus,
+            this,
+        )
 
-        this._leaderboardRecordListRouteHandler =
-            createServerItemLeaderboardRecordListRouteHandler(this)
+        this._leaderboardRecordListRouteHandler = createServerItemLeaderboardRecordListRouteHandler(
+            sonolus,
+            this,
+        )
 
         this._leaderboardRecordDetailsRouteHandler =
             createServerItemLeaderboardRecordDetailsRouteHandler(sonolus, this)

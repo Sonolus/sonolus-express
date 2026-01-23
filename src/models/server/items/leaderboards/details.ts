@@ -1,4 +1,5 @@
 import { ServerItemLeaderboardDetails } from '@sonolus/core'
+import { SonolusBase } from '../../../../sonolus/base.js'
 import { Localize } from '../../../../utils/localization.js'
 import {
     ServerItemLeaderboardRecordModel,
@@ -10,8 +11,11 @@ export type ServerItemLeaderboardDetailsModel = {
 }
 
 export const toServerItemLeaderboardDetails = (
+    sonolus: SonolusBase,
     localize: Localize,
     details: ServerItemLeaderboardDetailsModel,
 ): ServerItemLeaderboardDetails => ({
-    topRecords: details.topRecords.map((record) => toServerItemLeaderboardRecord(localize, record)),
+    topRecords: details.topRecords.map((record) =>
+        toServerItemLeaderboardRecord(sonolus, localize, record),
+    ),
 })

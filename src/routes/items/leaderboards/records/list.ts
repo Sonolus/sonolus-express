@@ -5,7 +5,9 @@ import {
     toServerItemLeaderboardRecordList,
 } from '../../../../models/server/items/leaderboards/records/list.js'
 import { ServerOptionsModel } from '../../../../models/server/options/option.js'
+import { SonolusBase } from '../../../../sonolus/base.js'
 import { SonolusItemGroup } from '../../../../sonolus/itemGroup.js'
+import { extractString } from '../../../../utils/extract.js'
 import { SonolusCtx } from '../../../ctx.js'
 import { handleError } from '../../../error.js'
 import { HandlerResponse, SonolusRouteHandler } from '../../../handler.js'
@@ -31,6 +33,7 @@ export const createServerItemLeaderboardRecordListRouteHandler =
         TCommunityActions extends ServerFormsModel,
         TCommunityCommentActions extends ServerFormsModel,
     >(
+        sonolus: SonolusBase,
         group: SonolusItemGroup<
             TConfigurationOptions,
             TItemModel,
@@ -64,9 +67,9 @@ export const createServerItemLeaderboardRecordListRouteHandler =
             itemName,
             leaderboardName,
             page: +(req.query.page ?? '') || 0,
-            cursor: req.query.cursor && `${req.query.cursor as never}`,
+            cursor: extractString(req.query.cursor),
         })
         if (handleError(response, res, localize)) return
 
-        res.json(toServerItemLeaderboardRecordList(localize, response))
+        res.json(toServerItemLeaderboardRecordList(sonolus, localize, response))
     }

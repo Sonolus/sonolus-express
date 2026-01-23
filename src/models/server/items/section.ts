@@ -12,6 +12,7 @@ import { PostItemModel, toPostItem } from '../../items/post.js'
 import { ReplayItemModel, toReplayItem } from '../../items/replay.js'
 import { RoomItemModel, toRoomItem } from '../../items/room.js'
 import { SkinItemModel, toSkinItem } from '../../items/skin.js'
+import { toUserItem, UserItemModel } from '../../items/user.js'
 import { ServerFormsModel, toServerForm } from '../forms/form.js'
 import { RawServerFormValue, serializeRawServerFormsValue } from '../forms/value.js'
 
@@ -26,6 +27,7 @@ export type ServerItemSectionModel<T extends ServerFormsModel> = (
     | ServerItemSectionModelTyped<'engine', EngineItemModel>
     | ServerItemSectionModelTyped<'replay', ReplayItemModel>
     | ServerItemSectionModelTyped<'room', RoomItemModel>
+    | ServerItemSectionModelTyped<'user', UserItemModel>
 ) & {
     search?: {
         [K in keyof T]: {
@@ -55,6 +57,7 @@ const toItemByType = {
     engine: toEngineItem,
     replay: toReplayItem,
     room: toRoomItem,
+    user: toUserItem,
 }
 
 export const toServerItemSection = <T extends ServerFormsModel>(

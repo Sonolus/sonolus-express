@@ -5,6 +5,7 @@ import {
     toServerItemLeaderboardDetails,
 } from '../../../models/server/items/leaderboards/details.js'
 import { ServerOptionsModel } from '../../../models/server/options/option.js'
+import { SonolusBase } from '../../../sonolus/base.js'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup.js'
 import { SonolusCtx } from '../../ctx.js'
 import { handleError } from '../../error.js'
@@ -28,6 +29,7 @@ export const createServerItemLeaderboardDetailsRouteHandler =
         TCommunityActions extends ServerFormsModel,
         TCommunityCommentActions extends ServerFormsModel,
     >(
+        sonolus: SonolusBase,
         group: SonolusItemGroup<
             TConfigurationOptions,
             TItemModel,
@@ -63,5 +65,5 @@ export const createServerItemLeaderboardDetailsRouteHandler =
         })
         if (handleError(response, res, localize)) return
 
-        res.json(toServerItemLeaderboardDetails(localize, response))
+        res.json(toServerItemLeaderboardDetails(sonolus, localize, response))
     }

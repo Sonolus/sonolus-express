@@ -5,6 +5,7 @@ import { EffectItemModel, toEffectItem } from './effect.js'
 import { Model, ToItem, getItem } from './item.js'
 import { ParticleItemModel, toParticleItem } from './particle.js'
 import { SkinItemModel, toSkinItem } from './skin.js'
+import { UserItemModel, toUserItem } from './user.js'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface EngineItemModel extends Model<
@@ -15,7 +16,9 @@ export interface EngineItemModel extends Model<
         effect: string | EffectItemModel
         particle: string | ParticleItemModel
     }
-> {}
+> {
+    authorUser?: string | UserItemModel
+}
 
 export const toEngineItem: ToItem<EngineItemModel, EngineItem> = (sonolus, localize, item) => ({
     name: item.name,
@@ -24,6 +27,13 @@ export const toEngineItem: ToItem<EngineItemModel, EngineItem> = (sonolus, local
     title: localize(item.title),
     subtitle: localize(item.subtitle),
     author: localize(item.author),
+    authorUser: item.authorUser
+        ? toUserItem(
+              sonolus,
+              localize,
+              getItem(sonolus.user.items, item.authorUser, `Engine/${item.name}`, '.authorUser'),
+          )
+        : undefined,
     tags: toTags(localize, item.tags),
     skin: toSkinItem(
         sonolus,
