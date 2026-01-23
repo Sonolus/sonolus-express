@@ -4,13 +4,12 @@ import { Model, ToItem, getItem } from './item.js'
 import { LevelItemModel, toLevelItem } from './level.js'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export interface ReplayItemModel
-    extends Model<
-        DatabaseReplayItem,
-        {
-            level: string | LevelItemModel
-        }
-    > {}
+export interface ReplayItemModel extends Model<
+    DatabaseReplayItem,
+    {
+        level: string | LevelItemModel
+    }
+> {}
 
 export const toReplayItem: ToItem<ReplayItemModel, ReplayItem> = (sonolus, localize, item) => ({
     name: item.name,

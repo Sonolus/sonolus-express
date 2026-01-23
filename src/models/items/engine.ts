@@ -7,16 +7,15 @@ import { ParticleItemModel, toParticleItem } from './particle.js'
 import { SkinItemModel, toSkinItem } from './skin.js'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export interface EngineItemModel
-    extends Model<
-        DatabaseEngineItem,
-        {
-            skin: string | SkinItemModel
-            background: string | BackgroundItemModel
-            effect: string | EffectItemModel
-            particle: string | ParticleItemModel
-        }
-    > {}
+export interface EngineItemModel extends Model<
+    DatabaseEngineItem,
+    {
+        skin: string | SkinItemModel
+        background: string | BackgroundItemModel
+        effect: string | EffectItemModel
+        particle: string | ParticleItemModel
+    }
+> {}
 
 export const toEngineItem: ToItem<EngineItemModel, EngineItem> = (sonolus, localize, item) => ({
     name: item.name,

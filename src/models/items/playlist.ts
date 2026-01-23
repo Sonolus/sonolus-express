@@ -4,13 +4,12 @@ import { Model, ToItem, getItem } from './item.js'
 import { LevelItemModel, toLevelItem } from './level.js'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export interface PlaylistItemModel
-    extends Model<
-        DatabasePlaylistItem,
-        {
-            levels: (string | LevelItemModel)[]
-        }
-    > {}
+export interface PlaylistItemModel extends Model<
+    DatabasePlaylistItem,
+    {
+        levels: (string | LevelItemModel)[]
+    }
+> {}
 
 export const toPlaylistItem: ToItem<PlaylistItemModel, PlaylistItem> = (
     sonolus,
