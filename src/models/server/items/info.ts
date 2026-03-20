@@ -1,4 +1,4 @@
-import { ServerItemInfo, Srl } from '@sonolus/core'
+import { LocalizationText, ServerItemInfo, Srl } from '@sonolus/core'
 import { SonolusBase } from '../../../sonolus/base.js'
 import { Localize } from '../../../utils/localization.js'
 import { PickForms, ServerFormsModel, toServerForms } from '../../server/forms/form.js'
@@ -9,6 +9,7 @@ export type ServerItemInfoModel<
     TCreates extends ServerFormsModel,
     TSearches extends ServerFormsModel,
 > = {
+    title?: LocalizationText
     creates?: PickForms<TCreates>
     searches?: PickForms<TSearches>
     quickSearchValue?: {
@@ -28,6 +29,7 @@ export const toServerItemInfo = <
     creates: TCreates,
     searches: TSearches,
 ): ServerItemInfo => ({
+    title: info.title && localize(info.title),
     creates: info.creates && toServerForms(localize, info.creates, creates),
     searches: info.searches && toServerForms(localize, info.searches, searches),
     quickSearchValues:
