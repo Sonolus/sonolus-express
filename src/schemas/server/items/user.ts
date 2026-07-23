@@ -1,5 +1,5 @@
-import { Type } from '@sinclair/typebox'
 import { UserItem } from '@sonolus/core'
+import Type from 'typebox'
 import { Expect } from '../../../utils/test.js'
 import { tagSchema } from '../../tag.js'
 import { SchemaToMatch } from '../../test.js'

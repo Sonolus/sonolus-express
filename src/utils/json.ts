@@ -1,15 +1,16 @@
-import { Static, TSchema } from '@sinclair/typebox'
-import { Value } from '@sinclair/typebox/value'
+import Type from 'typebox'
+import Value from 'typebox/value'
 
-export const parse = <T extends TSchema>(
+export const parse = <T extends Type.TSchema>(
     json: Buffer | string,
     schema: T,
-): Static<T> | undefined => {
+): Type.Static<T> | undefined => {
     try {
         const value: unknown = JSON.parse(typeof json === 'string' ? json : json.toString('utf8'))
         if (!Value.Check(schema, value)) return
 
-        return Value.Clean(schema, value)
+        Value.Clean(schema, value)
+        return value
     } catch {
         return
     }

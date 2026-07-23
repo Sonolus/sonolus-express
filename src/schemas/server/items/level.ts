@@ -1,5 +1,5 @@
-import { TSchema, Type } from '@sinclair/typebox'
 import { LevelItem } from '@sonolus/core'
+import Type from 'typebox'
 import { Expect } from '../../../utils/test.js'
 import { srlSchema } from '../../srl.js'
 import { tagSchema } from '../../tag.js'
@@ -10,7 +10,7 @@ import { engineItemSchema } from './engine.js'
 import { particleItemSchema } from './particle.js'
 import { skinItemSchema } from './skin.js'
 
-const useItemSchema = <T extends TSchema>(T: T) =>
+const useItemSchema = <T extends Type.TSchema>(T: T) =>
     Type.Union([
         Type.Object({
             useDefault: Type.Literal(true),

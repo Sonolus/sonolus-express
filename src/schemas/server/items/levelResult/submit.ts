@@ -1,5 +1,5 @@
-import { Type } from '@sinclair/typebox'
 import { ServerSubmitLevelResultRequest } from '@sonolus/core'
+import Type from 'typebox'
 import { Expect } from '../../../../utils/test.js'
 import { SchemaToMatch } from '../../../test.js'
 import { replayItemSchema } from '../replay.js'
