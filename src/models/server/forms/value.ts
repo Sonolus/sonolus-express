@@ -77,9 +77,7 @@ export const parseServerFormsValue = <T extends ServerFormsModel>(
 export const serializeRawServerFormsValue = <T extends ServerFormsModel>(
     value: RawServerFormsValue<T>,
     forms: T,
-): string =>
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    serializeRawServerFormValue(value, value.type, forms[value.type]!)
+): string => serializeRawServerFormValue(value, value.type, forms[value.type]!)
 
 export type ServerSearchesValue<T extends ServerFormsModel> =
     | ServerFormsValue<T>

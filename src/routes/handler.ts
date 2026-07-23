@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+
 import { ServerOptionsModel } from '../models/server/options/option.js'
 import { Localize } from '../utils/localization.js'
 import { MaybePromise } from '../utils/promise.js'

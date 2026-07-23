@@ -1,4 +1,5 @@
 import { Icon, LocalizationText, ServerItemSection } from '@sonolus/core'
+
 import { SonolusBase } from '../../../sonolus/base.js'
 import { Localize } from '../../../utils/localization.js'
 import { BackgroundItemModel, toBackgroundItem } from '../../items/background.js'
@@ -82,8 +83,7 @@ export const toServerItemSection = <T extends ServerFormsModel>(
               localize,
               section.search.value.type,
               section.search.form === true
-                  ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    searches[section.search.value.type]!
+                  ? searches[section.search.value.type]!
                   : section.search.form,
           )
         : undefined,

@@ -1,4 +1,5 @@
 import { ServerItemCommunityInfo } from '@sonolus/core'
+
 import { SonolusBase } from '../../../../sonolus/base.js'
 import { Localize } from '../../../../utils/localization.js'
 import { PickForms, ServerFormsModel, toServerForms } from '../../forms/form.js'

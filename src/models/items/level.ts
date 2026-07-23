@@ -1,4 +1,5 @@
 import { DatabaseLevelItem, LevelItem, UseItem } from '@sonolus/core'
+
 import { SonolusBase } from '../../sonolus/base.js'
 import { Localize } from '../../utils/localization.js'
 import { toTags } from '../tag.js'
@@ -19,7 +20,6 @@ export type UseItemModel<T> =
           item: string | T
       }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface LevelItemModel extends Model<
     DatabaseLevelItem,
     {

@@ -1,4 +1,5 @@
 import { LocalizationText, ServerItemLeaderboardRecord } from '@sonolus/core'
+
 import { SonolusBase } from '../../../../../sonolus/base.js'
 import { Localize } from '../../../../../utils/localization.js'
 import { getItem } from '../../../../items/item.js'

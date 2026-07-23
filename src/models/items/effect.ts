@@ -1,9 +1,9 @@
 import { DatabaseEffectItem, EffectItem } from '@sonolus/core'
+
 import { toTags } from '../tag.js'
 import { getItem, Model, ToItem } from './item.js'
 import { toUserItem, UserItemModel } from './user.js'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface EffectItemModel extends Model<DatabaseEffectItem, {}> {
     authorUser?: string | UserItemModel
 }

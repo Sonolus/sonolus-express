@@ -1,10 +1,10 @@
 import { DatabasePlaylistItem, PlaylistItem } from '@sonolus/core'
+
 import { toTags } from '../tag.js'
 import { Model, ToItem, getItem } from './item.js'
 import { LevelItemModel, toLevelItem } from './level.js'
 import { UserItemModel, toUserItem } from './user.js'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface PlaylistItemModel extends Model<
     DatabasePlaylistItem,
     {

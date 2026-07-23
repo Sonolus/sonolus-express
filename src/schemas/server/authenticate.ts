@@ -1,5 +1,6 @@
-import { Type } from '@sinclair/typebox'
 import { ServerAuthenticateRequest } from '@sonolus/core'
+import Type from 'typebox'
+
 import { Expect } from '../../utils/test.js'
 import { serviceUserProfileSchema } from '../service/userProfile.js'
 import { SchemaToMatch } from '../test.js'

@@ -1,4 +1,5 @@
 import { Icon, LocalizationText, ServerForm } from '@sonolus/core'
+
 import { Localize } from '../../../utils/localization.js'
 import { ServerOptionsModel, toServerOption } from '../options/option.js'
 
@@ -41,7 +42,6 @@ export const toServerForms = <T extends ServerFormsModel>(
     Object.entries(pick as Partial<Record<string, boolean | ServerFormModel>>)
         .map(
             ([type, value]) =>
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 value && toServerForm(localize, type, value === true ? forms[type]! : value),
         )
         .filter((form) => !!form)

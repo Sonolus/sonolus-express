@@ -1,8 +1,8 @@
 import { DatabaseTag, LocalizationText, UserItem } from '@sonolus/core'
+
 import { toTags } from '../tag.js'
 import { ToItem } from './item.js'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface UserItemModel {
     name: string
     title: LocalizationText
