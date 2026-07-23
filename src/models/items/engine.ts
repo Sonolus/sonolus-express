@@ -8,7 +8,6 @@ import { ParticleItemModel, toParticleItem } from './particle.js'
 import { SkinItemModel, toSkinItem } from './skin.js'
 import { UserItemModel, toUserItem } from './user.js'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface EngineItemModel extends Model<
     DatabaseEngineItem,
     {

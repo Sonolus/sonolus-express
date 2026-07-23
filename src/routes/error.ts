@@ -5,7 +5,6 @@ import { Localize } from '../utils/localization.js'
 
 export type ServerError<E extends number> = E | [E, LocalizationText]
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export const handleError = <T>(
     response: T | ServerError<number>,
     res: Response,

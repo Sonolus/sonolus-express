@@ -20,7 +20,6 @@ export type UseItemModel<T> =
           item: string | T
       }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface LevelItemModel extends Model<
     DatabaseLevelItem,
     {

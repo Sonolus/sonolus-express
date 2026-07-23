@@ -4,7 +4,6 @@ import { toTags } from '../tag.js'
 import { getItem, Model, ToItem } from './item.js'
 import { toUserItem, UserItemModel } from './user.js'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface ParticleItemModel extends Model<DatabaseParticleItem, {}> {
     authorUser?: string | UserItemModel
 }

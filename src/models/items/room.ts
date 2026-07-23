@@ -4,7 +4,6 @@ import { toTags } from '../tag.js'
 import { getItem, ToItem } from './item.js'
 import { toUserItem, UserItemModel } from './user.js'
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface RoomItemModel {
     name: string
     title: LocalizationText

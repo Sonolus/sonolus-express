@@ -56,7 +56,6 @@ export const toServerOptions = <T extends ServerOptionsModel>(
     Object.entries(pick as Partial<Record<string, boolean | ServerOptionModel>>)
         .map(
             ([type, value]) =>
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 value && toServerOption(localize, type, value === true ? options[type]! : value),
         )
         .filter((form) => !!form)
