@@ -24,19 +24,19 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/express": "^4.17.25",
-    "@types/multer": "^2.1.0",
-    "@types/node": "^22.19.19",
-    "eslint": "^10.4.0",
+    "@types/multer": "^2.2.0",
+    "@types/node": "^22.20.1",
+    "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
-    "prettier": "^3.8.3",
+    "prettier": "^3.9.6",
     "prettier-plugin-organize-imports": "^4.3.0",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.59.4"
+    "typescript-eslint": "^8.65.0"
   },
   "peerDependencies": {
-    "@sinclair/typebox": "^0.34.49",
+    "@sinclair/typebox": "^0.34.52",
     "@sonolus/core": "~7.15.2",
     "express": "^4.22.2",
-    "multer": "^2.1.1"
+    "multer": "^2.2.0"
   }
 }
