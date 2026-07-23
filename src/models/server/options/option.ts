@@ -1,4 +1,5 @@
 import { ServerOption } from '@sonolus/core'
+
 import { Localize } from '../../../utils/localization.js'
 import { ServerCollectionItemOptionModel, toServerCollectionItemOption } from './collectionItem.js'
 import { ServerFileOptionModel, toServerFileOption } from './file.js'

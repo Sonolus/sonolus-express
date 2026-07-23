@@ -1,9 +1,11 @@
+import { webcrypto } from 'node:crypto'
+
 import {
     getSignaturePublicKey,
     ServerAuthenticateResponse,
     ServiceUserProfile,
 } from '@sonolus/core'
-import { webcrypto } from 'node:crypto'
+
 import { ServerOptionsModel } from '../models/server/options/option.js'
 import { authenticateServerRequestSchema } from '../schemas/server/authenticate.js'
 import { SonolusBase } from '../sonolus/base.js'

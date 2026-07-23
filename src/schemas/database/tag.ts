@@ -1,5 +1,6 @@
 import { DatabaseTag } from '@sonolus/core'
 import Type from 'typebox'
+
 import { Expect } from '../../utils/test.js'
 import { SchemaToMatch } from '../test.js'
 import { localizationTextSchema } from './localizationText.js'

@@ -82,7 +82,8 @@ export const serializeRawServerFormsValue = <T extends ServerFormsModel>(
     serializeRawServerFormValue(value, value.type, forms[value.type]!)
 
 export type ServerSearchesValue<T extends ServerFormsModel> =
-    ServerFormsValue<T> | ServerFormValue<'quick', typeof quickForm>
+    | ServerFormsValue<T>
+    | ServerFormValue<'quick', typeof quickForm>
 
 const quickForm = {
     title: {},

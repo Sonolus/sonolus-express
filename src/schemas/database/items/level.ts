@@ -1,5 +1,6 @@
 import { DatabaseLevelItem, DatabaseUseItem } from '@sonolus/core'
 import Type from 'typebox'
+
 import { Expect } from '../../../utils/test.js'
 import { srlSchema } from '../../srl.js'
 import { SchemaToMatch } from '../../test.js'

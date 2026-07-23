@@ -1,4 +1,5 @@
 import { ServerItemLeaderboardRecordList } from '@sonolus/core'
+
 import { SonolusBase } from '../../../../../sonolus/base.js'
 import { Localize } from '../../../../../utils/localization.js'
 import { ServerItemLeaderboardRecordModel, toServerItemLeaderboardRecord } from './record.js'

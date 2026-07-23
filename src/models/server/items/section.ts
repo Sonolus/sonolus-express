@@ -1,4 +1,5 @@
 import { Icon, LocalizationText, ServerItemSection } from '@sonolus/core'
+
 import { SonolusBase } from '../../../sonolus/base.js'
 import { Localize } from '../../../utils/localization.js'
 import { BackgroundItemModel, toBackgroundItem } from '../../items/background.js'

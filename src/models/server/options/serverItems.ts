@@ -1,5 +1,6 @@
 import { ItemType, LocalizationText, ServerServerItemsOption, Sil } from '@sonolus/core'
 import Type from 'typebox'
+
 import { silSchema } from '../../../schemas/sil.js'
 import { parse } from '../../../utils/json.js'
 import { Localize } from '../../../utils/localization.js'

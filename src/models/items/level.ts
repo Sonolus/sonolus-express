@@ -1,4 +1,5 @@
 import { DatabaseLevelItem, LevelItem, UseItem } from '@sonolus/core'
+
 import { SonolusBase } from '../../sonolus/base.js'
 import { Localize } from '../../utils/localization.js'
 import { toTags } from '../tag.js'

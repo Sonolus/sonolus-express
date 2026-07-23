@@ -14,6 +14,7 @@ import {
     SkinItem,
     UserItem,
 } from '@sonolus/core'
+
 import { backgroundItemSchema } from '../../../schemas/server/items/background.js'
 import { effectItemSchema } from '../../../schemas/server/items/effect.js'
 import { engineItemSchema } from '../../../schemas/server/items/engine.js'
@@ -38,20 +39,21 @@ export type ServerCollectionItemOptionModel = {
 
 export type ServerCollectionItemOptionValue<T = ServerCollectionItemOptionModel> =
     T extends ServerCollectionItemOptionModel
-        ? | {
-                post: PostItem
-                playlist: PlaylistItem
-                level: LevelItem
-                skin: SkinItem
-                background: BackgroundItem
-                effect: EffectItem
-                particle: ParticleItem
-                engine: EngineItem
-                replay: ReplayItem
-                room: RoomItem
-                user: UserItem
-            }[T['itemType']]
-          | undefined
+        ?
+              | {
+                    post: PostItem
+                    playlist: PlaylistItem
+                    level: LevelItem
+                    skin: SkinItem
+                    background: BackgroundItem
+                    effect: EffectItem
+                    particle: ParticleItem
+                    engine: EngineItem
+                    replay: ReplayItem
+                    room: RoomItem
+                    user: UserItem
+                }[T['itemType']]
+              | undefined
         : never
 
 const schemas = {

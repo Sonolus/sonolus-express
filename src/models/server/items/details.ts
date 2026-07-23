@@ -1,4 +1,5 @@
 import { LocalizationText, ServerItemDetails } from '@sonolus/core'
+
 import { SonolusBase } from '../../../sonolus/base.js'
 import { Localize } from '../../../utils/localization.js'
 import { ToItem } from '../../items/item.js'

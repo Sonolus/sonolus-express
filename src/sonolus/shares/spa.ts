@@ -1,5 +1,6 @@
-import express, { Router } from 'express'
 import { resolve } from 'node:path'
+
+import express, { Router } from 'express'
 
 const itemTypes = [
     'posts',
