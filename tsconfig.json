@@ -12,6 +12,6 @@
         "rootDir": "./src",
         "outDir": "./dist",
         "declaration": true,
-        "types": ["@types/node"],
+        "types": ["node"],
     }
 }
