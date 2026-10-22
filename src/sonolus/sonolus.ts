@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-import { LocalizationText, Srl, localize, hash as sonolusHash, version } from '@sonolus/core'
+import { LocalizationText, Srl, localize, hash as sonolusHash, sonolusVersion } from '@sonolus/core'
 import express, { NextFunction, Request, RequestHandler, Response, Router } from 'express'
 import multer from 'multer'
 
@@ -529,7 +529,7 @@ export class Sonolus<
     private _toMiddleware(handler: SonolusRouteHandler<TConfigurationOptions>) {
         return async (req: Request, res: Response, next: NextFunction) => {
             try {
-                res.set('Sonolus-Version', version.sonolus)
+                res.set('Sonolus-Version', sonolusVersion)
 
                 const localization = extractString(req.query.localization) ?? ''
                 const localize: Localize = (text) => this.localize(text, localization)
