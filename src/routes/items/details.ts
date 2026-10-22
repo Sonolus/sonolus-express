@@ -6,6 +6,7 @@ import { ServerItemDetailsModel, toServerItemDetails } from '../../models/server
 import { ServerOptionsModel } from '../../models/server/options/option.js'
 import { SonolusBase } from '../../sonolus/base.js'
 import { SonolusItemGroup } from '../../sonolus/itemGroup.js'
+import { extractString } from '../../utils/extract.js'
 import { SonolusCtx } from '../ctx.js'
 import { handleError } from '../error.js'
 import { HandlerResponse, SonolusRouteHandler } from '../handler.js'
@@ -86,7 +87,7 @@ export const createServerItemDetailsRouteHandler =
         toItem: ToItem<TItemModel, unknown>,
     ): SonolusRouteHandler<TConfigurationOptions> =>
     async ({ req, res, localize, ctx }) => {
-        const itemName = req.params.itemName
+        const itemName = extractString(req.params.itemName)
         if (!itemName) {
             res.status(400).end()
             return

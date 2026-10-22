@@ -6,6 +6,7 @@ import { ServerFormsValue, parseServerFormsValue } from '../../../models/server/
 import { ServerOptionsModel } from '../../../models/server/options/option.js'
 import { serverSubmitItemCommunityActionRequestSchema } from '../../../schemas/server/items/community/submitItemCommunityActionRequest.js'
 import { SonolusItemGroup } from '../../../sonolus/itemGroup.js'
+import { extractString } from '../../../utils/extract.js'
 import { parse } from '../../../utils/json.js'
 import { SonolusCtx } from '../../ctx.js'
 import { handleError } from '../../error.js'
@@ -47,7 +48,7 @@ export const createServerSubmitItemCommunityActionRouteHandler =
             return
         }
 
-        const itemName = req.params.itemName
+        const itemName = extractString(req.params.itemName)
         if (!itemName) {
             res.status(400).end()
             return

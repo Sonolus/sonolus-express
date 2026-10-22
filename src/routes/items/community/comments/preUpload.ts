@@ -43,13 +43,13 @@ export const createServerPreUploadItemCommunityCommentActionRouteHandler =
             return
         }
 
-        const itemName = req.params.itemName
+        const itemName = extractString(req.params.itemName)
         if (!itemName) {
             res.status(400).end()
             return
         }
 
-        const commentName = req.params.commentName
+        const commentName = extractString(req.params.commentName)
         if (!commentName) {
             res.status(400).end()
             return
