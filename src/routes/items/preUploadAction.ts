@@ -40,7 +40,7 @@ export const createServerPreUploadItemActionRouteHandler =
             return
         }
 
-        const itemName = req.params.itemName
+        const itemName = extractString(req.params.itemName)
         if (!itemName) {
             res.status(400).end()
             return

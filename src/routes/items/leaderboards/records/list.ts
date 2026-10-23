@@ -50,13 +50,13 @@ export const createServerItemLeaderboardRecordListRouteHandler =
             return
         }
 
-        const itemName = req.params.itemName
+        const itemName = extractString(req.params.itemName)
         if (!itemName) {
             res.status(400).end()
             return
         }
 
-        const leaderboardName = req.params.leaderboardName
+        const leaderboardName = extractString(req.params.leaderboardName)
         if (!leaderboardName) {
             res.status(400).end()
             return
